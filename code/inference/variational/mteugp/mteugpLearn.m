@@ -1,12 +1,16 @@
-function  model  = mteugpLearn( model )
+function  model  = mteugpLearn( model, optconf )
 %MTEUGPLEARN Summary of this function goes here
 %   Detailed explanation goes here
 
-Q = model.q;
+Q = model.Q;
+D = model.D;
+
+%% Initializing model
+model.M = zeros(D,Q);
 
 %% Optimization 
 for q = 1 : Q
-    [model.M(:,q), model.C(:,:,q)]  = optimizeSingleM(model, q);
+    [model.M(:,q), model.C(:,:,q)]  = optimizeSingleM(model, q, optconf);
 end
 
 end
