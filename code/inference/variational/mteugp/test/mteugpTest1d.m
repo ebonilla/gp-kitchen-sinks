@@ -9,7 +9,7 @@ rng(10101,'twister');
 %% General settings
 N       = 20;
 d       = 1; % original dimensionality of input space
-D       = 1000; % dimensionality of output space
+D       = 100; % dimensionality of output space
 covfunc = 'covSEiso';
 ell     = 1/2; 
 sf      = 1; 
@@ -24,19 +24,22 @@ sigma2w = 1;
 Z       = randn(D,d);
 sigma_z = getOptimalSigmaz(ell);
 PHI     = getRandomRBF(Z, sigma_z, x);
+D       = size(PHI,2); % ACtual number of features
 
 %% set up model
-model.Q       = 1; % latent functions
-model.P       = size(y,2); % Outputs
-model.N       = N; 
-model.D       = D;
-model.sigma2y = sigma2y;
-model.sigma2w = sigma2w;
-model.Y       = y;
-model.Phi     = PHI;
+model.Q            = 1; % latent functions
+model.P            = size(y,2); % Outputs
+model.N            = N; 
+model.D            = D;
+model.sigma2y      = sigma2y*ones(model.P,1); % vector of noise variances
+model.sigma2w      = sigma2w*ones(D,1); % vector of prior variances
+model.Y            = y;
+model.Phi          = PHI;
+model.linearMethod = 'Taylor';
+model.fwdFunc      = @(ff) (- ff.^2 + 3);
 optconf.maxiter = 100;
 optconf.tol    = 1e-3;
-optconf.alpha  = 0.01; 
+optconf.alpha  = 0.5; 
 
 model         = mteugpLearn( model, optconf );
 
