@@ -27,19 +27,20 @@ N = model.N;
 ell = 0;
 sigma2y  = model.sigma2y;
 Sigmainv = diag(sigma2y);
-M        = model.M;
+M        = model.M';
+P        = model.P;
 for n = 1 : N 
     yn       = model.Y(n,:)';
     An       = squeeze(model.A(n,:,:));
     phin     = model.Phi(n,:)';
     bn       = model.B(n,:)';
-    qTerm    = (yn - An*M*phin - bn)^T*Sigmainv*(yn - An*M*phin - bn); % TODO: Improve efficiency
+    qTerm    = (yn - An*M*phin - bn)'*Sigmainv*(yn - An*M*phin - bn); % TODO: Improve efficiency
     
     trTerm = 0;
-    for q = 1 : Q
+    for q = 1 : model.Q
         Cq = model.C(:,:,q);
         anq = An(:,q)';
-        trTerm = trTerm + trace(phin*anq'*Sigma*anq*phin^T*Cq); % TODO: improve efficiency 
+        trTerm = trTerm + trace(phin*anq'*Sigmainv*anq*phin'*Cq); % TODO: improve efficiency 
     end
     ell  = qTerm + trTerm;
 end
@@ -57,7 +58,7 @@ sigma2w = model.sigma2w(q);
 kl     = (1/sigma2w)*trace(C) ...
              + (1/sigma2w)*(m'*m) ... 
              - getLogDetChol(cholC) ...
-             + D*log(sigma) ...
+             + D*log(sigma2w) ...
              -D;
 kl     = 0.5*kl;         
 

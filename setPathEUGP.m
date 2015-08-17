@@ -2,6 +2,7 @@
 
 %% This is for tunning Trung's code, order matters here
 addpath(genpath('code/inference/variational/mteugp'));
+addpath(genpath('code/inference/variational/utils'));
 addpath(genpath('code/inference/features'));
 
 

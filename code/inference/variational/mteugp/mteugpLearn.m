@@ -6,7 +6,11 @@ Q = model.Q;
 D = model.D;
 
 %% Initializing model
-model.M = zeros(D,Q);
+model.M            = zeros(D,Q);
+[model.A, model.B] = mteugpUpdateLinearization(model); % lineariz. parameters
+for q = 1 : Q
+    model.C(:,:,q) = updateCovariance(model,q);
+end
 
 %% Optimization 
 for q = 1 : Q
@@ -33,34 +37,51 @@ mq       = model.M(:,q);
 sigma2w  = model.sigma2w(q);
 
 %% Newton iterations
-i = 0;
-while (i < optconf.maxiter)
+i = 1;
+nelbo = - NaN*ones(optconf.maxiter,1);
+nelbo(i) = mteugpNelbo( model );
+while (i <= optconf.maxiter)
     grad_mq = getGradMq(model, mq, sigma2w, Sigmainv, N, q);
-    H      = getHessMq(model, mq, sigma2w, Sigmainv, N, q); % does not really depend on mq
+    H      =  getHessMq(model, mq, sigma2w, Sigmainv, N, q); % does not really depend on mq
     L      = chol(H, 'lower');
     dmq    = solve_chol(L',grad_mq);
-    mq     = mq - optconf.alpha*dmq;
-    i = i + 1;
-    
+    mq     = mq  - optconf.alpha*dmq;
+
+    model.M(:,q) = mq; 
+    nelbo(i)     = mteugpNelbo( model );
+
     % TODO: Need to update linearization within Newton or outside?
+    
+    fprintf('Nelbo(%d) = %.2f \n', i, nelbo(i));    
+    i = i + 1;
 end
 
 %% After mean converged, update covariance
 % TODO: update linearization parameters?
-[model.A, model.B] = mteugpUdateLinearization(model);
+[model.A, model.B] = mteugpUpdateLinearization(model);
 
-
-H    = - getHessMq(model, mq, sigma2w, Sigmainv, N, q);
-L    = chol(H, 'lower');
-Cq   = getInverseChol(L);
+Cq = updateCovariance(model,q);
 
 
 end
 
 
+%% Cq = updateCovariance(model)
+function Cq = updateCovariance(model, q)
+N        = model.N;
+Sigmainv = diag(model.sigma2y);
+sigma2w  = model.sigma2w(q);
+mq       = model.M(:,q);
+
+H    = getHessMq(model, mq, sigma2w, Sigmainv, N, q);
+L    = chol(H, 'lower');
+Cq   = getInverseChol(L);
+end
+
 
 %% getHessMq(model, mq, sigma2w, Sigmainv, N, q)
 function H = getHessMq(model, mq, sigma2w, Sigmainv, N, q)
+D = model.D;
 H =  - sigma2w * eye(D);
 for n = 1 : N
     phin = model.Phi(n,:)';
@@ -68,19 +89,25 @@ for n = 1 : N
     H    = H - phin*anq'*Sigmainv*anq*phin'; 
 end
 
+% minimizing negative ebo
+H = - H;
+
 end
 
 
 %% grad_mq = getGradMq(model, mq, sigma2w, Sigmainv, N, q)
 function grad_mq = getGradMq(model, mq, sigma2w, Sigmainv, N, q)
-grad_mq = zeros(size(mq));
+grad_mq = - (1/sigma2w)*mq;
 for n = 1 : N
     yn       = model.Y(n,:)';
     phin     = model.Phi(n,:)';
     anq      = model.A(n,:,q)';
     bn       = model.B(n,:)';
-    grad_mq  =  grad_mq + phin*anq'*Sigmainv*(yn - anq*mq'*phin - bn) ...
-                - (1/sigma2w)*mq;
+    grad_mq  =  grad_mq + phin*anq'*Sigmainv*(yn - anq*mq'*phin - bn);                 
 end
+
+
+% minimizing negative ebo
+grad_mq = - grad_mq;
 
 end

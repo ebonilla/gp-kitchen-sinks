@@ -13,7 +13,7 @@ else
     else % Estimates Jacobian numerically
         fwdVal      = feval(fwdFunc, f); 
         fprintf('Computing Jacobian numerically ... ');
-        [J, errJ]   = jacobianest(fwdfunc, x);
+        [J, errJ]   = jacobianest(fwdFunc, f);
         fprintf('done\n');
 %     end
 end
