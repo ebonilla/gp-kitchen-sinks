@@ -14,11 +14,15 @@ covfunc = 'covSEiso';
 ell     = 1/2; 
 sf      = 1; 
 hyp.cov = log([ell; sf]);
-sigma2y = 1e-3; 
+sigma2y = 1e-4; 
 sigma2w = 1;
+fwdFunc = @(ff) ff.^2;
 
 %% Generates data
-[x, xstar, y, K, cholK] =   getData(N, d, covfunc, hyp, sigma2y);
+[x, y, xstar, ystar] =   getData(N, d, covfunc, hyp, fwdFunc, sigma2y);
+
+
+
 
 %% Generates random Features 
 Z       = randn(D,d);
@@ -36,10 +40,10 @@ model.sigma2w      = sigma2w*ones(D,1); % vector of prior variances
 model.Y            = y;
 model.Phi          = PHI;
 model.linearMethod = 'Taylor';
-model.fwdFunc      = @(ff) (- ff.^2 + 3);
-optconf.maxiter = 100;
-optconf.tol    = 1e-3;
-optconf.alpha  = 0.5; 
+model.fwdFunc      = fwdFunc;
+optconf.maxiter    = 100;
+optconf.tol        = 1e-3;
+optconf.alpha      = 0.5; 
 
 model         = mteugpLearn( model, optconf );
 
@@ -48,17 +52,61 @@ end
 
 
 %%  function getData()
-function [x, xstar, y, K, L] =  getData(N, d, covfunc, hyp, sigma2y)
-%% Generates input
-x            = -2 + 4*rand(N, d);
-if ( d == 1 )
-    x = sort(x);
-end
-xstar = linspace(-2, 2, 100)';
-K = feval(covfunc, hyp.cov, x);
-L  = chol(K + sigma2y*eye(N,N), 'lower');
-Z  = randn(N,1);
-f  = L*Z;
-y  = f;
+function [x, y, xstar, fstar, gstar, ystar] =  getData(N, d, covfunc, hyp, fwdFunc, sigma2y)
+MIN_NOISE = 1e-7;
+Nall   = 100;
+xstar  = linspace(-2, 2, Nall)';
+K      = feval(covfunc, hyp.cov, xstar);
+L      = chol(K + MIN_NOISE*eye(Nall), 'lower');
+z      = randn(Nall,1);
+fstar  = L*z;
+gstar  = feval(fwdFunc, fstar); 
+ystar  = gstar + sqrt(sigma2y)*randn(size(gstar));
 
+idx   = randperm(Nall);
+idx   = idx(1:N);
+x     = xstar(idx,:);
+y     = ystar(idx,:);
+xstar(idx,:) = [];
+ystar(idx,:) = [];
+gstar(idx,:) = [];
+fstar(idx,:) = [];
+
+[v, idx] = sort(xstar);
+plot(v, fstar(idx), 'b', 'LineWidth',2); hold on;
+plot(v, gstar, 'g--','LineWidth',2); hold on;
+plot(x, y, 'ro'); hold on;
+
+legend({'fstar', 'gstar', 'ytrain' });
+set(gca, 'FontSize', 14);
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
