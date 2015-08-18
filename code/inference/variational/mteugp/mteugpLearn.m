@@ -42,9 +42,8 @@ function mq = optimizeSingleM(model, q, optconf)
 % optconf.alpha: learning rate
 
 N        = model.N;
-D        = model.D;
 sigma2y  = model.sigma2y;
-Sigmainv = diag(sigma2y);
+Sigmainv = getSigmaInv(sigma2y);
 mq       = model.M(:,q);
 sigma2w  = model.sigma2w(q);
 
@@ -68,19 +67,26 @@ while ( (i <= optconf.varIter) && (tol > optconf.tol) )
     i = i + 1;
     nelbo(i)     = mteugpNelbo( model );
     fprintf('Nelbo(%d) = %.2f \n', i, nelbo(i));    
-    tol = abs(nelbo(i) - nelbo(i-1));
+    % tol = abs(nelbo(i) - nelbo(i-1));
     
     % Updates linerization
-    [model.A, model.B] = mteugpUpdateLinearization(model);
+    % [model.A, model.B] = mteugpUpdateLinearization(model);
 end
 
+end
+
+
+%% function getSigmaInv
+function Sigmainv = getSigmaInv(sigma2y)
+Sigmainv = diag(1./sigma2y);
 end
 
 
 %% Cq = updateCovariance(model)
 function Cq = updateCovariance(model, q)
 N        = model.N;
-Sigmainv = diag(model.sigma2y);
+sigma2y  = model.sigma2y;
+Sigmainv = getSigmaInv(sigma2y);
 sigma2w  = model.sigma2w(q);
 mq       = model.M(:,q);
 

@@ -17,6 +17,7 @@ switch (model.linearMethod)
             f = F(n,:);
             [fval, Jn] = egpEvalFwdModel(model.fwdFunc, f);
             A(n,:,:) = Jn;
+            B(n,:)   = fval - f*Jn'; 
         end
     otherwise 
         fprintf('Unknown Linearization method');
