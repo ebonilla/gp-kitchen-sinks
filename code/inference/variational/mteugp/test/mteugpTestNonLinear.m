@@ -5,7 +5,7 @@ clc; close all;
 rng(10101,'twister');
 
 %% General settings
-N       = 20;
+N       = 50;
 d       = 1; % original dimensionality of input space
 D       = 100; % dimensionality of output space
 covfunc = 'covSEiso';
@@ -14,7 +14,7 @@ sf      = 1;
 hyp.cov = log([ell; sf]);
 sigma2y = 1e-3; 
 sigma2w = 1;
-fwdFunc = @(ff) ff.^2;
+fwdFunc = @(ff) ff.^3;
 
 %% Generates data
 [x, y, xstar, fstar, gstar, ystar] =   getData(N, d, covfunc, hyp, fwdFunc, sigma2y);
@@ -44,6 +44,7 @@ optconf.globalIter = 1;  % maximum global iterations
 optconf.tol        = 1e-5;
 optconf.alpha      = 0.5; 
 
+%% Learns EGP model
 model         = mteugpLearn( model, optconf );
 
 
@@ -53,31 +54,17 @@ PhiStar         = getRandomRBF(Z, sigma_z, xstar);
 vPred = diag(CovPred);
 plot_confidence_interval(xstar,mPred,sqrt(vPred), [], 1, 'b', [0.7 0.9 0.95]); 
 hold on; 
-plot_data(x, y, xstar, fstar, gstar );
-legend({'EGP std (f*)', 'EGP mean(f*)', 'f*', 'y*', 'ytrain'});
+plot_data(x, y, xstar, fstar, gstar);
+legend({'EGP std (f*)', 'EGP mean(f*)', 'f*', 'g*', 'ytrain'});
 
 end
 
 
 
-%% Gets GP posterior for linear case y = f + noise
-function [mPredGP, varPredGP] =  predictGP(covfunc, hyp, sigma2y, x, y, xstar)
-N = size(x,1);
-K      = feval(covfunc, hyp.cov, x);
-cholK  = chol(K + sigma2y*eye(N,N), 'lower');
-kstar   = feval(covfunc, hyp.cov, x, xstar);
-mPredGP = kstar'*(solve_chol(cholK',y)); 
-% now the variances
-kss       = feval(covfunc, hyp.cov, xstar, 'diag'); % only diagonal requested
-v         = cholK\kstar;
-varPredGP = kss - sum(v.*v, 1)'; 
-end
-
-
-%%  function getData()
+%  function getData()
 function [x, y, xstar, fstar, gstar, ystar] =  getData(N, d, covfunc, hyp, fwdFunc, sigma2y)
 MIN_NOISE = 1e-7;
-Nall   = 100;
+Nall   = 300;
 xstar  = linspace(-2, 2, Nall)';
 K      = feval(covfunc, hyp.cov, xstar);
 L      = chol(K + MIN_NOISE*eye(Nall), 'lower');
@@ -90,6 +77,7 @@ idx   = randperm(Nall);
 idx   = idx(1:N);
 x     = xstar(idx,:);
 y     = ystar(idx,:);
+
 xstar(idx,:) = [];
 ystar(idx,:) = [];
 gstar(idx,:) = [];
@@ -98,7 +86,7 @@ fstar(idx,:) = [];
 
 end
 
-%%
+%
 function plot_data(x, y, xstar, fstar, gstar )
 [v, idx] = sort(xstar);
 plot(v, fstar(idx), 'r', 'LineWidth',2); hold on;
