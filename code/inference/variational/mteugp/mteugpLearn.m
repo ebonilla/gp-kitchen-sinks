@@ -67,10 +67,10 @@ while ( (i <= optconf.varIter) && (tol > optconf.tol) )
     i = i + 1;
     nelbo(i)     = mteugpNelbo( model );
     fprintf('Nelbo(%d) = %.2f \n', i, nelbo(i));    
-    % tol = abs(nelbo(i) - nelbo(i-1));
+    tol = abs(nelbo(i) - nelbo(i-1));
     
     % Updates linerization
-    % [model.A, model.B] = mteugpUpdateLinearization(model);
+    [model.A, model.B] = mteugpUpdateLinearization(model);
 end
 
 end

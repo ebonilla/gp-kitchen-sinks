@@ -1,5 +1,6 @@
 function model = mteugpTest1d()
-clc;
+clc; close all;
+
 rng(10101,'twister');
 
 %% General settings
@@ -10,7 +11,7 @@ covfunc = 'covSEiso';
 ell     = 1/2; 
 sf      = 1; 
 hyp.cov = log([ell; sf]);
-sigma2y = 1e-4; 
+sigma2y = 1e-3; 
 sigma2w = 1;
 fwdFunc = @(ff) ff;
 
@@ -39,7 +40,7 @@ model.linearMethod = 'Taylor';
 model.fwdFunc      = fwdFunc;
 optconf.varIter    = 100; % maximum iterations on variational parameters
 optconf.globalIter = 1;  % maximum global iterations
-optconf.tol        = 1e-3;
+optconf.tol        = 1e-5;
 optconf.alpha      = 0.5; 
 
 model         = mteugpLearn( model, optconf );
@@ -54,7 +55,7 @@ figure;
 plot_confidence_interval(xstar,mPred,sqrt(vPred), [], 1, 'b', [0.7 0.9 0.95]); 
 hold on;
 plot_confidence_interval(xstar, mGP, sqrt(vGP), [], 0, 'r', 'r'); hold on;
-
+plot(x, y, 'ko', 'MarkerSize', 8, 'MarkerFaceColor', 'k'); % data
 
 end
 
