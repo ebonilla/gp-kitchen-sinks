@@ -6,24 +6,36 @@ Q = model.Q;
 D = model.D;
 
 %% Initializing model
-model.M            = zeros(D,Q);
+model.M            = randn(D,Q);
 [model.A, model.B] = mteugpUpdateLinearization(model); % lineariz. parameters
 for q = 1 : Q
     model.C(:,:,q) = updateCovariance(model,q);
 end
 
-%% Optimization 
+
+for i = 1 : optconf.globalIter
+    % optimization of means
+    for q = 1 : Q
+     model.M(:,q)  = optimizeSingleM(model, q, optconf);  
+    end
+        
+   % optimization of linear parameters
+   % [model.A, model.B] = mteugpUpdateLinearization(model);
+
+end
+
+% optimization of covariances
 for q = 1 : Q
-    [model.M(:,q), model.C(:,:,q)]  = optimizeSingleM(model, q, optconf);
+     model.C(:,:,q) = updateCovariance(model,q);
 end
 
-end
 
+end
 
 
 
 %% Optimizes for a single q
-function [mq, Cq] = optimizeSingleM(model, q, optconf)
+function mq = optimizeSingleM(model, q, optconf)
 % optconf: Optimization configuration
 % optconf.maxiter
 % optconf.tol
@@ -38,9 +50,11 @@ sigma2w  = model.sigma2w(q);
 
 %% Newton iterations
 i = 1;
-nelbo = - NaN*ones(optconf.maxiter,1);
+nelbo    = - NaN*ones(optconf.varIter,1);
 nelbo(i) = mteugpNelbo( model );
-while (i <= optconf.maxiter)
+fprintf('Nelbo(%d) = %.2f \n', i, nelbo(i));    
+tol = inf;
+while ( (i <= optconf.varIter) && (tol > optconf.tol) )
     grad_mq = getGradMq(model, mq, sigma2w, Sigmainv, N, q);
     H      =  getHessMq(model, mq, sigma2w, Sigmainv, N, q); % does not really depend on mq
     L      = chol(H, 'lower');
@@ -48,20 +62,17 @@ while (i <= optconf.maxiter)
     mq     = mq  - optconf.alpha*dmq;
 
     model.M(:,q) = mq; 
-    nelbo(i)     = mteugpNelbo( model );
 
     % TODO: Need to update linearization within Newton or outside?
     
-    fprintf('Nelbo(%d) = %.2f \n', i, nelbo(i));    
     i = i + 1;
+    nelbo(i)     = mteugpNelbo( model );
+    fprintf('Nelbo(%d) = %.2f \n', i, nelbo(i));    
+    tol = abs(nelbo(i) - nelbo(i-1));
+    
+    % Updates linerization
+    [model.A, model.B] = mteugpUpdateLinearization(model);
 end
-
-%% After mean converged, update covariance
-% TODO: update linearization parameters?
-[model.A, model.B] = mteugpUpdateLinearization(model);
-
-Cq = updateCovariance(model,q);
-
 
 end
 
