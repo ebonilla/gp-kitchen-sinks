@@ -1,4 +1,5 @@
-function model = mteugpTest1d()
+function model = mteugpTestNonLinear()
+% 1D, Nonlinear
 clc; close all;
 
 rng(10101,'twister');
@@ -13,10 +14,10 @@ sf      = 1;
 hyp.cov = log([ell; sf]);
 sigma2y = 1e-3; 
 sigma2w = 1;
-fwdFunc = @(ff) ff;
+fwdFunc = @(ff) ff.^2;
 
 %% Generates data
-[x, y, xstar, ystar] =   getData(N, d, covfunc, hyp, fwdFunc, sigma2y);
+[x, y, xstar, fstar, gstar, ystar] =   getData(N, d, covfunc, hyp, fwdFunc, sigma2y);
 
 
 
@@ -50,12 +51,10 @@ model         = mteugpLearn( model, optconf );
 PhiStar         = getRandomRBF(Z, sigma_z, xstar);
 [ mPred, CovPred ] = mteugpGetPosteriorF( model, 1, PhiStar );
 vPred = diag(CovPred);
-[mGP, vGP] =  predictGP(covfunc, hyp, sigma2y, x, y, xstar);
-figure;
 plot_confidence_interval(xstar,mPred,sqrt(vPred), [], 1, 'b', [0.7 0.9 0.95]); 
-hold on;
-plot_confidence_interval(xstar, mGP, sqrt(vGP), [], 0, 'r', 'r'); hold on;
-plot(x, y, 'ko', 'MarkerSize', 8, 'MarkerFaceColor', 'k'); % data
+hold on; 
+plot_data(x, y, xstar, fstar, gstar );
+legend({'EGP std (f*)', 'EGP mean(f*)', 'f*', 'y*', 'ytrain'});
 
 end
 
@@ -96,15 +95,17 @@ ystar(idx,:) = [];
 gstar(idx,:) = [];
 fstar(idx,:) = [];
 
-[v, idx] = sort(xstar);
-plot(v, fstar(idx), 'b', 'LineWidth',2); hold on;
-plot(v, gstar, 'g--','LineWidth',2); hold on;
-plot(x, y, 'ro'); hold on;
 
-legend({'fstar', 'gstar', 'ytrain' });
-set(gca, 'FontSize', 14);
 end
 
+%%
+function plot_data(x, y, xstar, fstar, gstar )
+[v, idx] = sort(xstar);
+plot(v, fstar(idx), 'r', 'LineWidth',2); hold on;
+plot(v, gstar, 'g','LineWidth',2); hold on;
+plot(x, y, 'ko', 'MarkerSize', 8, 'MarkerFaceColor', 'k'); % data
+set(gca, 'FontSize', 14);
+end
 
 
 
