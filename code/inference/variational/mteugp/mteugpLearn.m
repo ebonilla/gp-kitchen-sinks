@@ -2,7 +2,7 @@ function  model  = mteugpLearn( model, optconf )
 %MTEUGPLEARN Summary of this function goes here
 %   Detailed explanation goes here
 
-model.Phi   = feval(model.featFunc, model.X, model.featParam{:}); 
+model.Phi   = feval(model.featFunc, model.X, model.featParam); 
 model.D     = size(model.Phi,2); % actual number of features
 Q = model.Q;
 D = model.D;
@@ -14,6 +14,9 @@ for q = 1 : Q
     model.C(:,:,q) = updateCovariance(model,q);
 end
 
+% test gradients
+testGradientsFeat(model);
+pause;
 
 for i = 1 : optconf.globalIter
     % optimization of means
@@ -33,6 +36,17 @@ end
 
 
 end
+
+
+% function testGradients
+ function testGradientsFeat(model)
+% test gradients wrt feat parameters
+fobj = @(xx) mteugNelboFeat(xx, model);
+for i = 1 : 10
+    theta = rand(size(model.featParam));
+    [delta, g, g2] = derivativeCheck(fobj, theta, 1, 2);
+end
+ end
 
 
 

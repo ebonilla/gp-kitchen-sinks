@@ -25,7 +25,7 @@ fwdFunc = @(ff) ff.^3;
 Z       = randn(D,d);
 featFunc  =  @(xx, ss) getRandomRBF(xx, Z, ss); % function of (x, vargargin)
 sigma_z   = getOptimalSigmaz(ell); % initialization of parameters 
-featParam = {sigma_z}; % a cell with featFunc optimizable (initial) parameters
+featParam = sigma_z; % a cell with featFunc optimizable (initial) parameters
 
 
 
@@ -50,6 +50,8 @@ optconf.globalIter = 1;    % maximum global iterations
 optconf.tol        = 1e-5; % tolerance for Newton iterations
 optconf.alpha      = 0.5;  % learning rate for Newton iterations
 
+
+
 %% Learns EGP model
 model         = mteugpLearn( model, optconf );
  
@@ -70,6 +72,9 @@ end
 
 
 
+
+ 
+ 
 %  function getData()
 function [x, y, xstar, fstar, gstar, ystar] =  getData(N, d, covfunc, hyp, fwdFunc, sigma2y)
 MIN_NOISE = 1e-7;
