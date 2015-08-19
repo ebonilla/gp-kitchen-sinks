@@ -2,6 +2,8 @@ function  model  = mteugpLearn( model, optconf )
 %MTEUGPLEARN Summary of this function goes here
 %   Detailed explanation goes here
 
+model.Phi   = feval(model.featFunc, model.X, model.featParam{:}); 
+model.D     = size(model.Phi,2); % actual number of features
 Q = model.Q;
 D = model.D;
 

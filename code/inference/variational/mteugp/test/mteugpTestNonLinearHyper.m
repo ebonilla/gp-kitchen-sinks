@@ -1,5 +1,6 @@
-function model = mteugpTestNonLinear()
-% 1D, Nonlinear
+function model = mteugpTestNonLinearHyper()
+% 1D, Nonlinear, hyperpatameter learning
+
 clc; close all;
 
 rng(10101,'twister');
@@ -17,26 +18,30 @@ sigma2w = 1;
 fwdFunc = @(ff) ff.^3;
 
 %% Generates data
-[x, y, xstar, fstar, gstar, ystar] =   getData(N, d, covfunc, hyp, fwdFunc, sigma2y);
+[X, Y, xstar, fstar, gstar, ystar] =   getData(N, d, covfunc, hyp, fwdFunc, sigma2y);
 
 
-
-
-%% Generates random Features 
+%% feature function parameters and initialization
 Z       = randn(D,d);
-sigma_z = getOptimalSigmaz(ell);
-Phi     = getRandomRBF(Z, sigma_z, x);
-D       = size(Phi,2); % ACtual number of features
+featFunc  =  @(xx, ss) getRandomRBF(xx, Z, ss); % function of (x, vargargin)
+sigma_z   = getOptimalSigmaz(ell); % initialization of parameters 
+featParam = {sigma_z}; % a cell with featFunc optimizable (initial) parameters
+
+
 
 %% set up model
 model.Q            = 1; % latent functions
-model.P            = size(y,2); % Outputs
-model.N            = N; 
+model.P            = size(Y,2); % Outputs
+model.N            = N;
 model.D            = D;
 model.sigma2y      = sigma2y*ones(model.P,1); % vector of noise variances
 model.sigma2w      = sigma2w*ones(D,1); % vector of prior variances
-model.Y            = y;
-model.Phi          = Phi;
+model.Y            = Y;
+model.X            = X;
+
+model.featFunc     = featFunc;  % feature function
+model.featParam    = featParam; % Parameters of feature function
+
 model.linearMethod = 'Taylor';
 model.fwdFunc      = fwdFunc;
 model.nSamples     = 1000; % Number of samples for approximating predictive dist.
@@ -50,14 +55,13 @@ model         = mteugpLearn( model, optconf );
  
 
 %% Evaluate predictive distribution over fstar, and also gstar predictions
-PhiStar           = getRandomRBF(Z, sigma_z, xstar);
-[mFpred, vFpred]  =  mteugpGetPredictive( model, PhiStar );
+[mFpred, vFpred]  =  mteugpGetPredictive( model, xstar );
 gpred             = mteugpPredict( model, mFpred, vFpred ); % 
 plot_confidence_interval(xstar, mFpred, sqrt(vFpred), [], 1, 'b', [0.7 0.9 0.95]); 
 hold on; 
 plot(xstar, gpred, 'k--', 'LineWidth', 2); hold on;  
 %
-plot_data(x, y, xstar, fstar, gstar); hold on;
+plot_data(X, Y, xstar, fstar, gstar); hold on;
 legend({'EGP std (f*)', 'EGP mean(f*)', 'EGP mean(g*)', 'ftrue', 'gtrue', ...
     'ytrain'}, 'Location', 'SouthEast');
 
