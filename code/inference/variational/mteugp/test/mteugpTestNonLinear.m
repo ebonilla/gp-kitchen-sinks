@@ -39,23 +39,27 @@ model.Y            = y;
 model.Phi          = Phi;
 model.linearMethod = 'Taylor';
 model.fwdFunc      = fwdFunc;
-optconf.varIter    = 100; % maximum iterations on variational parameters
-optconf.globalIter = 1;  % maximum global iterations
-optconf.tol        = 1e-5;
-optconf.alpha      = 0.5; 
+model.nSamples     = 1000;
+optconf.varIter    = 100;  % maximum iterations on variational parameters
+optconf.globalIter = 1;    % maximum global iterations
+optconf.tol        = 1e-5; % tolerance for Newton iterations
+optconf.alpha      = 0.5;  % learning rate for Newton iterations
 
 %% Learns EGP model
 model         = mteugpLearn( model, optconf );
 
 
-%% Evaluate predictive distribution over fstar
+%% Evaluate predictive distribution over fstar, and also gstar predictions
 PhiStar         = getRandomRBF(Z, sigma_z, xstar);
-[ mPred, CovPred ] = mteugpGetPosteriorF( model, 1, PhiStar );
-vPred = diag(CovPred);
+[mPred, vPred]  =  mteugpGetPredictive( model, PhiStar );
+gstar            = mteugpPredict( model, mPred, vPred ); % 
 plot_confidence_interval(xstar,mPred,sqrt(vPred), [], 1, 'b', [0.7 0.9 0.95]); 
 hold on; 
-plot_data(x, y, xstar, fstar, gstar);
-legend({'EGP std (f*)', 'EGP mean(f*)', 'f*', 'g*', 'ytrain'});
+plot(xstar, gstar, 'k--', 'LineWidth', 2); hold on;  
+plot_data(x, y, xstar, fstar, gstar); hold on;
+legend({'EGP std (f*)', 'EGP mean(f*)', 'EGP mean(g*)', 'ftrue', 'gtrue', ...
+    'ytrain'}, 'Location', 'SouthEast');
+
 
 end
 
