@@ -34,7 +34,7 @@ for n = 1 : N
     An       = squeeze(model.A(n,:,:));
     phin     = model.Phi(n,:)';
     bn       = model.B(n,:)';
-    qTerm    = (yn - An*M*phin - bn)'*Sigmainv*(yn - An*M*phin - bn); % TODO: Improve efficiency
+    quadTerm    = (yn - An*M*phin - bn)'*Sigmainv*(yn - An*M*phin - bn); % TODO: Improve efficiency
     
     trTerm = 0;
     for q = 1 : model.Q
@@ -42,9 +42,9 @@ for n = 1 : N
         anq = An(:,q)';
         trTerm = trTerm + trace(phin*anq'*Sigmainv*anq*phin'*Cq); % TODO: improve efficiency 
     end
-    ell  = qTerm + trTerm;
+    ell  = ell + quadTerm + trTerm;
 end
-    ell = -0.5*( ell - N*(P*log(2*pi) + sum(log(sigma2y))) ) ;
+ell = -0.5*( ell - N*(P*log(2*pi) + sum(log(sigma2y))) ) ;
 
 end
 

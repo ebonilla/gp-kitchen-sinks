@@ -10,9 +10,11 @@ if (nargout == 2) % Gradients are required
     GradPhi =  (1/sqrt(D))*[-sin(sigma_z*W).*W, cos(sigma_z*W).*W]; 
 end
 
-return;
+end
 
 
+
+%% old version
 function PHI = getRandomRBF_old(x, Z, sigma_z)
 D = size(Z,1); % dimensionality of new fatures (# bases)
 Z = sigma_z*Z;
@@ -22,4 +24,4 @@ Z = sigma_z*Z;
 PHI     = (1/sqrt(D))*[cos(2*pi*x*Z'), sin(2*pi*x*Z')]; % 
 %PHI     = (1/sqrt(D))*[cos(x*Z'), sin(x*Z')]; 
 
-return;
+end

@@ -9,6 +9,7 @@ rng(10101,'twister');
 N       = 50;
 d       = 1; % original dimensionality of input space
 D       = 100; % dimensionality of output space
+%N = 1; d = 1; D = 2;
 covfunc = 'covSEiso';
 ell     = 1/2; 
 sf      = 1; 

@@ -34,7 +34,7 @@ elbo = ell - kl;
 nelbo = - elbo;
 grad  = - grad;
 end
-
+ 
 
 %%
 function [ell, grad] = getELL(model, GradPhi)
@@ -45,13 +45,13 @@ Sigmainv    = diag(1./(sigma2y));
 M           = model.M';
 P           = model.P;
 [N, D, L]   = size(GradPhi);
-grad     = zeros(L,1);
+grad        = zeros(L,1);
 for n = 1 : N 
     yn       = model.Y(n,:)';
     An       = squeeze(model.A(n,:,:));
     phin     = model.Phi(n,:)';
     bn       = model.B(n,:)';
-    qTerm    = (yn - An*M*phin - bn)'*Sigmainv*(yn - An*M*phin - bn); % TODO: Improve efficiency
+    quadTerm    = (yn - An*M*phin - bn)'*Sigmainv*(yn - An*M*phin - bn); % TODO: Improve efficiency
     gPhin    = squeeze(GradPhi(n,:,:));  % grad_theta(phin)
     
     % TODO: Should not do if here but Matlab is incosistent with dimensions
@@ -59,17 +59,16 @@ for n = 1 : N
     if (L==1) 
         gPhin = gPhin'; 
     end
-     grad = grad -  2*gPhin'*M'*An'*Sigmainv*(yn - An*M*phin - bn); % grad quad term
+    grad = grad -  2*gPhin'*M'*An'*Sigmainv*(yn - An*M*phin - bn); % grad quad term
 
     trTerm = 0;
     for q = 1 : model.Q
         Cq = model.C(:,:,q);
         anq = An(:,q)';
         trTerm = trTerm + trace(phin*anq'*Sigmainv*anq*phin'*Cq); % TODO: improve efficiency 
-    
         grad = grad + 2*gPhin'*Cq*phin*anq'*Sigmainv*anq;% grad of trace term
     end
-    ell  = qTerm + trTerm;
+    ell  = ell + quadTerm + trTerm;
     
 end
     ell  = - 0.5*( ell - N*(P*log(2*pi) + sum(log(sigma2y))) ) ;

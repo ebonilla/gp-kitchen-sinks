@@ -38,15 +38,15 @@ end
 end
 
 
-% function testGradients
+%% function testGradients
  function testGradientsFeat(model)
 % test gradients wrt feat parameters
-fobj = @(xx) mteugNelboFeat(xx, model);
+% fobj = @(xx) mteugNelboFeat(xx, model);
 for i = 1 : 10
     theta = rand(size(model.featParam));
-    [delta, g, g2] = derivativeCheck(fobj, theta, 1, 2);
+    [delta, g, g2] = derivativeCheck(@mteugNelboFeat, theta, 1, 2, model);
 end
- end
+end
 
 
 
