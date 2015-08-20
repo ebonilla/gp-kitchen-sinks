@@ -9,7 +9,6 @@ rng(10101,'twister');
 N       = 50;
 d       = 1; % original dimensionality of input space
 D       = 100; % dimensionality of output space
-%N = 1; d = 1; D = 2;
 covfunc = 'covSEiso';
 ell     = 1/2; 
 sf      = 1; 
@@ -24,10 +23,10 @@ fwdFunc = @(ff) ff.^3;
 
 %% feature function parameters and initialization
 Z       = randn(D,d);
-featFunc  =  @(xx, ss) getRandomRBF(xx, Z, ss); % function of (x, vargargin)
-sigma_z   = getOptimalSigmaz(ell); % initialization of parameters 
-featParam = sigma_z; % a cell with featFunc optimizable (initial) parameters
-
+featFunc     =  @(xx, ss) getRandomRBF(xx, Z, ss); % function of (x, vargargin)
+sigma_z      = getOptimalSigmaz(ell); % initialization of parameters 
+featParam    = sigma_z; % a cell with featFunc optimizable (initial) parameters
+initFeatFunc = @initRandomRBF;
 
 
 %% set up model
@@ -41,13 +40,15 @@ model.Y            = Y;
 model.X            = X;
 
 model.featFunc     = featFunc;  % feature function
-model.featParam    = featParam; % Parameters of feature function
+model.initFeatFunc = initFeatFunc; % initializes Parameters of feature function
 
 model.linearMethod = 'Taylor';
 model.fwdFunc      = fwdFunc;
 model.nSamples     = 1000; % Number of samples for approximating predictive dist.
 optconf.varIter    = 100;  % maximum iterations on variational parameters
 optconf.globalIter = 1;    % maximum global iterations
+optconf.featIter   = 100;  % maximum iterations for feature parametes (minfunc parameter)
+optconf.featEval   = 100;  % Maxium evals for feature paramters func (minFunc parameter)
 optconf.tol        = 1e-5; % tolerance for Newton iterations
 optconf.alpha      = 0.5;  % learning rate for Newton iterations
 

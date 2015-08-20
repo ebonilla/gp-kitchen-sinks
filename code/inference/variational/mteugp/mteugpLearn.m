@@ -2,6 +2,9 @@ function  model  = mteugpLearn( model, optconf )
 %MTEUGPLEARN Summary of this function goes here
 %   Detailed explanation goes here
 
+%% initializes feature parameters
+model.featParam = feval(model.initFeatFunc);
+
 model.Phi   = feval(model.featFunc, model.X, model.featParam); 
 model.D     = size(model.Phi,2); % actual number of features
 Q = model.Q;
@@ -14,25 +17,40 @@ for q = 1 : Q
     model.C(:,:,q) = updateCovariance(model,q);
 end
 
+
+
 % test gradients
-testGradientsFeat(model);
-pause;
+% testGradientsFeat(model);
+% pause;
+
+% Structure for minFunc 
+optFeat = struct('Display', 'final', 'Method', 'lbfgs', 'MaxIter', optconf.featIter,...
+    'MaxFunEvals', optconf.featEval, 'DerivativeCheck','off'); 
 
 for i = 1 : optconf.globalIter
     % optimization of means
     for q = 1 : Q
-     model.M(:,q)  = optimizeSingleM(model, q, optconf);  
+        model  = optimizeSingleM(model, q, optconf);  
     end
-        
+   
+   % update covariances using optimal mean
+    for q = 1 : Q
+        model.C(:,:,q) = updateCovariance(model,q);
+    end
+    fprintf('Nelbo after updating covariances = %.2f\n', mteugpNelbo( model ) );
+   
+    % optimization of feature parameters
+    theta             = model.featParam;
+    [model.featParam, nelboFeat, exitFlag]  = minFunc(@mteugNelboFeat, theta, optFeat, model); 
+    fprintf('Nelbo after updating feat param. = %.2f\n', mteugpNelbo( model ) );
+
+   
    % optimization of linear parameters
    % [model.A, model.B] = mteugpUpdateLinearization(model);
 
 end
 
-% optimization of covariances
-for q = 1 : Q
-     model.C(:,:,q) = updateCovariance(model,q);
-end
+
 
 
 end
@@ -41,6 +59,7 @@ end
 %% function testGradients
  function testGradientsFeat(model)
 % test gradients wrt feat parameters
+% Do not use anonymys function here as model is modified inside functions
 % fobj = @(xx) mteugNelboFeat(xx, model);
 for i = 1 : 10
     theta = rand(size(model.featParam));
@@ -51,7 +70,8 @@ end
 
 
 %% Optimizes for a single q
-function mq = optimizeSingleM(model, q, optconf)
+% it updates M and the linearization parameters A, B
+function model = optimizeSingleM(model, q, optconf)
 % optconf: Optimization configuration
 % optconf.maxiter
 % optconf.tol
@@ -69,7 +89,7 @@ nelbo    = - NaN*ones(optconf.varIter,1);
 nelbo(i) = mteugpNelbo( model );
 fprintf('Nelbo(%d) = %.2f \n', i, nelbo(i));    
 tol = inf;
-while ( (i <= optconf.varIter) && (tol > optconf.tol) )
+while ( (i <= optconf.varIter) && (tol > optconf.tol) )    
     grad_mq = getGradMq(model, mq, sigma2w, Sigmainv, N, q);
     H      =  getHessMq(model, mq, sigma2w, Sigmainv, N, q); % does not really depend on mq
     L      = chol(H, 'lower');
@@ -88,7 +108,7 @@ while ( (i <= optconf.varIter) && (tol > optconf.tol) )
     % Updates linerization
     [model.A, model.B] = mteugpUpdateLinearization(model);
 end
-
+ 
 end
 
 
