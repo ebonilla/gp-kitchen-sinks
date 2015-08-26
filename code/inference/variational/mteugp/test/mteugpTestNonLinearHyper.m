@@ -47,8 +47,8 @@ model.fwdFunc      = fwdFunc;
 model.nSamples     = 1000; % Number of samples for approximating predictive dist.
 optconf.varIter    = 100;  % maximum iterations on variational parameters
 optconf.globalIter = 1;    % maximum global iterations
-optconf.featIter   = 100;  % maximum iterations for feature parametes (minfunc parameter)
-optconf.featEval   = 100;  % Maxium evals for feature paramters func (minFunc parameter)
+optconf.featIter   = 500;  % maximum iterations for feature parametes (minfunc parameter)
+optconf.featEval   = 1000;  % Maxium evals for feature paramters func (minFunc parameter)
 optconf.tol        = 1e-5; % tolerance for Newton iterations
 optconf.alpha      = 0.5;  % learning rate for Newton iterations
 

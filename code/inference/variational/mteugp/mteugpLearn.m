@@ -2,67 +2,103 @@ function  model  = mteugpLearn( model, optconf )
 %MTEUGPLEARN Summary of this function goes here
 %   Detailed explanation goes here
 
-%% initializes feature parameters
-model.featParam = feval(model.initFeatFunc);
 
-model.Phi   = feval(model.featFunc, model.X, model.featParam); 
-model.D     = size(model.Phi,2); % actual number of features
-Q = model.Q;
-D = model.D;
 
-%% Initializing model
-model.M            = randn(D,Q);
-[model.A, model.B] = mteugpUpdateLinearization(model); % lineariz. parameters
-for q = 1 : Q
-    model.C(:,:,q) = updateCovariance(model,q);
+model = initEUGP(model); 
+for i = 1 : optconf.globalIter
+    
+    model = optimizeMeans(model, optconf);
+    model = optimizeCovariances(model);
+    model = optimizeFeatures(model, optconf); 
+
+    %testGradientsFeat(model);
+
 end
 
 
 
-% test gradients
-% testGradientsFeat(model);
-% pause;
+
+
+end
+
+
+%%  model = initEUGP(model)
+function model = initEUGP(model)
+% Initializing model
+model.featParam = feval(model.initFeatFunc);
+model.Phi       = feval(model.featFunc, model.X, model.featParam); 
+model.D         = size(model.Phi,2); % actual number of features
+
+model.M            = randn(model.D,model.Q);
+[model.A, model.B] = mteugpUpdateLinearization(model); % lineariz. parameters
+for q = 1 : model.Q
+    model.C(:,:,q) = updateCovariance(model,q);
+end
+fprintf('Initial Nelbo = %.2f\n', mteugpNelbo( model ) );
+end
+
+
+%% optimizeFeatures
+function model = optimizeFeatures(model, optconf)
 
 % Structure for minFunc 
-optFeat = struct('Display', 'final', 'Method', 'lbfgs', 'MaxIter', optconf.featIter,...
-    'MaxFunEvals', optconf.featEval, 'DerivativeCheck','off'); 
+% numDiff = 0: use user gradients, 1: fwd-diff, 2: centra-diff
+optFeat = struct('Display', 'full', 'Method', 'lbfgs', 'MaxIter', optconf.featIter,...
+    'MaxFunEvals', optconf.featEval, 'DerivativeCheck','off', 'numDiff', 2); 
 
-for i = 1 : optconf.globalIter
-    % optimization of means
-    for q = 1 : Q
-        model  = optimizeSingleM(model, q, optconf);  
-    end
-   
+% optimization of feature parameters
+theta             = model.featParam;
+
+% Using minFunc
+% [model.featParam, nelboFeat, exitFlag]  = minFunc(@mteugNelboFeat, theta, optFeat, model); 
+    
+% Unsing minimize
+%model.featParam = minimize(theta, @mteugNelboFeat, optconf.featEval, model);
+    
+% Using nlopt
+opt.verbose       = 1;
+%opt.algorithm     = NLOPT_LD_LBFGS;
+opt.algorithm      = NLOPT_LN_BOBYQA;
+opt.min_objective = @(xx) mteugNelboFeat(xx, model);
+[model.featParam, fminval, retcode] = nlopt_optimize(opt, theta);
+    
+% update features
+model.Phi = feval(model.featFunc, model.X, model.featParam); 
+    
+fprintf('Nelbo after updating feat param. = %.2f\n', mteugpNelbo( model ) );
+
+end
+
+%% optimizeCovariances()
+function model = optimizeCovariances(model)
    % update covariances using optimal mean
-    for q = 1 : Q
+    for q = 1 : model.Q
         model.C(:,:,q) = updateCovariance(model,q);
     end
     fprintf('Nelbo after updating covariances = %.2f\n', mteugpNelbo( model ) );
-   
-    % optimization of feature parameters
-    theta             = model.featParam;
-    [model.featParam, nelboFeat, exitFlag]  = minFunc(@mteugNelboFeat, theta, optFeat, model); 
-    fprintf('Nelbo after updating feat param. = %.2f\n', mteugpNelbo( model ) );
-
-   
-   % optimization of linear parameters
-   % [model.A, model.B] = mteugpUpdateLinearization(model);
-
 end
 
 
+%% optimizeMeans()
+function model = optimizeMeans(model, optconf)
+% Optmize means and linearization parameters
 
-
+    % optimization of means
+    for q = 1 : model.Q
+        model  = optimizeSingleM(model, q, optconf);  
+    end
 end
 
-
+    
 %% function testGradients
  function testGradientsFeat(model)
 % test gradients wrt feat parameters
 % Do not use anonymys function here as model is modified inside functions
 % fobj = @(xx) mteugNelboFeat(xx, model);
+theta = model.featParam;
+[delta, g, g2] = derivativeCheck(@mteugNelboFeat, theta, 1, 2, model);
 for i = 1 : 10
-    theta = rand(size(model.featParam));
+    theta = log(rand(size(model.featParam)));
     [delta, g, g2] = derivativeCheck(@mteugNelboFeat, theta, 1, 2, model);
 end
 end

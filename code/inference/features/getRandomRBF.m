@@ -1,5 +1,8 @@
 function [Phi, GradPhi] = getRandomRBF(x, Z, theta)
-sigma_z = theta;
+
+% sigma_z = exp(theta) --> theta = log(sigma_z)
+sigma_z = exp(theta);
+
 
 D = size(Z,1); % dimensionality of new fatures (# bases)
 
@@ -8,6 +11,9 @@ Phi   = (1/sqrt(D))*[cos(sigma_z*W), sin(sigma_z*W)]; %
 
 if (nargout == 2) % Gradients are required
     GradPhi =  (1/sqrt(D))*[-sin(sigma_z*W).*W, cos(sigma_z*W).*W]; 
+    
+    % sigma_z = exp(theta) 
+    GradPhi = GradPhi*sigma_z;
 end
 
 end
