@@ -4,7 +4,6 @@ function [ model ] = mteugpOptimizeCovariances( model )
 for q = 1 : model.Q
         model.C(:,:,q) = updateCovariance(model,q);
 end
-    fprintf('Nelbo after updating covariances = %.2f\n', mteugpNelbo( model ) );
 
 end
 

@@ -5,7 +5,7 @@ function [ model ] = mteugpOptimizeMeans( model )
 
 % optimization of means
 for q = 1 : model.Q
-        model  = optimizeSingleM(model, q, model.optConf);  
+        model  = optimizeSingleM(model, q, model.varConf);  
 end
 
 end
@@ -26,11 +26,11 @@ sigma2w  = model.sigma2w(q);
 
 %% Newton iterations
 i = 1;
-nelbo    = - NaN*ones(optconf.varIter,1);
+nelbo    = - NaN*ones(optconf.iter,1);
 nelbo(i) = mteugpNelbo( model );
-fprintf('Nelbo(%d) = %.2f \n', i, nelbo(i));    
+%fprintf('Nelbo(%d) = %.2f \n', i, nelbo(i));    
 tol = inf;
-while ( (i <= optconf.varIter) && (tol > optconf.tol) )    
+while ( (i <= optconf.iter) && (tol > optconf.tol) )    
     grad_mq = getGradMq(model, mq, sigma2w, Sigmainv, N, q);
     H      =  mteugpGetHessMq(model, mq, sigma2w, Sigmainv, N, q); % does not really depend on mq
     L      = chol(H, 'lower');
@@ -43,13 +43,14 @@ while ( (i <= optconf.varIter) && (tol > optconf.tol) )
     
     i = i + 1;
     nelbo(i)     = mteugpNelbo( model );
-    fprintf('Nelbo(%d) = %.2f \n', i, nelbo(i));    
+    % fprintf('Nelbo(%d) = %.2f \n', i, nelbo(i));    
     tol = abs(nelbo(i) - nelbo(i-1));
     
     % Updates linerization
     [model.A, model.B] = mteugpUpdateLinearization(model);
 end
  
+
 end
 
 
