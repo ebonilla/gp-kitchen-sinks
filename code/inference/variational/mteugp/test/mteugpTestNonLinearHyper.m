@@ -45,14 +45,28 @@ model.initFeatFunc = initFeatFunc; % initializes Parameters of feature function
 model.linearMethod = 'Taylor';
 model.fwdFunc      = fwdFunc;
 model.nSamples     = 1000; % Number of samples for approximating predictive dist.
-optConf.varIter    = 100;  % maximum iterations on variational parameters
-optConf.globalIter = 1;    % maximum global iterations
-optConf.featIter   = 500;  % maximum iterations for feature parametes (minfunc parameter)
-optConf.featEval   = 1000;  % Maxium evals for feature paramters func (minFunc parameter)
-optConf.tol        = 1e-5; % tolerance for Newton iterations
-optConf.alpha      = 0.5;  % learning rate for Newton iterations
-optConf.optimizer  = 'nlopt'; % for hyper-parameters
-model.optConf      = optConf; % optimization settings
+
+% global optimization configuration
+optConf.iter = 10;    % maximum global iterations
+optConf.tol  = 1e-3;
+model.globalConf = optConf;
+
+% variational parameter optimization configuration
+optConf.iter    = 100;  % maximum iterations on variational parameters
+optConf.tol     = 1e-3; % tolerance for Newton iterations
+optConf.alpha   = 0.5;  % learning rate for Newton iterations
+model.varConf   = optConf;
+
+% feature optimization configuration
+optConf.iter      = 500;  % maximum iterations for feature parametes (minfunc parameter)
+optConf.eval      = 100;  % Maxium evals for feature paramters func (minFunc parameter)
+optConf.optimizer = 'nlopt'; % for hyper-parameters
+optConf.tol       = 1e-3; % Tolerance for feature optimization 
+optConf.verbose   = 0; % 0: none, 1: full
+model.featConf    = optConf;
+
+
+ 
 
 
 %% Learns EGP model
