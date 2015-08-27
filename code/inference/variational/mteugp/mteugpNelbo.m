@@ -2,16 +2,11 @@ function nelbo  = mteugpNelbo( model )
 %MTEUGPNELBO Summary of this function goes here
 %   Detailed explanation goes here
 
-Q = model.Q;
-P = model.P;
 
-%% KL part
-kl = 0;
-for q = 1 : Q
-    kl = kl + getSingleKL(model, q);
-end
+%% KL term
+kl  = mteugpGetKL( model );
 
-%% ELL Part
+%% ELL term
 ell = getELL(model);
 
 elbo = ell - kl;
@@ -45,22 +40,6 @@ for n = 1 : N
     ell  = ell + quadTerm + trTerm;
 end
 ell = -0.5*( ell - N*(P*log(2*pi) + sum(log(sigma2y))) ) ;
-
-end
-
-%%  function kl = getSingleKL(model, q)
-function kl = getSingleKL(model, q)
-D = model.D; % dimensionality of new features (bases)
-C      = model.C(:,:,q); % posterior covariance
-m      = model.M(:,q); % posterior mean
-cholC  = chol(C, 'lower');
-sigma2w = model.sigma2w(q);
-kl     = (1/sigma2w)*trace(C) ...
-             + (1/sigma2w)*(m'*m) ... 
-             - getLogDetChol(cholC) ...
-             + D*log(sigma2w) ...
-             -D;
-kl     = 0.5*kl;         
 
 end
 

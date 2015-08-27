@@ -1,11 +1,11 @@
-function [ model ] = mteugpOptimizeMeans( model, optconf )
+function [ model ] = mteugpOptimizeMeans( model )
 %MTEUPOPTIMIZEMEANS Summary of this function goes here
 %   Detailed explanation goes here
 % Optmize means and linearization parameters
 
-    % optimization of means
+% optimization of means
 for q = 1 : model.Q
-        model  = optimizeSingleM(model, q, optconf);  
+        model  = optimizeSingleM(model, q, model.optConf);  
 end
 
 end
