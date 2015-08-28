@@ -33,7 +33,7 @@ tol = inf;
 while ( (i <= optconf.iter) && (tol > optconf.tol) )    
     grad_mq = getGradMq(model, mq, sigma2w, Sigmainv, N, q);
     H      =  mteugpGetHessMq(model, mq, sigma2w, Sigmainv, N, q); % does not really depend on mq
-    L      = chol(H, 'lower');
+    L      = getCholSafe(H);
     dmq    = solve_chol(L',grad_mq);
     mq     = mq  - optconf.alpha*dmq;
 

@@ -17,6 +17,6 @@ sigma2w  = model.sigma2w(q);
 mq       = model.M(:,q);
 
 H    = mteugpGetHessMq(model, mq, sigma2w, Sigmainv, N, q);
-L    = chol(H, 'lower');
+L    = getCholSafe(H);
 Cq   = getInverseChol(L);
 end

@@ -25,7 +25,7 @@ fwdFunc = @(ff) ff.^3;
 Z       = randn(D,d);
 featFunc     =  @(xx, ss) getRandomRBF(xx, Z, ss); % function of (x, vargargin)
 sigma_z      = getOptimalSigmaz(ell); % initialization of parameters 
-featParam    = sigma_z; % a cell with featFunc optimizable (initial) parameters
+% featParam    = sigma_z; % a cell with featFunc optimizable (initial) parameters
 initFeatFunc = @initRandomRBF;
 
 
@@ -34,8 +34,8 @@ model.Q            = 1; % latent functions
 model.P            = size(Y,2); % Outputs
 model.N            = N;
 model.D            = D;
-model.sigma2y      = sigma2y*ones(model.P,1); % vector of noise variances
-model.sigma2w      = sigma2w*ones(D,1); % vector of prior variances
+%model.sigma2y      = sigma2y*ones(model.P,1); % vector of noise variances
+%model.sigma2w      = sigma2w*ones(D,1); % vector of prior variances
 model.Y            = Y;
 model.X            = X;
 
@@ -47,8 +47,8 @@ model.fwdFunc      = fwdFunc;
 model.nSamples     = 1000; % Number of samples for approximating predictive dist.
 
 % global optimization configuration
-optConf.iter = 10;    % maximum global iterations
-optConf.tol  = 1e-3;
+optConf.iter     = 10;    % maximum global iterations
+optConf.tol      = 1e-3;
 model.globalConf = optConf;
 
 % variational parameter optimization configuration
@@ -66,12 +66,13 @@ optConf.verbose   = 0; % 0: none, 1: full
 model.featConf    = optConf;
 
 
- 
-
 
 %% Learns EGP model
 model         = mteugpLearn( model );
- 
+
+fprintf('Learned Feature Parameter = %.4f\n', exp(model.featParam));
+fprintf('True (optimal) Feature Parameter = %.4f\n', sigma_z);
+
 
 %% Evaluate predictive distribution over fstar, and also gstar predictions
 [mFpred, vFpred]  =  mteugpGetPredictive( model, xstar );

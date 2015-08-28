@@ -18,7 +18,8 @@ while (( i < optConf.iter) && (tol > optConf.tol) )
     model.Nelbo(i+1) =  mteugpNelbo( model );
     showProgress(i+1, model.Nelbo(i+1));
 
-    model = mteugpOptimizeFeatures(model);    
+    %model = mteugpOptimizeFeatures(model);    
+    model  = mteugpOptimizeHyper(model);
 
     tol = abs(model.Nelbo(i+1) - model.Nelbo(i));
 end

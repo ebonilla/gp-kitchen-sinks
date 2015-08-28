@@ -1,5 +1,11 @@
 function [Phi, GradPhi] = getRandomRBF(x, Z, theta)
 
+% if (nargin == 0) % return number of parameters
+%     Phi = 1;
+%     return;
+% end
+
+
 % sigma_z = exp(theta) --> theta = log(sigma_z)
 sigma_z = exp(theta);
 
