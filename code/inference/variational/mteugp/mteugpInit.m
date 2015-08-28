@@ -9,10 +9,14 @@ model.Phi       = feval(model.featFunc, model.X, model.featParam);
 model.D         = size(model.Phi,2); % actual number of features
 
 % likelihood variances
-model.sigma2y = var(model.Y, 0, 1)';
+%model.sigma2y = var(model.Y, 0, 1)';
+% DELETE ME
+model.sigma2y = 1e-3*ones(model.P,1);
+
 
 % hyper-parameters (of prior on w)
 model.sigma2w = ones(model.D,1); 
+
 
 
 % means, lineariz. and covariances

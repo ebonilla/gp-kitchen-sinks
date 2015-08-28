@@ -1,4 +1,4 @@
-function theta  = mteugpOptimizeHyper(model )
+function model  = mteugpOptimizeHyper(model )
 %MTEUGPOPTIMIZE Summary of this function goes here
 %   wrapper for differenr optimization algorithms for hyperparameters
 % theta = [featureParam; likelihoodParam; PriorParam]
@@ -24,7 +24,7 @@ switch optConf.optimizer
         [theta, nelboFeat, exitFlag]  = minFunc(@mteugpNelboHyper, theta, optFeat, model); 
     
     case 'minimize',
-        model.featParam = minimize(theta, @mteugpNelboHyper, optConf.eval, model);
+        theta = minimize(theta, @mteugpNelboHyper, optConf.eval, model);
     
     case 'nlopt', % Using nlopt
         opt.verbose        = optConf.verbose;
@@ -35,9 +35,12 @@ switch optConf.optimizer
         opt.maxeval        = optConf.eval;
         opt.ftol_abs       = optConf.tol;
         
-        [model.featParam, fminval, retcode] = nlopt_optimize(opt, theta);
+        [theta, fminval, retcode] = nlopt_optimize(opt, theta);
     
 end
+
+ model  = mteugpUpdateHyper( model, theta );
+
 
 end
 

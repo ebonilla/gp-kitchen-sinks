@@ -62,7 +62,7 @@ optConf.iter      = 500;  % maximum iterations for feature parametes (minfunc pa
 optConf.eval      = 100;  % Maxium evals for feature paramters func (minFunc parameter)
 optConf.optimizer = 'nlopt'; % for hyper-parameters
 optConf.tol       = 1e-3; % Tolerance for feature optimization 
-optConf.verbose   = 0; % 0: none, 1: full
+optConf.verbose   = 1; % 0: none, 1: full
 model.featConf    = optConf;
 
 
