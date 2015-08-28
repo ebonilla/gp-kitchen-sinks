@@ -39,7 +39,7 @@ for n = 1 : N
     end
     ell  = ell + quadTerm + trTerm;
 end
-ell = -0.5*( ell - N*(P*log(2*pi) + sum(log(sigma2y))) ) ;
+ell = -0.5*( ell + N*(P*log(2*pi) + sum(log(sigma2y))) ) ;
 
 end
 
