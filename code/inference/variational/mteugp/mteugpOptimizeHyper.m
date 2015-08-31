@@ -2,16 +2,9 @@ function model  = mteugpOptimizeHyper(model )
 %MTEUGPOPTIMIZE Summary of this function goes here
 %   wrapper for differenr optimization algorithms for hyperparameters
 % theta = [featureParam; likelihoodParam; PriorParam]
-%       = [featureParam; sigma2y; sigma2w]
+%       = [featureParam; theta_y; theta_w]
 %
-% featureParam: used directly by model.featFunc
-% sigma2y = exp(theta_y): P-dimensional vector
-% Although  sigma2w is a D-dimensional here we consider an isotropic 
-% parameterization sigma2w = exp(theta_w)*ones(D,1)
-
-theta = model.featParam; % feture Parameters are taken care of by feature function
-theta = [theta; log(model.sigma2y)];     
-theta = [theta; model.sigma2w(1)]; % ISOTROPIC PRIOR ASSUMPTION IN OPTIMIZATION!
+theta  = mteugpWrapHyper(model);
 
 optConf = model.featConf;
 switch optConf.optimizer
@@ -39,7 +32,7 @@ switch optConf.optimizer
     
 end
 
- model  = mteugpUpdateHyper( model, theta );
+ model  = mteugpUnwrapHyper( model, theta );
 
 
 end

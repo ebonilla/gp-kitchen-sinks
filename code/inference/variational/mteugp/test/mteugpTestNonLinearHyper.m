@@ -59,7 +59,7 @@ model.varConf   = optConf;
 
 % feature optimization configuration
 optConf.iter      = 500;  % maximum iterations for feature parametes (minfunc parameter)
-optConf.eval      = 100;  % Maxium evals for feature paramters func (minFunc parameter)
+optConf.eval      = 10;  % Maxium evals for feature paramters func (minFunc parameter)
 optConf.optimizer = 'nlopt'; % for hyper-parameters
 optConf.tol       = 1e-3; % Tolerance for feature optimization 
 optConf.verbose   = 1; % 0: none, 1: full
@@ -70,8 +70,10 @@ model.featConf    = optConf;
 %% Learns EGP model
 model         = mteugpLearn( model );
 
-fprintf('Learned Feature Parameter = %.4f\n', exp(model.featParam));
-fprintf('True (optimal) Feature Parameter = %.4f\n', sigma_z);
+fprintf('sigma_x: Learned= %.4f <--> Optimal %4f \n', exp(model.featParam), sigma_z);
+fprintf('sigma2_y: Learned= %.4f <--> True %4f \n', model.sigma2y, sigma2y);
+fprintf('sigma2_w: Learned= %.4f <--> True %4f \n', model.sigma2w, sigma2w);
+
 
 
 %% Evaluate predictive distribution over fstar, and also gstar predictions

@@ -15,7 +15,7 @@ model.sigma2y = 1e-3*ones(model.P,1);
 
 
 % hyper-parameters (of prior on w)
-model.sigma2w = ones(model.D,1); 
+model.sigma2w = ones(model.Q,1); 
 
 
 
@@ -27,7 +27,7 @@ model  = mteugpOptimizeCovariances( model );
 
 fprintf('Initial feature parameter = %.4f\n', exp(model.featParam) );
 fprintf('Initial sigma2y = %.4f\n', model.sigma2y );
-fprintf('Initial sigma2w = %.4f\n', model.sigma2w(1) );
+fprintf('Initial sigma2w = %.4f\n', model.sigma2w);
 
 fprintf('Initial Nelbo = %.2f\n', mteugpNelbo( model ) );
 
@@ -35,3 +35,4 @@ fprintf('Initial Nelbo = %.2f\n', mteugpNelbo( model ) );
 
 end
 
+ 

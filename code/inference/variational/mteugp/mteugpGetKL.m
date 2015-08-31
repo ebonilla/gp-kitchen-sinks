@@ -15,7 +15,7 @@ function kl = getSingleKL(model, q)
 D = model.D; % dimensionality of new features (bases)
 C      = model.C(:,:,q); % posterior covariance
 m      = model.M(:,q); % posterior mean
-cholC  = chol(C, 'lower');
+cholC  = getCholSafe(C);
 sigma2w = model.sigma2w(q);
 kl     = (1/sigma2w)*trace(C) ...
              + (1/sigma2w)*(m'*m) ... 
