@@ -5,40 +5,41 @@ function  model  = mteugpLearn( model )
 optConf = model.globalConf;
 
 model                = mteugpInit(model); 
-model.Nelbo          = zeros(optConf.iter + 2,1);
-i = 0;
-model.Nelbo(i+1) =  mteugpNelbo( model ); 
-showProgress(i+1, model.Nelbo(i+1));
+model.nelbo          = zeros(optConf.iter + 2,1);
+i = 1;
+model.nelbo(i) =  mteugpNelbo( model ); 
+showProgress(i, model.nelbo(i));
 tol = inf;
 while (( i < optConf.iter) && (tol > optConf.tol) )
     i = i + 1;
     model = mteugpOptimizeMeans(model);         
     model = mteugpOptimizeCovariances(model);  
     
-    model.Nelbo(i+1) =  mteugpNelbo( model );
-    showProgress(i+1, model.Nelbo(i+1));
+    model.nelbo(i) =  mteugpNelbo( model );
+    showProgress(i, model.nelbo(i));
 
     %model = mteugpOptimizeFeatures(model);    
     model  = mteugpOptimizeHyper(model);
 
-    tol = abs(model.Nelbo(i+1) - model.Nelbo(i));
+    tol = abs(model.nelbo(i) - model.nelbo(i-1));
 end
-
 i = i + 1;
-% After final update of features
+% After final update of features / hyper-parameters
 model = mteugpOptimizeMeans(model);        
 model = mteugpOptimizeCovariances(model);   
 
-model.Nelbo(i+1) =  mteugpNelbo( model );
-showProgress(i+1, model.Nelbo(i+1));
+model.nelbo(i) =  mteugpNelbo( model );
+showProgress(i, model.nelbo(i));
 
+T = i;
+model.nelbo(T+1:end) = [];
 
 end
-
+ 
 
 %% showProgress(iter, val)
 function showProgress(iter, val)
-fprintf('Nelbo(%d) %.3f\n', iter, val );
+fprintf('Nelbo(%d) %.3f\n', iter-1, val );
 end
 
 

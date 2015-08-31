@@ -29,7 +29,7 @@ fprintf('Initial feature parameter = %.4f\n', exp(model.featParam) );
 fprintf('Initial sigma2y = %.4f\n', model.sigma2y );
 fprintf('Initial sigma2w = %.4f\n', model.sigma2w);
 
-fprintf('Initial Nelbo = %.2f\n', mteugpNelbo( model ) );
+% fprintf('Initial Nelbo = %.2f\n', mteugpNelbo( model ) );
 
 
 

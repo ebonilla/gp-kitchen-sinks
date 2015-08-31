@@ -6,15 +6,15 @@ function model  = mteugpOptimizeHyper(model )
 %
 theta  = mteugpWrapHyper(model);
 
-optConf = model.featConf;
+optConf = model.hyperConf;
 switch optConf.optimizer
     case 'minFunc',
         % numDiff = 0: use user gradients, 1: fwd-diff, 2: centra-diff
-        optFeat = struct('Display', 'full', 'Method', 'lbfgs', 'MaxIter', optConf.iter,...
+        opt = struct('Display', 'full', 'Method', 'lbfgs', 'MaxIter', optConf.iter,...
         'MaxFunEvals', optConf.eval, 'DerivativeCheck','off', 'numDiff', 2); 
 
         % Using minFunc
-        [theta, nelboFeat, exitFlag]  = minFunc(@mteugpNelboHyper, theta, optFeat, model); 
+        [theta, nelboFeat, exitFlag]  = minFunc(@mteugpNelboHyper, theta, opt, model); 
     
     case 'minimize',
         theta = minimize(theta, @mteugpNelboHyper, optConf.eval, model);
@@ -37,3 +37,4 @@ end
 
 end
 
+ 
