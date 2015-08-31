@@ -63,7 +63,7 @@ optConf.eval      = 10;  % Maxium evals for feature paramters func (minFunc para
 optConf.optimizer = 'nlopt'; % for hyper-parameters
 optConf.tol       = 1e-3; % Tolerance for feature optimization 
 optConf.verbose   = 1; % 0: none, 1: full
-model.featConf    = optConf;
+model.hyperConf    = optConf;
 
 
 
@@ -72,7 +72,7 @@ model         = mteugpLearn( model );
 
 fprintf('sigma_x: Learned= %.4f <--> Optimal %4f \n', exp(model.featParam), sigma_z);
 fprintf('sigma2_y: Learned= %.4f <--> True %4f \n', model.sigma2y, sigma2y);
-fprintf('sigma2_w: Learned= %.4f <--> True %4f \n', model.sigma2w, sigma2w);
+fprintf('sigma2_w: Learned= %.4f \n', model.sigma2w);
 
 
 
