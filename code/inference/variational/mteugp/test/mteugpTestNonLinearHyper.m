@@ -57,7 +57,7 @@ optConf.tol     = 1e-3; % tolerance for Newton iterations
 optConf.alpha   = 0.5;  % learning rate for Newton iterations
 model.varConf   = optConf;
 
-% feature optimization configuration
+% Hyperparameter optimization configuration
 optConf.iter      = 500;  % maximum iterations for feature parametes (minfunc parameter)
 optConf.eval      = 10;  % Maxium evals for feature paramters func (minFunc parameter)
 optConf.optimizer = 'nlopt'; % for hyper-parameters

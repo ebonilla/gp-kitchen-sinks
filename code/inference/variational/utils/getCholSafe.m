@@ -1,4 +1,4 @@
-function  L  = getCholSafe( Sigma, maxTries, minJitter )
+function  L  = getCholSafe( Sigma, maxTries, minJitter, verbose )
 %GETCHOLSAFE Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -11,6 +11,10 @@ function  L  = getCholSafe( Sigma, maxTries, minJitter )
 % L     = getChol(Sigma);
 % 
 % return;
+
+if (nargin < 4)
+    verbose = 0;
+end
 
 if (nargin < 3)
     minJitter = 1e-6;
@@ -28,37 +32,35 @@ for i = 1:maxTries
       L = getChol(Sigma);
       break
     else
-      if nargout < 2
-        warning(['Matrix is not positive definite in jitChol, adding ' num2str(jitter) ' jitter.'])
+      if (verbose)      
+          warning(['Matrix is not positive definite in jitChol, adding ' num2str(jitter) ' jitter.'])
       end
       L = getChol(real(Sigma+jitter*eye(size(Sigma, 1))));
       break
     end
-  catch
+  catch ME
     % Was the error due to not positive definite?
     nonPosDef = 0;
     verString = version;
     if str2double(verString(1:3)) > 6.1
-      [void, errid] = lasterr;
-      if strcmp(errid, 'MATLAB:posdef')
+      if strcmp(ME.identifier, 'MATLAB:posdef')
         nonPosDef = 1;
       end
     else
-      errMsg = lasterr;
-      if findstr(errMsg, 'positive definite')
+      if strfind(ME.message, 'positive definite')
         nonPosDef = 1;
       end
     end
   end
   if nonPosDef
     jitter = jitter*10;
-    if i==maxTries
+    if (i == maxTries)
       error(['Matrix is non positive definite tried ' num2str(i) ...
              ' times adding jitter, but failed with jitter ' ...
              'of ' num2str(jitter) '. Increase max tries'])
     end
   else
-    error(lasterr)
+    error(ME.message);
   end
 end
 
