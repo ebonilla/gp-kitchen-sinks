@@ -3,7 +3,7 @@ function  H  = mteugpGetHessMq( model, mq, sigma2w, Sigmainv, N, q )
 %   Get Hessian of negative elbo evaluated at w_q = m_q
 
 D = model.D;
-H =  - sigma2w * eye(D);
+H =  - (1/sigma2w) * eye(D);
 for n = 1 : N
     phin = model.Phi(n,:)';
     anq  = model.A(n,:,q)';
@@ -14,5 +14,6 @@ end
 H = - H;
 
 end
+
 
 
