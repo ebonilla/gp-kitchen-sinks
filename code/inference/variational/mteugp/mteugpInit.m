@@ -15,9 +15,9 @@ model.sigma2y = 0.01*var(model.Y, 0, 1)';
 
 
 % hyper-parameters (of prior on w)
-% model.sigma2w = ones(model.Q,1); 
+model.sigma2w = ones(model.Q,1); 
 % DELETE ME
-model.sigma2w = rand(model.Q,1); 
+%model.sigma2w = rand(model.Q,1); 
 
 
 % means, lineariz. and covariances
