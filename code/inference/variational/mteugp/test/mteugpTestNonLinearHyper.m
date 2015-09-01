@@ -52,16 +52,16 @@ optConf.tol      = 1e-3;
 model.globalConf = optConf;
 
 % variational parameter optimization configuration
-optConf.iter    = 100;  % maximum iterations on variational parameters
+optConf.iter    = 50;  % maximum iterations on variational parameters
 optConf.tol     = 1e-3; % tolerance for Newton iterations
 optConf.alpha   = 0.5;  % learning rate for Newton iterations
 model.varConf   = optConf;
-
+ 
 % Hyperparameter optimization configuration
-optConf.iter      = 500;  % maximum iterations for feature parametes (minfunc parameter)
-optConf.eval      = 10;  % Maxium evals for feature paramters func (minFunc parameter)
+optConf.iter      = 100;  % maximum iterations for hyper parametes (minfunc parameter)
+optConf.eval      = 50;  % Maxium evals for hyper paramters func (minFunc parameter)
 optConf.optimizer = 'nlopt'; % for hyper-parameters
-optConf.tol       = 1e-3; % Tolerance for feature optimization 
+optConf.tol       = 1e-3; % Tolerance for hyper optimization 
 optConf.verbose   = 1; % 0: none, 1: full
 model.hyperConf    = optConf;
 
