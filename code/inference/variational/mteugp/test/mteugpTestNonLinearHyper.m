@@ -125,7 +125,7 @@ end
 function plot_data(x, y, xstar, fstar, gstar )
 [v, idx] = sort(xstar);
 plot(v, fstar(idx), 'r', 'LineWidth',2); hold on;
-plot(v, gstar, 'g','LineWidth',2); hold on;
+plot(v, gstar(idx), 'g','LineWidth',2); hold on;
 plot(x, y, 'ko', 'MarkerSize', 8, 'MarkerFaceColor', 'k'); % data
 set(gca, 'FontSize', 14);
 end
