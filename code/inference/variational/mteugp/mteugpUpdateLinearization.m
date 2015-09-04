@@ -20,7 +20,7 @@ switch (model.linearMethod)
             B(n,:)   = fval - f*Jn'; 
         end
     case 'Unscented'
-    VarF = getVariancesF(model.Phi, model.C);  % NxQ matrix of variances
+    VarF = mteugpGetVariancesF(model.Phi, model.C);  % NxQ matrix of variances
     for n = 1 : N
         [A(n,:,:), B(n,:) ] = ugpGetLinearization(model.fwdFunc,MuF(n,:), VarF(n,:), model.kappa);          
     end
@@ -33,18 +33,5 @@ end
 end
 
 
-% get the variances var(fnq), q=1, Q
-function V = getVariancesF(Phi, C)
-% Phi: NxD matrix of features
-% C: DxDxQ matrix of Q DxD covariances (on weights)
-% V: NxQ vector of variances
-N = size(Phi,1);
-Q = size(C,3);
-V = zeros(N,Q);
-Phi2 = Phi.^2;
-for q = 1 : Q
-    cq = diag(C(:,:,q)); 
-    V(:,q) = Phi2*cq;
-end
-end
+
 

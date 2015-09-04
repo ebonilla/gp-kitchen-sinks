@@ -1,8 +1,8 @@
 function model = mteugpTestNonLinearHyper()
 % 1D, Nonlinear, hyperpatameter learning
-
+%
 clc; close all;
-
+   
 rng(10101,'twister');
 
 %% General settings
@@ -71,8 +71,8 @@ model.hyperConf    = optConf;
 %% Learns EGP model
 model         = mteugpLearn( model );
 
-fprintf('sigma_x: Learned= %.4f <--> Optimal %4f \n', exp(model.featParam), sigma_z);
-fprintf('sigma2_y: Learned= %.4f <--> True %4f \n', model.sigma2y, sigma2y);
+fprintf('sigma_x: Learned= %.4f <--> Optimal %.4f \n', exp(model.featParam), sigma_z);
+fprintf('sigma2_y: Learned= %.4f <--> True %.4f \n', model.sigma2y, sigma2y);
 fprintf('sigma2_w: Learned= %.4f \n', model.sigma2w);
 
 
@@ -85,15 +85,15 @@ hold on;
 plot(xstar, gpred, 'k--', 'LineWidth', 2); hold on;  
 %
 plot_data(X, Y, xstar, fstar, gstar); hold on;
-legend({'EGP std (f*)', 'EGP mean(f*)', 'EGP mean(g*)', 'ftrue', 'gtrue', ...
+legend({'Model std (f*)', 'Model mean(f*)', 'Model mean(g*)', 'ftrue', 'gtrue', ...
     'ytrain'}, 'Location', 'SouthEast');
-
+title(upper(model.linearMethod));
 
 end
 
 
 
-
+ 
  
  
 %  function getData()

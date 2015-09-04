@@ -5,13 +5,17 @@ function [ model ] = mteugpInit( model )
 
 % Initializing features
 model.featParam = feval(model.initFeatFunc);
+% DELETE ME
+%model.featParam = log(0.31831);
+
+
 model.Phi       = feval(model.featFunc, model.X, model.featParam); 
 model.D         = size(model.Phi,2); % actual number of features
 
 % likelihood variances
 model.sigma2y = 0.01*var(model.Y, 0, 1)';
 % DELETE ME
-% model.sigma2y = 1e-3*ones(model.P,1);
+%model.sigma2y = 1e-3*ones(model.P,1);
 
 
 % hyper-parameters (of prior on w)
