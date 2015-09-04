@@ -20,9 +20,9 @@ switch (model.linearMethod)
             B(n,:)   = fval - f*Jn'; 
         end
     case 'Unscented'
-    VarF = getVariancesF(Phi, C);  % NxQ matrix of variances
+    VarF = getVariancesF(model.Phi, model.C);  % NxQ matrix of variances
     for n = 1 : N
-        [A(n,:,:), B(n,:) ] = ugpGetLinearization(MuF(n,:), VarF(n,:), model.kappa);          
+        [A(n,:,:), B(n,:) ] = ugpGetLinearization(model.fwdFunc,MuF(n,:), VarF(n,:), model.kappa);          
     end
         
     otherwise 
