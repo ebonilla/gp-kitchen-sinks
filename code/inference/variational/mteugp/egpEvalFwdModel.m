@@ -10,9 +10,9 @@ if (nargout == 1) % Check if gradients are required
 else
     %nout = nargout(fwdFunc); % FIX THIS -> Does not work for anonymous functions
     if ( boolJacob ) % functions provides Jacobian
-        fprintf('Using Jacobian provided by fwd function ...');
+        %fprintf('Using Jacobian provided by fwd function ...');
         [fwdVal, J] = feval(fwdFunc, f);
-        fprintf('done\n');
+        %fprintf('done\n');
     else % Estimates Jacobian numerically
         fwdVal      = feval(fwdFunc, f); 
         %fprintf('Computing Jacobian numerically ... ');

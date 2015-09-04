@@ -3,8 +3,8 @@ function   mteugpTestToyData(  )
 %   Data generated and evaluated using the model of Steinberg and Bonilla
 %   (NIPS, 2014)
 DATADIR = 'toyData';
-benchmark = {'lineardata', 'poly3data', 'expdata', 'sindata', 'tanhdata'};
-%benchmark = {'lineardata'};
+%benchmark = {'lineardata', 'poly3data', 'expdata', 'sindata', 'tanhdata'};
+benchmark = {'lineardata'};
 
 for i = 1 : length(benchmark)
   evaluateBenchmark(DATADIR, benchmark{i});
@@ -15,21 +15,60 @@ end
 % evaluateBenchmark(DATADIR, benchmark)
 function evaluateBenchmark(DATADIR, benchmark)
 % Just avoids Matlab sending me stupid warning
+linearMethod = {'Taylor', 'Unscented'};
+for i = 1 : length(linearMethod)
+    runAllFolds(DATADIR, benchmark, linearMethod{i});
+end
+
+
+end
+
+
+%% runAllFolds() 
+function runAllFolds(DATADIR, benchmark, linearMethod)
+RESULTS_DIR = ['results/', DATADIR, '/', linearMethod];
+system(['mkdir -p ', RESULTS_DIR]);
+    
 f = []; train = []; test = [];  x = [];  y = [];
 load([DATADIR, '/', benchmark], 'f',  'train', 'test', 'x', 'y');
 train = train+1; test = test+1; % shifts indices to Matlab 
 nFolds = size(train, 1);
 
-figure;
+%figure;
 for k = 1 : nFolds
     [xtrain, ftrain, ytrain, xtest, ftest, ytest] = readSingleFold(x, f, y, train, test,k);
-
-    subplot(2,3,k); 
-    plot_data(xtrain, ytrain, xtest, ftest, ytest ); 
-    title(benchmark);
-  % fname = ['resultsOpper/', benchmark, '_k', num2str(k), '.mat'];
-  %  save(fname, 'mufPred', 'sigmafStar', 'yStar', 'pred');
+    [model, pred, perf] = runSingleFold(xtrain, ytrain, xtest, ftest, benchmark, linearMethod );
+    
+    %subplot(2,3,k); 
+    %plot_data(xtrain, ytrain, xtest, ftest, ytest ); 
+    %title(benchmark);
+    fname = [RESULTS_DIR, '/', benchmark, '_k', num2str(k), '.mat'];
+    save(fname, 'model', 'pred', 'perf');
+    
+    showProgress(benchmark, linearMethod, perf);
 end
+
+end
+
+
+%% showProgress(benchmark, linearMethod, perf)
+function showProgress(benchmark, linearMethod, perf)
+fprintf('%s: %s --> SMSE=%.4f, NLPD=%4f \n', benchmark, linearMethod, perf.smseFstar, perf.nlpdFstar);
+end
+
+
+%% [model, mFpred, vFpred, gpred] = runSingleFold(xtrain, ytrain, xtest, benchmark, linearMethod )
+function [model, pred, perf] = runSingleFold(xtrain, ytrain, xtest, ftest, benchmark, linearMethod )
+
+model             = mteugpGetConfigToy( xtrain, ytrain, benchmark, linearMethod );
+model             = mteugpLearn( model );
+
+[pred.mFpred, pred.vFpred]  = mteugpGetPredictive( model, xtest );
+pred.gpred                  = mteugpPredict( model, pred.mFpred, pred.vFpred ); %         
+
+perf.smseFstar  = mySMSE([], ftest, pred.mFpred );
+perf.nlpdFstar  = myMLL( [], ftest,  pred.mFpred , pred.vFpred );
+
 end
 
 

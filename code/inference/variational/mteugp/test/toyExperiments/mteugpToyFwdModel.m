@@ -1,4 +1,4 @@
-function [ g, dg ] = mteugpToyFwdModel( benchmark, f )
+function [ g, dg ] = mteugpToyFwdModel(f,benchmark )
 %MTEUGPTESTFWDFUNC Fwd models in toy experiments
 %   Detailed explanation goes here
 switch benchmark,
