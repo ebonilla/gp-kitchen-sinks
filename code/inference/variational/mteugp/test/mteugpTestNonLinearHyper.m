@@ -42,8 +42,9 @@ model.X            = X;
 model.featFunc     = featFunc;  % feature function
 model.initFeatFunc = initFeatFunc; % initializes Parameters of feature function
 
-model.linearMethod = 'Unscented'; % 'Taylor' or 'Unscented'
+model.linearMethod = 'Taylor'; % 'Taylor' or 'Unscented'
 model.fwdFunc      = fwdFunc;  
+model.jacobian     = 0; % jacobian is provided by fwdFunc
 model.kappa        = 1/2; % parameter of Unscented linearization
 model.nSamples     = 1000; % Number of samples for approximating predictive dist.
 
