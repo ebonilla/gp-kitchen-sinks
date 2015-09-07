@@ -5,8 +5,45 @@ function [ model ] = mteugpOptimizeMeans( model )
 
 % optimization of means
 for q = 1 : model.Q
-        model  = optimizeSingleM(model, q, model.varConf);  
+        model  = optimizeSingleM2(model, q, model.varConf);  
 end
+
+end
+
+
+
+
+function model = optimizeSingleM2(model, q, optconf)
+% same as  optimizeSingleM but measure convergence on parameter space 
+% rather in Nelbo --> avoids computation of the Nelbo
+% optconf: Optimization configuration
+% optconf.maxiter
+% optconf.tol
+% optconf.alpha: learning rate
+
+N        = model.N;
+sigma2y  = model.sigma2y;
+Sigmainv = mteugpGetSigmaInv(sigma2y);
+mq       = model.M(:,q);
+sigma2w  = model.sigma2w(q);
+
+%% Newton iterations
+i = 1;
+tol = inf;
+mqOld = model.M(:,q);
+while ( (i <= optconf.iter) && (tol > optconf.tol) )    
+    grad_mq      = getGradMq(model, mq, sigma2w, Sigmainv, N, q);
+    H            =  mteugpGetHessMq(model, mq, sigma2w, Sigmainv, N, q); % does not really depend on mq
+    L            = getCholSafe(H);
+    dmq          = solve_chol(L',grad_mq);
+    mq           = mq  - optconf.alpha*dmq;
+    model.M(:,q) = mq; 
+    [model.A, model.B] = mteugpUpdateLinearization(model);     % Updates linerization    
+    tol   = abs(norm(mq - mqOld));
+    mqOld = mq;
+    i = i + 1;
+end
+ 
 
 end
 

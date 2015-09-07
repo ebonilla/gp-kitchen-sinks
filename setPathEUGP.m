@@ -4,7 +4,7 @@
 addpath(genpath('code/inference/variational/mteugp'));
 addpath(genpath('code/inference/variational/utils'));
 addpath(genpath('code/inference/features'));
-addpath(genpath('data'));
+addpath('data');
 
 
 path(path(), genpath('~/Dropbox/Matlab/utils')); % sq_dist from here, plots, etc

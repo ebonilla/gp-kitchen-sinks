@@ -2,12 +2,12 @@ function   mteugpTestToyData(  )
 %MTEUGPTESTTOYDATA Tests MTEUGP on a series of toy data examples 
 %   Data generated and evaluated using the model of Steinberg and Bonilla
 %   (NIPS, 2014)
-DATADIR = 'toyData';
-%benchmark = {'lineardata', 'poly3data', 'expdata', 'sindata', 'tanhdata'};
-benchmark = {'lineardata'};
+DATASET = 'toyData';
+benchmark = {'lineardata', 'poly3data', 'expdata', 'sindata', 'tanhdata'};
+%benchmark = {'lineardata'};
 
-for i = 1 : length(benchmark)
-  evaluateBenchmark(DATADIR, benchmark{i});
+for i = 1 : 1 %length(benchmark)
+  evaluateBenchmark(DATASET, benchmark{i});
 end
 
 end
@@ -16,7 +16,7 @@ end
 function evaluateBenchmark(DATADIR, benchmark)
 % Just avoids Matlab sending me stupid warning
 linearMethod = {'Taylor', 'Unscented'};
-for i = 1 : length(linearMethod)
+for i = 1 : 1%length(linearMethod)
     runAllFolds(DATADIR, benchmark, linearMethod{i});
 end
 
@@ -30,21 +30,23 @@ RESULTS_DIR = ['results/', DATADIR, '/', linearMethod];
 system(['mkdir -p ', RESULTS_DIR]);
     
 f = []; train = []; test = [];  x = [];  y = [];
-load([DATADIR, '/', benchmark], 'f',  'train', 'test', 'x', 'y');
+load(['data/', DATADIR, '/', benchmark], 'f',  'train', 'test', 'x', 'y');
 train = train+1; test = test+1; % shifts indices to Matlab 
 nFolds = size(train, 1);
 
+
 %figure;
-for k = 1 : nFolds
+for k = 1 : 1 %nFolds
     [xtrain, ftrain, ytrain, xtest, ftest, ytest] = readSingleFold(x, f, y, train, test,k);
-    [model, pred, perf] = runSingleFold(xtrain, ytrain, xtest, ftest, benchmark, linearMethod );
     
+
     %subplot(2,3,k); 
     %plot_data(xtrain, ytrain, xtest, ftest, ytest ); 
     %title(benchmark);
+
+    [model, pred, perf] = runSingleFold(xtrain, ytrain, xtest, ftest, benchmark, linearMethod );    
     fname = [RESULTS_DIR, '/', benchmark, '_k', num2str(k), '.mat'];
     save(fname, 'model', 'pred', 'perf');
-    
     showProgress(benchmark, linearMethod, perf);
 end
 
@@ -87,6 +89,8 @@ function [xtrain, ftrain, ytrain, xtest, ftest, ytest] = ...
     
 end
 
+
+%  plot_data(x, y, xstar, fstar, gstar )
 function plot_data(x, y, xstar, fstar, gstar )
 [v, idx] = sort(xstar);
 plot(v, fstar(idx), 'r', 'LineWidth',2); hold on;
