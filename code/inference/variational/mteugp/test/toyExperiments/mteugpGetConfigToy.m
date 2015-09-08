@@ -1,7 +1,7 @@
-function  model  = mteugpGetConfigToy( X, Y, benchmark, linearMethod )
+function  model  = mteugpGetConfigToy( X, Y, benchmark, linearMethod, D )
 %MTEUGPGETCONFIGTOY Get configuration for toy experiment
 d = size(X,2);
-D = 100; % Number of features to use
+%D = 100; % Number of features to use
 
 %% feature function
 Z            = randn(D,d);
