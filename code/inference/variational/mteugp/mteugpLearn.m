@@ -10,7 +10,7 @@ i = 1;
 model.nelbo(i) =  mteugpNelbo( model ); 
 showProgress(i, model.nelbo(i));
 tol = inf;
-while (( i < optConf.iter) && (tol > optConf.tol) )
+while (( i < optConf.iter) && (tol > optConf.ftol) )
     i = i + 1;
     model = mteugpOptimizeMeans(model);         
     model = mteugpOptimizeCovariances(model);  
@@ -39,7 +39,7 @@ end
 
 %% showProgress(iter, val)
 function showProgress(iter, val)
-fprintf('Nelbo(%d) %.3f\n', iter-1, val );
+fprintf('Nelbo(%d) %.4f\n', iter-1, val );
 end
 
 

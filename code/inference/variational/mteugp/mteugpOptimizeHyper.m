@@ -26,7 +26,8 @@ switch optConf.optimizer
         opt.min_objective  = @(xx) mteugpNelboHyper(xx, model);
         
         opt.maxeval        = optConf.eval;
-        opt.ftol_abs       = optConf.tol;
+        opt.ftol_rel       = optConf.ftol; % relative tolerance in f
+        opt.xtol_rel       = optConf.xtol;
         
         [theta, fminval, retcode] = nlopt_optimize(opt, theta);
     
