@@ -17,7 +17,7 @@ nSamples   = model.nSamples;
 stdF       = std(VarF);
 
 %% MC averaging
-Z  = rand(Nstar, Q, nSamples);
+Z  = randn(Nstar, Q, nSamples);
 G  = zeros(Nstar, P, nSamples);
 for i = 1 : nSamples
     Fstar    = MeanF + Z(:,:,i).*stdF; % sample p(f*)
