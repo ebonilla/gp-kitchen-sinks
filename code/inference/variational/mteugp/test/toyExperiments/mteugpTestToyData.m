@@ -30,37 +30,37 @@ RESULTS_DIR = ['results/', DATADIR, '/', linearMethod];
 system(['mkdir -p ', RESULTS_DIR]);
     
 f = []; train = []; test = [];  x = [];  y = [];
-load(['data/', DATADIR, '/', benchmark], 'f',  'train', 'test', 'x', 'y');
+load(['data/', DATADIR, '/', benchmark], 'f',  'train', 'test', 'x', 'g', 'y');
 train = train+1; test = test+1; % shifts indices to Matlab 
 nFolds = size(train, 1);
 
 
 %figure;
 for k = 1 : 1 %nFolds
-    [xtrain, ftrain, ytrain, xtest, ftest, ytest] = readSingleFold(x, f, y, train, test,k);
+    [xtrain, ftrain, ytrain, xtest, ftest, gtest] = readSingleFold(x, f, g, y, train, test, k);
     
 
     %subplot(2,3,k); 
     %plot_data(xtrain, ytrain, xtest, ftest, ytest ); 
     %title(benchmark);
 
-    [model, pred, perf] = runSingleFold(xtrain, ytrain, xtest, ftest, benchmark, linearMethod );    
+    [model, pred, perf] = runSingleFold(xtrain, ytrain, xtest, ftest, gtest, benchmark, linearMethod );    
     fname = [RESULTS_DIR, '/', benchmark, '_k', num2str(k), '.mat'];
     save(fname, 'model', 'pred', 'perf');
-    showProgress(benchmark, linearMethod, perf);
+    showProgress(benchmark, k, linearMethod, perf);
 end
 
 end
 
 
 %% showProgress(benchmark, linearMethod, perf)
-function showProgress(benchmark, linearMethod, perf)
-fprintf('%s: %s --> SMSE=%.4f, NLPD=%4f \n', benchmark, linearMethod, perf.smseFstar, perf.nlpdFstar);
+function showProgress(benchmark, fold, linearMethod, perf)
+fprintf('%s(%d): %s --> SMSE(f*)=%.4f, NLPD(f*)=%4f, SMS(g*)=%.4f \n', benchmark, fold, linearMethod, perf.smseFstar, perf.nlpdFstar, perf.smseGstar);
 end
 
 
 %% [model, mFpred, vFpred, gpred] = runSingleFold(xtrain, ytrain, xtest, benchmark, linearMethod )
-function [model, pred, perf] = runSingleFold(xtrain, ytrain, xtest, ftest, benchmark, linearMethod )
+function [model, pred, perf] = runSingleFold(xtrain, ytrain, xtest, ftest, gtest, benchmark, linearMethod )
 
 model             = mteugpGetConfigToy( xtrain, ytrain, benchmark, linearMethod );
 model             = mteugpLearn( model );
@@ -70,6 +70,9 @@ pred.gpred                  = mteugpPredict( model, pred.mFpred, pred.vFpred ); 
 
 perf.smseFstar  = mySMSE([], ftest, pred.mFpred );
 perf.nlpdFstar  = myMLL( [], ftest,  pred.mFpred , pred.vFpred );
+%
+perf.smseGstar  = mySMSE([], gtest, pred.gpred );
+
 
 end
 
@@ -77,15 +80,15 @@ end
 
 
 % Read single fold of data
-function [xtrain, ftrain, ytrain, xtest, ftest, ytest] = ...
-               readSingleFold(x, f, y, train, test, k)
+function [xtrain, ftrain, ytrain, xtest, ftest, gtest] = ...
+               readSingleFold(x, f, g, y, train, test, k)
     xtrain = x(train(k,:))';
     ftrain = f(train(k,:))';
     ytrain = y(train(k,:))';
 
     xtest = x(test(k,:))';
     ftest = f(test(k,:))';
-    ytest = y(test(k,:))';
+    gtest = g(test(k,:))';
     
 end
 

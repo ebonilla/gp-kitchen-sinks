@@ -27,3 +27,11 @@ Gstar = mean(G,3);
 
 end
 
+% TODO
+% integrand for numerical integration
+%function integrandQuad(model, f)
+%g = model.fwdFunc(
+%  gxs = self._passnlfunc(self.nlfunc, xsn)
+%           quad_msEf = (xsn - Emn)**2 / Vmn
+%            return gxs * np.exp(-0.5 * (quad_msEf + np.log(2 * np.pi * Vmn)))
+%            
