@@ -21,19 +21,18 @@ function model = optimizeSingleM2(model, q, optconf)
 % optconf.tol
 % optconf.alpha: learning rate
 
-N        = model.N;
-sigma2y  = model.sigma2y;
-Sigmainv = mteugpGetSigmaInv(sigma2y);
-mq       = model.M(:,q);
-sigma2w  = model.sigma2w(q);
+N            = model.N;
+diagSigmainv = 1./ model.sigma2y;
+mq           = model.M(:,q);
+sigma2w      = model.sigma2w(q);
 
 %% Newton iterations
 i = 1;
 tol = inf;
 mqOld = model.M(:,q);
 while ( (i <= optconf.iter) && (tol > optconf.tol) )    
-    grad_mq      = getGradMq(model, mq, sigma2w, Sigmainv, N, q);
-    H            =  mteugpGetHessMq(model, mq, sigma2w, Sigmainv, N, q); % does not really depend on mq
+    grad_mq      =  mteugpGetGradMq(model, mq, sigma2w, diagSigmainv, N, q);
+    H            =  mteugpGetHessMq(model, mq, sigma2w, diagSigmainv, N, q); % does not really depend on mq
     L            = getCholSafe(H);
     dmq          = solve_chol(L',grad_mq);
     mq           = mq  - optconf.alpha*dmq;
@@ -91,19 +90,3 @@ end
 end
 
 
-%% grad_mq = getGradMq(model, mq, sigma2w, Sigmainv, N, q)
-function grad_mq = getGradMq(model, mq, sigma2w, Sigmainv, N, q)
-grad_mq = - (1/sigma2w)*mq;
-for n = 1 : N
-    yn       = model.Y(n,:)';
-    phin     = model.Phi(n,:)';
-    anq      = model.A(n,:,q)';
-    bn       = model.B(n,:)';
-    grad_mq  =  grad_mq + phin*anq'*Sigmainv*(yn - anq*mq'*phin - bn);                 
-end
-
-
-% minimizing negative ebo
-grad_mq = - grad_mq;
-
-end

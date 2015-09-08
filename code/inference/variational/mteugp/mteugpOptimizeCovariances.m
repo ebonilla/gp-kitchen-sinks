@@ -9,14 +9,13 @@ end
 
 
 %% Cq = updateCovariance(model)
-function Cq = updateCovariance(model, q)
-N        = model.N;
-sigma2y  = model.sigma2y;
-Sigmainv = mteugpGetSigmaInv(sigma2y);
-sigma2w  = model.sigma2w(q);
-mq       = model.M(:,q);
+function Cq  = updateCovariance(model, q)
+N            = model.N;
+diagSigmainv = 1./ model.sigma2y;
+sigma2w      = model.sigma2w(q);
+mq           = model.M(:,q);
 
-H    = mteugpGetHessMq(model, mq, sigma2w, Sigmainv, N, q);
+H    = mteugpGetHessMq(model, mq, sigma2w, diagSigmainv, N, q);
 L    = getCholSafe(H);
 Cq   = getInverseChol(L);
 end
