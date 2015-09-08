@@ -6,15 +6,15 @@ function [ fwdVal, J, errJ ] = egpEvalFwdModel( fwdFunc, f, boolJacob )
 % boolJacob: Jacobian provided?
 %
 if (nargout == 1) % Check if gradients are required
-    fwdVal = feval(fwdfunc, f);  % simply computes the function
+    fwdVal = fwdfunc(f);  % simply computes the function
 else
     %nout = nargout(fwdFunc); % FIX THIS -> Does not work for anonymous functions
     if ( boolJacob ) % functions provides Jacobian
         %fprintf('Using Jacobian provided by fwd function ...');
-        [fwdVal, J] = feval(fwdFunc, f);
+        [fwdVal, J] = fwdFunc(f);
         %fprintf('done\n');
     else % Estimates Jacobian numerically
-        fwdVal      = feval(fwdFunc, f); 
+        fwdVal      = fwdFunc(f); 
         %fprintf('Computing Jacobian numerically ... ');
         [J, errJ]   = jacobianest(fwdFunc, f);
         % fprintf('done\n');
@@ -26,3 +26,4 @@ fwdVal  = fwdVal(:); % column vector
 end
 
 
+ 
