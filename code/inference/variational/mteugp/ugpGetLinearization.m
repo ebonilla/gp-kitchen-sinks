@@ -26,7 +26,7 @@ u(2:N) =  1/(2*(Q+kappa));
 
 % make sure I pass row vectors to fwd model function
 % assumes fwdFunc returns a matrix of NxP evaluations (P is dim output)
-Y  = feval(fwdFunc, X');  % NxP matrix
+Y  = fwdFunc(X');  % NxP matrix
 
 % stats
 ybar    = sum(bsxfun(@times, u, Y),1); % 1xP

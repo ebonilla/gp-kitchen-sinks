@@ -8,7 +8,7 @@ DATASET = 'toyData';
 benchmark = {'lineardata', 'poly3data', 'expdata', 'sindata', 'tanhdata'};
 %benchmark = {'lineardata'};
 
-for i = 1 : 1 %length(benchmark)
+for i = 1 : length(benchmark)
   evaluateBenchmark(DATASET, benchmark{i}, D);
 end
 
@@ -18,7 +18,7 @@ end
 function evaluateBenchmark(DATASET, benchmark, D)
 % Just avoids Matlab sending me stupid warning
 linearMethod = {'Taylor', 'Unscented'};
-for i = 1 : 1%length(linearMethod)
+for i = 1 : length(linearMethod)
     runAllFolds(DATASET, benchmark, linearMethod{i}, D);
 end
 

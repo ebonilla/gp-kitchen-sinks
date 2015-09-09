@@ -6,7 +6,7 @@ clc; close all;
 rng(10101,'twister');
 
 %% General settings
-N       = 50;
+N       = 100;
 d       = 1; % original dimensionality of input space
 D       = 100; % dimensionality of output space
 covfunc = 'covSEiso';
@@ -42,7 +42,7 @@ model.X            = X;
 model.featFunc     = featFunc;  % feature function
 model.initFeatFunc = initFeatFunc; % initializes Parameters of feature function
 
-model.linearMethod = 'Taylor'; % 'Taylor' or 'Unscented'
+model.linearMethod = 'Unscented'; % 'Taylor' or 'Unscented'
 model.fwdFunc      = fwdFunc;  
 model.jacobian     = 0; % jacobian is provided by fwdFunc
 model.kappa        = 1/2; % parameter of Unscented linearization
