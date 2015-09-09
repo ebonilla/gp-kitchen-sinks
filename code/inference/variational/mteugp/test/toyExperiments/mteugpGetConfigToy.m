@@ -20,7 +20,7 @@ model.featFunc     = featFunc;  % feature function
 model.initFeatFunc = initFeatFunc; % initializes Parameters of feature function
 
 model.linearMethod = linearMethod; % 'Taylor' or 'Unscented'
-model.fwdFunc      = @(ff) mteugpToyFwdModel(ff,benchmark ) ;  
+model.fwdFunc      = @(ff) mteugpFwdModelToy(ff,benchmark ) ;  
 model.jacobian     = 1;  % 1/0 if jacobian is provided
 model.kappa        = 1/2; % parameter of Unscented linearization
 
