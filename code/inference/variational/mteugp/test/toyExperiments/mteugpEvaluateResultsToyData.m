@@ -1,4 +1,4 @@
-function [base perf] = mteugpEvaluateResultsToyData()
+function [basePerf, modelPerf] = mteugpEvaluateResultsToyData()
 
 % Evaluates results on toy data
 DATASET = 'toyData';
@@ -7,19 +7,82 @@ linearMethod = {'Taylor', 'Unscented', 'GP'};
 nFolds = 5;
 D      = 100;
 
-base = getPerformance(DATASET, benchmark, linearMethod, nFolds, D, 'baseline');
-perf = getPerformance(DATASET, benchmark, linearMethod, nFolds, D, 'mteugp' );
+basePerf = getPerformance(DATASET, benchmark, linearMethod, nFolds, D, 'baseline');
+modelPerf = getPerformance(DATASET, benchmark, linearMethod, nFolds, D, 'mteugp' );
+
+baseStat  = getPerfStats(basePerf);
+modelStat = getPerfStats(modelPerf);
+exportResults(baseStat, modelStat, benchmark, linearMethod);
 
 end
 
 
 
 
-% function perf = getModel()
-% end
+% exportResults(base, perf)
+function exportResults(baseStat, modelStat, benchmark, linearMethod)
+% base: baseline performance
+% perf: performance of the model
+[B, M] = size(baseStat.smseF{1}); % $ benchmarks, # linearization method, # folds
+fname = 'table-toy.tex';
+fid = fopen(fname, 'wt');
+fprintf(fid, '\\begin{tabular}{c c c c c}\n');
+fprintf(fid, 'Benchmark & Algorithm & SMSE-f* (std) & NLPD-f* (std) &');
+fprintf(fid, 'SMSE-g* (std) \\\\ \n');
+
+for i = 1 : B
+        fprintf(fid, '%s ', benchmark{i});
+    for j = 1 : M
+        writeLine(baseStat, linearMethod, fid, i, j);
+    end
+    fprintf(fid, '\n');
+end
+fprintf(fid, '\\end{tabular}');
+fclose(fid);
+end
 
 
+function writeLine(perfStat, linearMethod, fid, i, j)
+% SMSE-f* (std)
+meanVal = perfStat.smseF{1}(i,j);
+stdVal  = perfStat.smseF{2}(i,j);        
+if ( ~isnan(meanVal) )
+    fprintf(fid, '& %s ', linearMethod{j});
+    fprintf(fid, '& %.4f (%.4f) & ', meanVal, stdVal);
+else
+    fprintf(fid, '& %s & - & ',  linearMethod{j});
+end
+% NLPD-f* (std)
+meanVal = perfStat.nlpdF{1}(i,j);
+stdVal  = perfStat.nlpdF{2}(i,j);        
+if ( ~isnan(meanVal) )
+    fprintf(fid, '%.4f (%.4f) & ',  meanVal, stdVal);
+else
+    fprintf(fid, ' - & ');
+end
+% SMSE-g* (std)
+meanVal = perfStat.smseG{1}(i,j);
+stdVal  = perfStat.smseG{2}(i,j);        
+if ( ~isnan(meanVal) )
+     fprintf(fid, '%.4f (%.4f) ',  meanVal, stdVal);
+else
+     fprintf(fid, ' -  ');
+end
+fprintf(fid, '\\\\ \n');
 
+end
+       
+% perfStat = getPerfStats(perf)
+function perfStat = getPerfStats(perf)
+perfStat.smseF{1} = mean(perf.smseF,3);
+perfStat.nlpdF{1} = mean(perf.nlpdF,3);
+perfStat.smseG{1} = mean(perf.smseG,3);
+%
+perfStat.smseF{2} = std(perf.smseF,0,3);
+perfStat.nlpdF{2} = std(perf.nlpdF,0,3);
+perfStat.smseG{2} = std(perf.smseG,0,3);
+
+end
 
 
 % base = getBaseline(DATASET, benchmark, linearMethod, nFolds)
