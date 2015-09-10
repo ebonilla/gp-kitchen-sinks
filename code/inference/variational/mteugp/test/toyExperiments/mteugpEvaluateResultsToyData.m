@@ -1,14 +1,14 @@
 function [basePerf, modelPerf] = mteugpEvaluateResultsToyData()
 
 % Evaluates results on toy data
+RESULTS_DIR = 'results/20150910';
 DATASET = 'toyData';
 benchmark = {'lineardata', 'poly3data', 'expdata', 'sindata', 'tanhdata'};
 linearMethod = {'Taylor', 'Unscented', 'GP'};
 nFolds = 5;
 D      = 100;
-
-basePerf = getPerformance(DATASET, benchmark, linearMethod, nFolds, D, 'baseline');
-modelPerf = getPerformance(DATASET, benchmark, linearMethod, nFolds, D, 'mteugp' );
+basePerf = getPerformance([], DATASET, benchmark, linearMethod, nFolds, D, 'baseline');
+modelPerf = getPerformance(RESULTS_DIR, DATASET, benchmark, linearMethod, nFolds, D, 'mteugp' );
 
 baseStat  = getPerfStats(basePerf);
 modelStat = getPerfStats(modelPerf);
@@ -31,11 +31,20 @@ fprintf(fid, 'Benchmark & Algorithm & SMSE-f* (std) & NLPD-f* (std) &');
 fprintf(fid, 'SMSE-g* (std) \\\\ \n');
 
 for i = 1 : B
-        fprintf(fid, '%s ', benchmark{i});
-    for j = 1 : M
-        writeLine(baseStat, linearMethod, fid, i, j);
+    fprintf(fid, '%s ', benchmark{i});
+    for j = 1 : M % model
+        if (~strcmp(linearMethod{j}, 'GP'))
+            writeLine(modelStat, ['S-',linearMethod{j}], fid, i, j);
+        end
     end
     fprintf(fid, '\n');
+    for j = 1 : M % baseline
+        if (~strcmp(linearMethod{j}, 'GP') || (strcmp(benchmark{i}, 'lineardata'))  ) 
+            writeLine(baseStat, linearMethod{j}, fid, i, j);
+        end
+    end
+    fprintf(fid, '\n');
+    
 end
 fprintf(fid, '\\end{tabular}');
 fclose(fid);
@@ -43,14 +52,17 @@ end
 
 
 function writeLine(perfStat, linearMethod, fid, i, j)
+linearMethod = strrep(linearMethod, 'Taylor', 'EGP');
+linearMethod = strrep(linearMethod, 'Unscented', 'UGP');
+
 % SMSE-f* (std)
 meanVal = perfStat.smseF{1}(i,j);
 stdVal  = perfStat.smseF{2}(i,j);        
 if ( ~isnan(meanVal) )
-    fprintf(fid, '& %s ', linearMethod{j});
+    fprintf(fid, '& %s ', linearMethod);
     fprintf(fid, '& %.4f (%.4f) & ', meanVal, stdVal);
 else
-    fprintf(fid, '& %s & - & ',  linearMethod{j});
+    fprintf(fid, '& %s & - & ',  linearMethod);
 end
 % NLPD-f* (std)
 meanVal = perfStat.nlpdF{1}(i,j);
@@ -86,7 +98,7 @@ end
 
 
 % base = getBaseline(DATASET, benchmark, linearMethod, nFolds)
-function perf = getPerformance(DATASET, benchmark, linearMethod, nFolds, D, model )
+function perf = getPerformance(RESULTS_DIR, DATASET, benchmark, linearMethod, nFolds, D, model )
 switch model,
     case 'baseline',
         perfFunc = @getBaselineSingle;
@@ -102,7 +114,7 @@ perf.smseG = zeros(B, M, nFolds);
 for i = 1 : B
     for j = 1 : M
         for k = 1 : nFolds 
-            [smseF, nlpdF, smseG] = perfFunc(DATASET, benchmark{i}, linearMethod{j}, k, D);
+            [smseF, nlpdF, smseG] = perfFunc(RESULTS_DIR, DATASET, benchmark{i}, linearMethod{j}, k, D);
             perf.smseF(i,j,k) = smseF;
             perf.nlpdF(i,j,k) = nlpdF;
             perf.smseG(i,j,k) = smseG;
@@ -112,11 +124,11 @@ end
 end
 
 
-function  [smseF, nlpdF, smseG] = getModelSingle(DATASET, benchmark, linearMethod, fold, D )
+function  [smseF, nlpdF, smseG] = getModelSingle(RESULTS_DIR, DATASET, benchmark, linearMethod, fold, D )
 smseF = NaN;
 nlpdF = NaN;
 smseG = NaN;
-RESULTS_DIR = ['results/', DATASET, '/', 'D', num2str(D), '/', linearMethod];
+RESULTS_DIR = [RESULTS_DIR, '/', DATASET, '/', 'D', num2str(D), '/', linearMethod];
 fname = [RESULTS_DIR, '/', benchmark, '_k', num2str(fold), '.mat'];
 try
     load(fname, 'pred');
@@ -134,7 +146,7 @@ end
 
 
 % Performance of Steiberg and Bonilla (2014)'s 
-function [smseF, nlpdF, smseG] = getBaselineSingle(DATASET, benchmark, linearMethod, fold, D )
+function [smseF, nlpdF, smseG] = getBaselineSingle(RESULTS_DIR, DATASET, benchmark, linearMethod, fold, D )
 smseF = NaN;
 nlpdF = NaN;
 smseG = NaN;

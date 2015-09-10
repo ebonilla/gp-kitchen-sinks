@@ -28,7 +28,7 @@ model.nSamples     = 1000; % Number of samples for approximating predictive dist
 
 % global optimization configuration
 optConf.iter     = 50;    % maximum global iterations
-optConf.ftol     = 0.01;
+optConf.ftol     = 1e-5;
 model.globalConf = optConf;
 
 % variational parameter optimization configuration
@@ -50,4 +50,4 @@ model.hyperConf   = optConf;
 end
 
 
-
+ 

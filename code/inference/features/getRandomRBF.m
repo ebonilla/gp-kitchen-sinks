@@ -4,6 +4,7 @@ function [Phi, GradPhi] = getRandomRBF(x, Z, theta)
 %     Phi = 1;
 %     return;
 % end
+% sigma_z is the std deviation of the features
 
 
 % sigma_z = exp(theta) --> theta = log(sigma_z)

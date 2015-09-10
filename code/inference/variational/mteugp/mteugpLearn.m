@@ -21,7 +21,8 @@ while (( i < optConf.iter) && (tol > optConf.ftol) )
     %model = mteugpOptimizeFeatures(model);    
     model  = mteugpOptimizeHyper(model);
 
-    tol = abs(model.nelbo(i) - model.nelbo(i-1));
+     tol = abs( model.nelbo(i) - model.nelbo(i-1) );
+    % tol = abs( (model.nelbo(i) - model.nelbo(i-1))/model.nelbo(i)   );
 end
 i = i + 1;
 % After final update of features / hyper-parameters

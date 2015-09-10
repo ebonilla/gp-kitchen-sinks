@@ -1,8 +1,9 @@
 function  theta  = initRandomRBF(  )
 %INITRANDOMRBF Initializes parameters of random RBF
 %   Detailed explanation goes here
-sigma_z = rand;
 
+sigma_z = getOptimalSigmaz(1);
+%sigma_z = rand;
 % DELETE ME
 % sigma_z = 10;
 

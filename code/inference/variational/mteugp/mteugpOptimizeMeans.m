@@ -38,7 +38,8 @@ while ( (i <= optconf.iter) && (tol > optconf.xtol) )
     mq           = mq  - optconf.alpha*dmq;
     model.M(:,q) = mq; 
     [model.A, model.B] = mteugpUpdateLinearization(model);     % Updates linerization    
-    tol   = abs(norm(mq - mqOld));
+    tol   = norm(mq - mqOld);
+    %tol = max(abs((mq - mqOld)./mq));
     mqOld = mq;
     i = i + 1;
 end
