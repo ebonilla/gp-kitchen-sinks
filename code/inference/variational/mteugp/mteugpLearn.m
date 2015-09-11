@@ -4,7 +4,7 @@ function  model  = mteugpLearn( model )
 
 optConf = model.globalConf;
 
-model                = mteugpInit(model); 
+model                = model.initFunc(model); 
 model.nelbo          = zeros(optConf.iter + 2,1);
 i = 1;
 model.nelbo(i) =  mteugpNelbo( model ); 

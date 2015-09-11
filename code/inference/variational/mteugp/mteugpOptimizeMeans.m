@@ -40,10 +40,12 @@ while ( (i <= optconf.iter) && (tol > optconf.xtol) )
     [model.A, model.B] = mteugpUpdateLinearization(model);     % Updates linerization    
     tol   = norm(mq - mqOld);
     %tol = max(abs((mq - mqOld)./mq));
+    
+    fprintf('Newton nelbo(%d)=%.4f\n',i, mteugpNelbo(model));
     mqOld = mq;
     i = i + 1;
 end
- 
+ pause;
 
 end
 
@@ -67,8 +69,8 @@ nelbo    = - NaN*ones(optconf.iter,1);
 nelbo(i) = mteugpNelbo( model );
 %fprintf('Nelbo(%d) = %.2f \n', i, nelbo(i));    
 tol = inf;
-while ( (i <= optconf.iter) && (tol > optconf.tol) )    
-    grad_mq = getGradMq(model, mq, sigma2w, Sigmainv, N, q);
+while ( (i <= optconf.iter) && (tol > optconf.ftol) )    
+    grad_mq = mteugpGetGradMq(model, mq, sigma2w, Sigmainv, N, q);
     H      =  mteugpGetHessMq(model, mq, sigma2w, Sigmainv, N, q); % does not really depend on mq
     L      = getCholSafe(H);
     dmq    = solve_chol(L',grad_mq);

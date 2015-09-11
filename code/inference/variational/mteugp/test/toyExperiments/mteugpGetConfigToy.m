@@ -46,6 +46,8 @@ optConf.xtol       = 1e-8; % Tolerance in x
 optConf.verbose   = 1; % 0: none, 1: full
 model.hyperConf   = optConf;
 
+% initialization Function
+model.initFunc    = @mteugpInitToy;
 
 end
 

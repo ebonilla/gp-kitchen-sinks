@@ -1,7 +1,7 @@
 function [basePerf, modelPerf] = mteugpEvaluateResultsToyData()
 
 % Evaluates results on toy data
-RESULTS_DIR = 'results/20150910';
+RESULTS_DIR = 'results';
 DATASET = 'toyData';
 benchmark = {'lineardata', 'poly3data', 'expdata', 'sindata', 'tanhdata'};
 linearMethod = {'Taylor', 'Unscented', 'GP'};

@@ -1,30 +1,22 @@
-function   mteugpTestToyData( D, writeLog  )
+function   mteugpTestToyData( idxBench, idxMethod, idxFold, D, writeLog  )
 %MTEUGPTESTTOYDATA Tests MTEUGP on a series of toy data examples 
 %   Data generated and evaluated using the model of Steinberg and Bonilla
 %   (NIPS, 2014)
+% idxBench=: 1 : 5
+% idxMethod: 1 : 2
+% idxFold: 1:5
 % D: Dimensionality of feature space
+RESULTS_DIR = 'results/tmp';  % 
 if (writeLog)
-    str = datestr(now);
-    diary([str, '.log']);
+    str = datestr(now, 30);
+    diary([RESULTS_DIR, '/',str, '.log']);
 end
 
-RESULTS_DIR = 'results'; 
-DATASET = 'toyData';
-benchmark = {'lineardata', 'poly3data', 'expdata', 'sindata', 'tanhdata'};
-%benchmark = {'lineardata'};
+DATASET     = 'toyData';
+benchmark   = {'lineardata', 'poly3data', 'expdata', 'sindata', 'tanhdata'};
 
-for i = 1 : length(benchmark)
-  evaluateBenchmark(RESULTS_DIR, DATASET, benchmark{i}, D);
-end
-
-end
-
-% evaluateBenchmark(DATASET, benchmark)
-function evaluateBenchmark(RESULTS_DIR, DATASET, benchmark, D)
-% Just avoids Matlab sending me stupid warning
-linearMethod = {'Taylor', 'Unscented'};
-for i = 1 : length(linearMethod)
-    runAllFolds(RESULTS_DIR, DATASET, benchmark, linearMethod{i}, D);
+for i = idxBench
+  evaluateBenchmark(RESULTS_DIR, DATASET, benchmark{i}, idxMethod, idxFold, D);
 end
 
 diary off;
@@ -32,13 +24,26 @@ diary off;
 end
 
 
+
+%% evaluateBenchmark(DATASET, benchmark)
+function evaluateBenchmark(RESULTS_DIR, DATASET, benchmark, idxMethod, idxFold, D)
+% Just avoids Matlab sending me stupid warning
+linearMethod = {'Taylor', 'Unscented'};
+for i = idxMethod
+    runAllFolds(RESULTS_DIR, DATASET, benchmark, linearMethod{i}, idxFold, D);
+end
+
+
+end
+
+
 %% runAllFolds() 
-function runAllFolds(RESULTS_DIR, DATASET, benchmark, linearMethod, D)
+function runAllFolds(RESULTS_DIR, DATASET, benchmark, linearMethod, idxFold, D)
 RESULTS_DIR = [RESULTS_DIR, '/', DATASET, '/', 'D', num2str(D), '/', linearMethod];
 system(['mkdir -p ', RESULTS_DIR]);
 nFolds = 5;
 
-for k = 1 : nFolds
+for k = idxFold
     data  =  mteugpReadSingleFoldToy(DATASET, benchmark, k);
     
     [model, pred, perf] = runSingleFold(data, benchmark, linearMethod, D);    
