@@ -1,4 +1,4 @@
-function  model  = mteugpGetConfigToy( X, Y, benchmark, linearMethod, D )
+function  model  = mteugpGetConfigDefault( X, Y, fwdFunc, linearMethod, D )
 %MTEUGPGETCONFIGTOY Get configuration for toy experiment
 d = size(X,2);
 %D = 100; % Number of features to use
@@ -20,8 +20,8 @@ model.featFunc     = featFunc;  % feature function
 model.initFeatFunc = initFeatFunc; % initializes Parameters of feature function
 
 model.linearMethod = linearMethod; % 'Taylor' or 'Unscented'
-model.fwdFunc      = @(ff) mteugpFwdModelToy(ff,benchmark ) ;  
-model.jacobian     = 1;  % 1/0 if jacobian is provided
+model.fwdFunc      = fwdFunc;  
+model.jacobian     = 0;  % 1/0 if jacobian is provided
 model.kappa        = 1/2; % parameter of Unscented linearization
 
 model.nSamples     = 1000; % Number of samples for approximating predictive dist.
@@ -32,10 +32,10 @@ optConf.ftol     = 1e-5;
 model.globalConf = optConf;
 
 % variational parameter optimization configuration
-optConf.iter    = 200;  % maximum iterations on variational parameters
+optConf.iter    = 200; % maximum iterations on variational parameters
 optConf.ftol   = 1e-5;
 % optConf.xtol   = 1e-8; % tolerance for Newton iterations
-optConf.alpha   = 0.9;  % learning rate for Newton iterations
+optConf.alpha   = 0.9; % learning rate for Newton iterations
 model.varConf   = optConf;
  
 % Hyperparameter optimization configuration
@@ -48,10 +48,9 @@ optConf.verbose   = 1; % 0: none, 1: full
 model.hyperConf   = optConf;
 
 % initialization Function
-model.initFunc    = @mteugpInitToy;
+model.initFunc    = @mteugpInitDefault;
 
 end
 
 
  
-  

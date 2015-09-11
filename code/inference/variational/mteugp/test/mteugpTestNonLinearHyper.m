@@ -16,63 +16,20 @@ hyp.cov = log([ell; sf]);
 sigma2y = 1e-3; 
 sigma2w = 1;
 fwdFunc = @(ff) ff.^3;
+linearMethod = 'Taylor';
 
 %% Generates data
 [X, Y, xstar, fstar, gstar, ystar] =   getData(N, d, covfunc, hyp, fwdFunc, sigma2y);
 
-
-%% feature function parameters and initialization
-Z       = randn(D,d);
-featFunc     =  @(xx, ss) getRandomRBF(xx, Z, ss); % function of (x, vargargin)
-sigma_z      = getOptimalSigmaz(ell); % initialization of parameters 
-% featParam    = sigma_z; % a cell with featFunc optimizable (initial) parameters
-initFeatFunc = @initRandomRBF;
+model  = mteugpGetConfigDefault( X, Y, fwdFunc, linearMethod, D );
 
 
-%% set up model
-model.Q            = 1; % latent functions
-model.P            = size(Y,2); % Outputs
-model.N            = N;
-model.D            = D;
-%model.sigma2y      = sigma2y*ones(model.P,1); % vector of noise variances
-%model.sigma2w      = sigma2w*ones(D,1); % vector of prior variances
-model.Y            = Y;
-model.X            = X;
-
-model.featFunc     = featFunc;  % feature function
-model.initFeatFunc = initFeatFunc; % initializes Parameters of feature function
-
-model.linearMethod = 'Unscented'; % 'Taylor' or 'Unscented'
-model.fwdFunc      = fwdFunc;  
-model.jacobian     = 0; % jacobian is provided by fwdFunc
-model.kappa        = 1/2; % parameter of Unscented linearization
-model.nSamples     = 1000; % Number of samples for approximating predictive dist.
-
-% global optimization configuration
-optConf.iter      = 5;    % maximum global iterations
-optConf.ftol      = 1e-3;
-model.globalConf  = optConf;
-
-% variational parameter optimization configuration
-optConf.iter    = 20;  % maximum iterations on variational parameters
-optConf.xtol     = 1e-3; % tolerance for Newton iterations
-optConf.alpha   = 0.5;  % learning rate for Newton iterations
-model.varConf   = optConf;
- 
-% Hyperparameter optimization configuration
-optConf.iter      = [];  % maximum iterations for hyper parametes (minfunc parameter)
-optConf.eval      = 20;  % Maxium evals for hyper paramters func (minFunc parameter)
-optConf.optimizer = 'nlopt'; % for hyper-parameters
-optConf.xtol       = 1e-3; % Tolerance for hyper optimization 
-optConf.ftol       = 1e-3; % Tolerance for hyper optimization 
-optConf.verbose   = 1; % 0: none, 1: full
-model.hyperConf    = optConf;
 
 
 
 %% Learns EGP model
 model         = mteugpLearn( model );
-
+sigma_z       = getOptimalSigmaz(ell); 
 fprintf('sigma_x: Learned= %.4f <--> Optimal %.4f \n', exp(model.featParam), sigma_z);
 fprintf('sigma2_y: Learned= %.4f <--> True %.4f \n', model.sigma2y, sigma2y);
 fprintf('sigma2_w: Learned= %.4f \n', model.sigma2w);

@@ -6,7 +6,7 @@ function   mteugpTestToyData( idxBench, idxMethod, idxFold, D, writeLog  )
 % idxMethod: 1 : 2
 % idxFold: 1:5
 % D: Dimensionality of feature space
-RESULTS_DIR = 'results/tmp';  % 
+RESULTS_DIR = 'results';  % 
 if (writeLog)
     str = datestr(now, 30);
     diary([RESULTS_DIR, '/',str, '.log']);
