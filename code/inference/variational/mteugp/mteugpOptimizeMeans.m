@@ -56,6 +56,7 @@ nelboOld = mteugpNelbo(model);
 difNelbo = Inf;
 i = 0;
 diverge = 0;
+% Finds the largest step that reduces the nelbo
 while ( (difNelbo > 0) && (i <=iter) )
     step               = step*alpha;
     model.M(:,q)       = mq  - step*dmq;

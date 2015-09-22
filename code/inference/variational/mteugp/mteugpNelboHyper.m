@@ -43,7 +43,7 @@ for n = 1 : N
 end
 
 % remaining terms coming from KL and likelihood after cancelation of traces at optimal M,C
-elbo = elbo +  N*(P*log(2*pi) + sum(log(sigma2y)));
+elbo = elbo +  N*( P*log(2*pi) + sum(log(sigma2y)) );
 for q = 1 : Q
     sigma2w = model.sigma2w(q);
     C       = model.C(:,:,q); % posterior covariance
