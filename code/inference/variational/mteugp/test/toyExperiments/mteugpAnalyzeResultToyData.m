@@ -21,6 +21,9 @@ pred2  =  pred;
 perf2  = perf;
 clear model pred perf;
 
+
+
+
 subplot(2,1,1);
 mteugpPlotPredictions1D( data ,model1, pred1 ); title('MODEL1');
 subplot(2,1,2);

@@ -23,7 +23,7 @@ set(gca, 'FontSize', 14);
 
 
 legend({'Model std (f*)', 'Model mean(f*)', 'Model mean(g*)', 'ftrue', 'gtrue', ...
-    'ytrain'}, 'Location', 'SouthEast');
+    'ytrain'}, 'Location', 'Best');
 title(upper(model.linearMethod));
 
 
