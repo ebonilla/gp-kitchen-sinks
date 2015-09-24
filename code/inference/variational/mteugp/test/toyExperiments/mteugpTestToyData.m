@@ -1,4 +1,5 @@
-function   mteugpTestToyData( idxBench, idxMethod, idxFold, D, writeLog  )
+function   mteugpTestToyData( str_idxBench, str_idxMethod, str_idxFold, ...
+                            str_D, str_writeLog  )
 %MTEUGPTESTTOYDATA Tests MTEUGP on a series of toy data examples 
 %   Data generated and evaluated using the model of Steinberg and Bonilla
 %   (NIPS, 2014)
@@ -6,6 +7,9 @@ function   mteugpTestToyData( idxBench, idxMethod, idxFold, D, writeLog  )
 % idxMethod: 1 : 2
 % idxFold: 1:5
 % D: Dimensionality of feature space
+[idxBench, idxMethod, idxFold, D, writeLog] = ...
+                parseInput(str_idxBench, str_idxMethod, str_idxFold, str_D, str_writeLog);
+
 RESULTS_DIR = 'results/tmp';  % 
 if (writeLog)
     str = datestr(now, 30);
@@ -23,6 +27,19 @@ diary off;
 
 end
 
+
+
+%% 
+function [idxBench, idxMethod, idxFold, D, writeLog] = ...
+                parseInput(str_idxBench, str_idxMethod, str_idxFold, str_D, str_writeLog)
+
+idxBench  = str2num(str_idxBench);
+idxMethod = str2num(str_idxMethod);
+idxFold   = str2num(str_idxFold);
+D         = str2num(str_D);
+writeLog  = str2num(str_writeLog);
+
+end
 
 
 %% evaluateBenchmark(DATASET, benchmark)
