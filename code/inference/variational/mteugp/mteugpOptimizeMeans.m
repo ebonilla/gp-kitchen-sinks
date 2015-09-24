@@ -32,6 +32,7 @@ while ( (i <= optconf.iter)  && (tol > optconf.ftol))
     if (diverge)
         return;
     end
+    % Updating means in linearization parameters
     model.M(:,q) = mq; 
     model.A      = A;
     model.B      = B;

@@ -5,6 +5,10 @@ for q = 1 : model.Q
         model.C(:,:,q) = updateCovariance(model,q);
 end
 
+
+% Moving the covariance chagnes the linearization parameters for the UGP
+[model.A, model.B] = mteugpUpdateLinearization(model);
+
 end
 
 
@@ -19,3 +23,6 @@ H    = mteugpGetHessMq(model, mq, sigma2w, diagSigmainv, N, q);
 L    = getCholSafe(H);
 Cq   = getInverseChol(L);
 end
+
+
+

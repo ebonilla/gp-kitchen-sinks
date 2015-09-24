@@ -14,7 +14,7 @@ for n = 1 : N
     bn       = model.B(n,:)';
     quadTerm    = (yn - An*M*phin - bn)'*Sigmainv*(yn - An*M*phin - bn); % TODO: Improve efficiency
     
-    trTerm = 0;
+     trTerm = 0;
     for q = 1 : model.Q
         Cq = model.C(:,:,q);
         anq = An(:,q)';

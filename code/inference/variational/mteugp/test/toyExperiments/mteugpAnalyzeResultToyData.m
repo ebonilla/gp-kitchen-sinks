@@ -10,7 +10,12 @@ fname = ['results/toyData/D100/Unscented/', benchmark, '_k', num2str(fold), '.ma
 load(fname, 'model', 'pred', 'perf' );
 model1 = model;
 pred1  =  pred;
-perf1  = perf;
+perf1   = perf;
+
+% replacing gpred with linear approximation
+% pred1.gpred   = mteugpPredictLinear( model1, data.xtest );
+% perf1   = mteugpGetPerformanceToy( pred1, data.ftest, data.gtest );
+
 clear model pred perf;
 
 % good results  

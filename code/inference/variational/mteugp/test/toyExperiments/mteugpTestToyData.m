@@ -16,7 +16,7 @@ DATASET     = 'toyData';
 benchmark   = {'lineardata', 'poly3data', 'expdata', 'sindata', 'tanhdata'};
 
 for i = idxBench
-  evaluateBenchmark(RESULTS_DIR, DATASET, benchmark{i}, idxMethod, idxFold, D);
+    evaluateBenchmark(RESULTS_DIR, DATASET, benchmark{i}, idxMethod, idxFold, D);
 end
 
 diary off;
@@ -29,7 +29,7 @@ end
 function evaluateBenchmark(RESULTS_DIR, DATASET, benchmark, idxMethod, idxFold, D)
 % Just avoids Matlab sending me stupid warning
 linearMethod = {'Taylor', 'Unscented'};
-for i = idxMethod
+for i = idxMethod                    
     runAllFolds(RESULTS_DIR, DATASET, benchmark, linearMethod{i}, idxFold, D);
 end
 
@@ -41,12 +41,10 @@ end
 function runAllFolds(RESULTS_DIR, DATASET, benchmark, linearMethod, idxFold, D)
 RESULTS_DIR = [RESULTS_DIR, '/', DATASET, '/', 'D', num2str(D), '/', linearMethod];
 system(['mkdir -p ', RESULTS_DIR]);
-nFolds = 5;
 
 for k = idxFold
     data  =  mteugpReadSingleFoldToy(DATASET, benchmark, k);
-    
-    [model, pred, perf] = runSingleFold(data, benchmark, linearMethod, D);    
+    [model, pred, perf] = runSingleFold(data, benchmark, linearMethod, k, D);    
     fname = [RESULTS_DIR, '/', benchmark, '_k', num2str(k), '.mat'];
     save(fname, 'model', 'pred', 'perf');
     showProgress(benchmark, k, linearMethod, perf);
@@ -55,16 +53,15 @@ end
 end
 
 
-%% showProgress(benchmark, linearMethod, perf)
-function showProgress(benchmark, fold, linearMethod, perf)
-fprintf('MODEL: %s(%d): %s --> SMSE(f*)=%.4f, NLPD(f*)=%4f, SMS(g*)=%.4f \n', benchmark, fold, linearMethod, perf.smseFstar, perf.nlpdFstar, perf.smseGstar);
-end
-
-
 %%  [model, pred, perf] = runSingleFold(data, benchmark, linearMethod, D )
-function [model, pred, perf] = runSingleFold(data, benchmark, linearMethod, D )
+function [model, pred, perf] = runSingleFold(data, benchmark, linearMethod, fold, D )
 
 model             = mteugpGetConfigToy( data.xtrain, data.ytrain, benchmark, linearMethod, D );
+
+% DELETE ME 
+initFunc       = @(model) mteugpInitToyFromFile(benchmark, linearMethod, fold, D);
+model.initFunc = initFunc;
+
 model             = mteugpLearn( model );
 
 [pred.mFpred, pred.vFpred]  = mteugpGetPredictive( model, data.xtest );
@@ -77,6 +74,10 @@ perf = mteugpGetPerformanceToy(pred, data.ftest, data.gtest);
 end
 
 
+%% showProgress(benchmark, linearMethod, perf)
+function showProgress(benchmark, fold, linearMethod, perf)
+fprintf('MODEL: %s(%d): %s --> SMSE(f*)=%.4f, NLPD(f*)=%4f, SMS(g*)=%.4f \n', benchmark, fold, linearMethod, perf.smseFstar, perf.nlpdFstar, perf.smseGstar);
+end
 
 
 
