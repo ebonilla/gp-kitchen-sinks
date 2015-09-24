@@ -13,5 +13,5 @@ path(path(), genpath('~/Dropbox/Matlab/DERIVESTsuite')); % jacobians
 
 addpath(genpath('~/Dropbox/Matlab/minFunc_2012'));
 
-addpath(genpath('/Users/ebonilla/Documents/Software/nlopt')); %'nlopt'
+addpath(genpath('/Users/ebonilla/Documents/software/nlopt')); %'nlopt'
 

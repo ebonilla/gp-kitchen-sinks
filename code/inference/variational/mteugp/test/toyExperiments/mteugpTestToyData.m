@@ -10,7 +10,7 @@ function   mteugpTestToyData( str_idxBench, str_idxMethod, str_idxFold, ...
 [idxBench, idxMethod, idxFold, D, writeLog] = ...
                 parseInput(str_idxBench, str_idxMethod, str_idxFold, str_D, str_writeLog);
 
-RESULTS_DIR = 'results/tmp';  % 
+RESULTS_DIR = 'results';  % 
 if (writeLog)
     str = datestr(now, 30);
     diary([RESULTS_DIR, '/',str, '.log']);
@@ -76,8 +76,8 @@ function [model, pred, perf] = runSingleFold(data, benchmark, linearMethod, fold
 model             = mteugpGetConfigToy( data.xtrain, data.ytrain, benchmark, linearMethod, D );
 
 % DELETE ME 
-initFunc       = @(model) mteugpInitToyFromFile(benchmark, linearMethod, fold, D);
-model.initFunc = initFunc;
+%initFunc       = @(model) mteugpInitToyFromFile(benchmark, linearMethod, fold, D);
+%model.initFunc = initFunc;
 
 model             = mteugpLearn( model );
 
