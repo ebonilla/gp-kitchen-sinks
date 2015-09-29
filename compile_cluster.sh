@@ -22,7 +22,7 @@ TARGETDIR='standalone/toyData'
 #rm -r $1.app
 
 
-/share/apps/matlab/2014b/bin/mcc -m  $FILENAME -a $P1 -a $P2 -a $P3 -a $P4 -a $P5 -d $TARGETDIR -o mteugpToyData -v 
+/share/apps/matlab/2014b/bin/mcc -R -nojvm -m  $FILENAME -a $P1 -a $P2 -a $P3 -a $P4 -a $P5 -d $TARGETDIR -o mteugpToyData -v 
 
 # ../scripts/*.m ../utils/*.m ../softmax-class/*.m ../external/gpml/*.m ../external/Netlab/*.m   
 # mteugpTestToydata.m -d standalone/toyData -o mteugp -v
