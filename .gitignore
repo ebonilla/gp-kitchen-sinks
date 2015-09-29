@@ -6,4 +6,5 @@
 *.synctex.gz
 *.mexmaci64
 *.*~
+*.out
 
