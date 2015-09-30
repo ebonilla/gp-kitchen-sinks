@@ -1,5 +1,42 @@
 \documentclass[twoside]{article}
 \usepackage{aistats2016}
+\usepackage[round]{natbib}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{epsfig,latexsym,amsbsy,amssymb,amsmath,color, url,booktabs, multirow}
+\usepackage{colortbl}
+\usepackage{longtable}
+\usepackage{algorithm,algorithmic}
+\usepackage{graphicx}
+\usepackage{lipsum}
+\usepackage{xspace}
+
+\makeatletter
+\renewenvironment{thebibliography}[1]
+{\subsubsection*{\refname}%
+  \@mkboth{\MakeUppercase\refname}{\MakeUppercase\refname}%
+%  \begin{small}
+    \list{\@biblabel{\@arabic\c@enumiv}}%
+    {\settowidth\labelwidth{\@biblabel{#1}}%
+      \leftmargin\labelwidth
+      \advance\leftmargin\labelsep
+      \@openbib@code
+      \usecounter{enumiv}%
+      \let\p@enumiv\@empty
+      \renewcommand\theenumiv{\@arabic\c@enumiv}}%
+    \sloppy
+    \clubpenalty4000
+    \@clubpenalty \clubpenalty
+    \widowpenalty4000%
+    \sfcode`\.\@m}
+  {\def\@noitemerr
+    {\@latex@warning{Empty `thebibliography' environment}}%
+    \endlist
+%  \end{small}
+  }
+  \makeatother
+
+
 
 % If your paper is accepted, change the options for the package
 % aistats2016 as follows:
@@ -10,6 +47,7 @@
 % headings for the authors names, plus a copyright note at the end of
 % the first column of the first page.
 
+\input{macros}
 
 \begin{document}
 
@@ -45,10 +83,25 @@
 \input{experiments}
 \input{conclusion}
 
+% \subsubsection*{Acknowledgements}
 
 
-\subsubsection*{References}
-% A Wilson's work
- 
+% Andrew G. Wilson's work
+\bibliography{references}
+\bibliographystyle{plainnat}
+% \bibliographystyle{apalike}
 
 \end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+      
