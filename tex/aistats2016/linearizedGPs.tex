@@ -1,3 +1,49 @@
-\section{LINEARIZED GAUSSIAN PROCESSES}
+\section{GAUSSIAN PROCESS MODELS}
+We are given $N$ input data points $ \{ \ins_n  \} \in \real{d}$ and their corresponding  
+targets $\{ \outs_n  \} \in \real{P}$, which will  we describe compactly with $\cbrac{\Ins, \Outs}$,
+where $\Ins \in \real{N \times d}$  and $\Outs \in \real{N \times P}$. Our goal is 
+to learn a probabilistic mapping from inputs to outputs, which can be achieved through $Q$ latent  functions $\{ f_q \}$ and a given non-linear forward model $\nonlinf : \real{Q} \to \real{P}$. Additionally, we are interested in estimating the posterior over the latent functions given the observed data. 
+While the former problem  is the standard multi-task supervised learning setting, we refer 
+to the latter  as a probabilistic joint inversion problem, as we are given a forward mapping from 
+latent functions to noiseless outputs but not the reverse. 
+
+A fairly flexible modeling approach places independent zero-mean Gaussian process (GP) priors over 
+the latent functions $\{ f_q \}$ with covariance functions $\kernel_q(\cdot, \cdot)$ and assumes iid observations given these latent functions. When these function are realized at the training data,
+we obtain the following prior and likelihood models:
+\begin{align}
+	p(\latents)  &=  \prod_{q=1}^{Q} \Normal(\latentsq; \vec{0}, \KERNL_q) \\
+	p(\outs | \latents) &= \prod_{n=1}^N p(\outs_n | \nonlinf ( \latentsn )) \text{,}
+\end{align}
+where $\KERNL_q$ is the covariance matrix induced by evaluating  the covariance 
+function $\kernel_q$ at all input data $\Ins$; $\latentsq$ are  the values 
+corresponding to latent function $q$ at all training inputs; 
+and $\latentsn$ are  the values corresponding to all latent functions at input $\ins_n$. 
+
+From a probabilistic inference perspective, solving the inversion problem (and the 
+subsequent prediction problem), boils down to computing the posterior distribution 
+$p(\latents | \Ins, \Outs)$. Unfortunately, this posterior distribution is, in general, 
+intractable due to the non-linearities in $\nonlinf$, and one must resort to approximations.
+%
+\subsection{Variational Inference in Linearized GP Models}
+\citet{steinberg-bonilla-nips-2014} have recently proposed a variational inference algorithm that
+addresses the above inference problem for single output observations ($Q=1$).  
+Such an algorithm relies upon the linearization of the forward model around the posterior 
+mean, allowing for an analytic approximation of the evidence lower bound, which in turns 
+enables the optimization of the variational parameters and hyperparameters within a simple 
+but effective optimization procedure.  
+
+To build such linearizations they use a Taylor series approximation and the unscented transform 
+and, consequently, they refer to their methods to as the Extended Gaussian Process (\egp) and 
+the Unscented Gaussian process (\ugp). 
+The main advantage of their algorithms is that the linear
+approximation is local and adaptive, as it is constructed around the posterior mean for a
+single data point $n$, and it gets updated at every iteration of the algorithm as a function
+of the variational parameters. 
+
+However, such algorithms have the fundamental problem of poor scalability, as they 
+inherit the computational cost of traditional GP models, which is $\calO(N^3)$. This 
+problem is, of course, exacerbated when having multi-task learning settings or multiple
+outputs, which renders their approach impractical to large datasets.  
 
 
+% Problem with scalability

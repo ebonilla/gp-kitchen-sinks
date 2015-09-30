@@ -1,0 +1,131 @@
+% OTHER
+\newcommand{\rks}{{\sc rks}\xspace}
+\newcommand{\egp}{{\sc egp}\xspace}
+\newcommand{\ugp}{{\sc ugp}\xspace}
+
+
+%% Define bracket commands (normal, square and curly).
+\newcommand{\brac} [1]  {\ensuremath{\left({#1}\right)}}
+\newcommand{\sbrac}[1]  {\ensuremath{\left[{#1}\right]}}
+\newcommand{\cbrac}[1]  {\ensuremath{\left\{{#1}\right\}}}
+\newcommand{\abrac}[1]  {\ensuremath{\left\langle{#1}\right\rangle}}
+
+
+%% Symbols
+
+% General
+\newcommand{\opt}        {\ensuremath{^{+}}}
+\newcommand{\test}       {\ensuremath{^{*}}}
+\newcommand{\testT}      {\ensuremath{^{*\top}\!}}
+\newcommand{\ttest}      {\ensuremath{^{**}}}
+\newcommand{\real}  [1]  {\ensuremath{\mathbb{R}^{#1}}}
+\newcommand{\ident} [1]  {\ensuremath{\mathbf{I}_{#1}}}
+\newcommand{\all}        {\ensuremath{\star}}
+%\newcommand{\all}        {\ensuremath{\raisebox{-0.7ex}{\scalebox{1.8}{$\cdot$}}}}
+%\newcommand{\all}        {\ensuremath{{\scalebox{1.8}{$\cdot$}}}}
+
+% Dimensions
+\newcommand{\ltdim}     {\ensuremath{Q}} % # of latent functions 
+\newcommand{\otdim}     {\ensuremath{P}} % # outputs
+\newcommand{\idim}      {\ensuremath{D}} % feature dimension
+
+% Variables
+\newcommand{\Latents}   {\ensuremath{\mathbf{F}}}
+\newcommand{\latents}   {\ensuremath{\mathbf{f}}}
+\newcommand{\latentss}  {\ensuremath{f}}
+\newcommand{\latentsq}  {\latents_{\cdot q}}
+\newcommand{\latentsn}  {\latents_{n \cdot}}
+\newcommand{\Outs}      {\ensuremath{\mathbf{Y}}}
+\newcommand{\outs}      {\ensuremath{\mathbf{y}}}
+\newcommand{\outss}     {\ensuremath{y}}
+\newcommand{\Ins}       {\ensuremath{\mathbf{X}}}
+\newcommand{\ins}       {\ensuremath{\mathbf{x}}}
+\newcommand{\featfunc}[1]  {\ensuremath{\phi\!\brac{{#1}}}}
+\newcommand{\Feats}     {\ensuremath{\boldsymbol\Phi}}
+\newcommand{\feats}     {\ensuremath{\boldsymbol\phi}}
+\newcommand{\Weights}   {\ensuremath{\mathbf{W}}}
+\newcommand{\weights}   {\ensuremath{\mathbf{w}}}
+\newcommand{\weight}    {\ensuremath{{w}}}
+\newcommand{\pWeights}  {\ensuremath{\mathbf{M}}}
+\newcommand{\pweights}  {\ensuremath{\mathbf{m}}}
+\newcommand{\pweight}   {\ensuremath{{m}}}
+\newcommand{\Linmat}    {\ensuremath{\mathbf{A}}}
+\newcommand{\Lins}      {\ensuremath{a}}
+\newcommand{\Linvec}    {\ensuremath{\mathbf{a}}}
+\newcommand{\intcpts}   {\ensuremath{b}}
+\newcommand{\kernl}     {\ensuremath{k}}
+\newcommand{\Kernl}     {\ensuremath{\mathbf{k}}}
+\newcommand{\KERNL}     {\ensuremath{\mathbf{K}}}
+
+
+\newcommand{\prvar}     {\ensuremath{\omega^2}}  % prior variance
+\newcommand{\prVar}     {\ensuremath{\boldsymbol\omega}} % prior coovarincae
+
+\newcommand{\Lcov}      {\ensuremath{\mat{\Sigma}}} % Likelihood covariance 
+\newcommand{\lvar}      {\ensuremath{\sigma^2}}    % Individual likelihood variances 
+
+\newcommand{\lstd}      {\ensuremath{\sigma}}
+\newcommand{\pLatents}  {\ensuremath{\mathbf{M}}}
+\newcommand{\platents}  {\ensuremath{\mathbf{m}}}
+\newcommand{\pocov}     {\ensuremath{\mathbf{C}}}
+\newcommand{\platentss} {\ensuremath{m}}
+\newcommand{\pocovs}    {\ensuremath{C}}
+\newcommand{\xcov}     {\ensuremath{\boldsymbol\Gamma}}
+\newcommand{\khyper}    {\ensuremath{\theta}}
+\newcommand{\khypers}   {\ensuremath{\boldsymbol\theta}}
+\newcommand{\hyper}     {\ensuremath{\boldsymbol{\theta}}}
+\newcommand{\prmean}    {\ensuremath{\boldsymbol{\mu}}}
+\newcommand{\Sobs}      {\ensuremath{\mathcal{Y}}}
+\newcommand{\Sfunc}     {\ensuremath{\mathcal{M}}}
+\newcommand{\scoef}     {\ensuremath{\kappa}}
+\newcommand{\Sw}        {\ensuremath{u}}
+\newcommand{\Kgain}     {\ensuremath{\mathbf{H}}}
+\newcommand{\intcpt}    {\ensuremath{\mathbf{b}}}
+\newcommand{\Fengy}     {\ensuremath{\mathcal{F}}}
+\newcommand{\LogLike}   {\ensuremath{\mathcal{L}}}
+\newcommand{\step}      {\ensuremath{\alpha}}
+\newcommand{\Jacob}[1]  {\ensuremath{\mathbf{J}_{#1}}}
+\newcommand{\jacob}[1]  {\ensuremath{\mathbf{j}_{#1}}}
+
+% Augmented systems
+\newcommand{\augobs}    {\ensuremath{\mathbf{z}}}
+\newcommand{\augcov}    {\ensuremath{\mathbf{S}}}
+\newcommand{\augLinmat} {\ensuremath{\mathbf{B}}}
+\newcommand{\augintcpt} {\ensuremath{\mathbf{c}}}
+
+
+%% Operations
+\newcommand{\transpose}  {\ensuremath{^{\!\top}}}
+\newcommand{\inv}        {\ensuremath{^{\text{-}1}}}
+\newcommand{\deter}[1]   {\ensuremath{\left|{#1}\right|}}
+\renewcommand{\trace}[1]   {\ensuremath{\text{tr}\!\brac{#1}}}
+\renewcommand{\diag}[1]    {\ensuremath{\text{diag}\!\brac{#1}}}
+\newcommand{\expec}[2]   {\ensuremath{\abrac{#2}_{\!{#1}}}}
+\newcommand{\expece}[2]  {\ensuremath{\mathbb{E}_{#1}\!\sbrac{#2}}}
+\newcommand{\evar} [2]   {\ensuremath{\mathbb{V}_{#1}\!\sbrac{#2}}}
+\newcommand{\KL}[2]      {\ensuremath{\text{KL}\!\sbrac{{#1}\!\parallel\!{#2}}}}
+\newcommand{\entropy}[1] {\ensuremath{\mathbb{H}\sbrac{#1}}}
+\newcommand{\lnorm}[2]   {\ensuremath{\left\|{#2}\right\|_{{#1}}}}
+
+
+%% Functions, PDFs etc
+\newcommand{\nonlinf}    {\ensuremath{\mathbf{g}}}
+\newcommand{\nonlin}[1]  {\ensuremath{\mathbf{g}\!\brac{{#1}}}}
+\newcommand{\nonlinfact}[2] {\ensuremath{g_{{#1}}\!\brac{{#2}}}}
+\newcommand{\augnonlin}[1] {\ensuremath{h\!\brac{{#1}}}}
+\newcommand{\prob}  [1]  {\ensuremath{p\!\brac{#1}}}
+\newcommand{\probC} [2]  {\ensuremath{p\!\left({#1}\middle\vert{#2}\right)}}
+\newcommand{\qrob}  [1]  {\ensuremath{q\!\brac{#1}}}
+\newcommand{\qrobC} [2]  {\ensuremath{q\!\left({#1}\middle\vert{#2}\right)}}
+\newcommand{\gaus}  [1]  {\ensuremath{\mathcal{N}\!\brac{#1}}}
+\newcommand{\gausC} [2]  {\ensuremath{\mathcal{N}\!\left({#1}\middle\vert{#2}\right)}}
+\newcommand{\bern}  [1]  {\ensuremath{\textrm{Bern}\!\brac{#1}}}
+\newcommand{\bernC} [2]  {\ensuremath{\textrm{Bern}\!\left({#1}\middle\vert{#2}\right)}}
+\newcommand{\kfunc} [2]  {\ensuremath{\kernl\!\brac{{#1}, {#2}}}}
+\newcommand{\expon} [2]  {\ensuremath{{#1}\!\times\!10^{#2}}}
+\newcommand{\bigo}  [1]  {\ensuremath{\mathcal{O}\!\brac{{#1}}}}
+
+
+%% Operators
+\DeclareMathOperator*{\argmax}{\operatorname*{argmax}}
+\DeclareMathOperator*{\argmin}{\operatorname*{argmin}}

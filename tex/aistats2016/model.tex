@@ -1,3 +1,38 @@
 \section{MULTI-TASK RANDOM EXPANSIONS}
-
+%
+We have input data $\ins_n \in \real{d}$, which we can transform into features
+$\featfunc{\ins_n} \in \real{D}$ using some function $\featfunc{\cdot}$. We also
+have output targets $\outs_n \in \real{P}$ and our total dataset is 
+$\cbrac{\Outs, \Ins}$ where $\Outs \in \real{N \times P}$ and, $\Ins \in
+\real{N \times d}$. We also refer to $\feats_n := \featfunc{\ins_n}$ and
+$\Feats := \featfunc{\Ins}$. The multi-task model is,
+\begin{equation}
+    \outs_n \sim \gaus{\nonlin{\Weights\feats_n}, \Lcov} 
+    \qquad \text{and} \qquad
+    \weights_q = \gaus{\mathbf{0}, \prvar_q \ident{D}},
+\end{equation}
+where there are $Q$ input tasks, and we have weights $\Weights \in \real{Q
+    \times D}$ and $\weights_q \in \real{D}$, and $\Lcov =
+\diag{\sbrac{\lvar_1, \ldots, \lvar_P}}$. Also we also have a non-linear
+forward model, $\nonlinf : \real{Q} \to \real{P}$. It is worth noting that the
+prior latent functions for each task are $\latents_q = \Feats\weights_q$. If we
+use \emph{random kitchen sink} or \emph{fastfood} bases such that
+$\kfunc{\ins_i}{\ins_j} = 
+\mathbb{E}[\featfunc{\ins_i}\transpose\featfunc{\ins_j}]$, we can
+approximate Gaussian processes with simple linear models that can
+be learned with stochastic gradient descent. We can employ the same methodology
+for our joint model,
+\begin{equation}
+    \probC{\Outs, \Weights}{\Ins} =
+        \prod^N_{n=1} \gausC{\outs}{\nonlin{\Weights\feats_n}, \Lcov}
+        \prod^Q_{q=1} \gausC{\weights_q}{\mathbf{0}, \prvar_q \ident{D}}.
+\end{equation}
+Let's now make the simplifying assumption that posterior factorises and has the
+form,
+\begin{equation}
+    \qrob{\Weights} = \prod^Q_{q=1} \gausC{\weights_q}{\pweights_q, \pocov_q},
+\end{equation}
+We can use variation inference to learn this posterior approximation, and
+thereby allowing us to infer the posterior latent tasks,
+$\mathbb{E}[\latents_q] \approx \Feats\pweights_q$.
 
