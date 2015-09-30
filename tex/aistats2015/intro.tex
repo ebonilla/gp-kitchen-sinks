@@ -1,0 +1,27 @@
+\section{INTRODUCTION}
+% 
+- We are interested in inference in GP models with non-linear likelihoods
+not only to make probabilistic predictions of the observables but also in having
+good estimates of the posterior of the latent function
+
+- the model proposed by S\&B  is good. their main insight is that we can perform 
+local approximations of the non-linear likelihood by using either Taylor series 
+approximations  or the Unsctened transform. The nice thing is that such approximations
+are local and adaptive in that their are constructed around the current posterior 
+mean, which is updated within a variational inference procedure 
+
+- Unfortunately the model of S\&B is  is single-task and non-scalable. 
+Scaling such a model naively with N data points and M tasks would be $N^3M^3$,
+which is completely unfeasible
+
+- We propose a multi-task scalable approximation of  the inference method of S\&B 
+* multi-task is achieved by linear combination of latent function
+* scalability is achieved through RKS  projections 
+* as in the original model, nonlinearity is dealt trough local linearization during 
+variational inference
+* say about the complexity of the new model 
+
+
+
+
+
