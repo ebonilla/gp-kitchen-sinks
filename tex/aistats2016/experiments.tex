@@ -1,3 +1,22 @@
 \section{EXPERIMENTS}
-
-
+\begin{table*}
+\caption{Performance of the \eks and \uks methods compared to their GP counterparts (\egp and \ugp) on a range of synthetic benchmarks. 
+\gp is the corresponds to the GP analytical solution in the linear case.
+}
+\begin{center}
+\input{table-toy}
+\end{center}
+\end{table*}
+%
+\begin{figure*}
+\centering
+\begin{tabular}{c c c}
+\includegraphics[width=0.31\linewidth]{toyData-EKS-SMSE-fstar} &
+\includegraphics[width=0.31\linewidth]{toyData-EKS-NLPD-fstar} &
+\includegraphics[width=0.31\linewidth]{toyData-EKS-SMSE-gstar} \\
+\includegraphics[width=0.31\linewidth]{toyData-UKS-SMSE-fstar} &
+\includegraphics[width=0.31\linewidth]{toyData-UKS-NLPD-fstar} &
+\includegraphics[width=0.31\linewidth]{toyData-UKS-SMSE-gstar} \\
+\end{tabular}
+\caption{The performance of the \eks (top) and \uks (bottom) as a function of the number of features used. }
+\end{figure*}

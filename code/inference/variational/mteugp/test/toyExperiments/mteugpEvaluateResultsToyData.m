@@ -1,4 +1,111 @@
-function [basePerf, modelPerf] = mteugpEvaluateResultsToyData()
+function mteugpEvaluateResultsToyData()
+try % delete file with unexectuted runs
+    system('rm runs-left.txt'); 
+catch ME
+end
+
+% Exports table for D=100
+% evaluateResultsToyData(100, 1);
+
+evaluateResultsAllD();
+
+
+end
+
+function evaluateResultsAllD()
+close all;
+boolExport = 0; % export results to latex Table?
+linearMethod = {'EKS', 'UKS', 'GP'};
+benchmark    = upper({'linear', 'poly3', 'exp', 'sin', 'tanh'});
+% strDim       = {'10', '20', '50', '100'};
+strDim       = {'20', '50', '100'};
+v_d          = cellfun(@str2double, strDim);
+L = length(v_d);
+modelStat = cell(1,L);
+for j = 1 : L
+    D = v_d(j);
+    [basePerf, modelPerf, baseStat{j}, modelStat{j}] = evaluateResultsToyData(D, boolExport);
+end
+
+baseValue = [-1.8 -2];
+for idxMethod = 1 : 2
+    strMethod = linearMethod{idxMethod};
+    % SMSE (f*)
+    [meanVal, stdVal] = getMatrixForBarPlot(modelStat, 'smseF', idxMethod);
+    drawBarPlot(meanVal, stdVal, strDim, benchmark, 'SMSE-f*',strMethod, 0);
+
+    % NLPD (f*)
+    [meanVal, stdVal] = getMatrixForBarPlot(modelStat, 'nlpdF', idxMethod);
+    drawBarPlot(meanVal, stdVal, strDim, benchmark, 'NLPD-f*', strMethod, baseValue(idxMethod) );
+
+    % SMSE (g*) 
+    [meanVal, stdVal] = getMatrixForBarPlot(modelStat, 'smseG', idxMethod);
+    drawBarPlot(meanVal, stdVal, strDim, benchmark, 'SMSE-g*', strMethod, 0);
+
+end
+
+
+end
+
+
+
+function drawBarPlot(meanVal, stdVal, strDim, benchmark, strYlabel, strMethod, baseValue)
+FONT_SIZE = 18;
+BAR_WIDTH = 1;
+
+%figure('PaperPositionMode','auto');
+figure; 
+
+[hb, he] = mybarweb(meanVal, stdVal, strDim, benchmark, BAR_WIDTH, parula, baseValue);
+set(gca, 'FontSize', FONT_SIZE);
+h_legend = findobj(gcf,'Tag','legend');
+set(h_legend, 'FontSize', FONT_SIZE, 'location', 'NorthWest', 'Orientation', 'vertical');
+ylabel(strYlabel);
+box off;
+
+% hlt = text(...
+%     'Parent', h_legend.DecorationContainer, ...
+%     'String', '# Features', ...
+%     'HorizontalAlignment', 'center', ...
+%     'VerticalAlignment', 'bottom', ...
+%     'Position', [0.5, 1.05, 0], ...
+%     'Units', 'normalized', ...
+%     'FontSize', FONT_SIZE);
+% legend boxon;
+fname = ['tex/aistats2016/figures/', ...
+            'toyData-', strMethod, '-', strrep(strYlabel, '*', 'star'), '.eps'];
+% print('-depsc2', fname);        
+%
+% saveas(gcf, fname, 'epsc' );
+%system(['epstopdf ', fname]);
+%
+export_fig(fname);
+end
+
+
+function [meanVal, stdVal]= getMatrixForBarPlot(cellStat, field, idxMethod)
+% cellStat: cell of perf structures
+% filed: one of {smseF, nlpdF, smseG}
+%  p  = getfield(cellStat{i}, field); is a structure with mean and std
+%  fields
+% each being a BxM matrix of performance, where B is the # benchmarks and M
+%  is the number of methods
+D       = length(cellStat); 
+perf    = cellStat{1}.(field);
+B       = size(perf.mean,1);  
+meanVal = zeros(B, D); 
+stdVal  = zeros(B, D);
+
+for d = 1 : D
+    perf         =  cellStat{d}.(field);
+    meanVal(:,d) =  perf.mean(:,idxMethod);    
+    stdVal(:,d)  =  perf.std(:,idxMethod);
+end
+
+
+end
+
+function [basePerf, modelPerf, baseStat, modelStat] = evaluateResultsToyData(D, boolExport)
 
 % Evaluates results on toy data
 RESULTS_DIR = 'results';
@@ -6,13 +113,15 @@ DATASET = 'toyData';
 benchmark = {'lineardata', 'poly3data', 'expdata', 'sindata', 'tanhdata'};
 linearMethod = {'Taylor', 'Unscented', 'GP'};
 nFolds = 5;
-D      = 100;
 basePerf = getPerformance([], DATASET, benchmark, linearMethod, nFolds, D, 'baseline');
 modelPerf = getPerformance(RESULTS_DIR, DATASET, benchmark, linearMethod, nFolds, D, 'mteugp' );
 
 baseStat  = getPerfStats(basePerf);
 modelStat = getPerfStats(modelPerf);
-exportResults(baseStat, modelStat, benchmark, linearMethod);
+
+if (boolExport)
+    exportResults(baseStat, modelStat, benchmark, linearMethod);
+end
 
 end
 
@@ -23,18 +132,36 @@ end
 function exportResults(baseStat, modelStat, benchmark, linearMethod)
 % base: baseline performance
 % perf: performance of the model
-[B, M] = size(baseStat.smseF{1}); % $ benchmarks, # linearization method, # folds
-fname = 'table-toy.tex';
-fid = fopen(fname, 'wt');
-fprintf(fid, '\\begin{tabular}{c c c c c}\n');
-fprintf(fid, 'Benchmark & Algorithm & SMSE-f* (std) & NLPD-f* (std) &');
-fprintf(fid, 'SMSE-g* (std) \\\\ \n');
+[B, M] = size(baseStat.smseF.mean); % # benchmarks, # linearization method, 
 
+% Replaces the names of the benchmark
+for i = 1 : B
+%     benchmark{i} = strrep(benchmark{i}, 'lineardata', '$\mathrm{f}$');
+%     benchmark{i} = strrep(benchmark{i}, 'poly3data', '$\mathrm{f^3 + f^2 + f}$');
+%     benchmark{i} = strrep(benchmark{i}, 'expdata', '$\mathrm{\exp(f)}$');
+%     benchmark{i} = strrep(benchmark{i}, 'sindata', '$\mathrm{\sin(f)}$');
+%     benchmark{i} = strrep(benchmark{i}, 'tanhdata', '$\mathrm{\tanh(f)}$');
+      benchmark{i} = strrep(benchmark{i}, 'data', '');
+end
+
+
+
+fname = 'tex/aistats2016/table-toy.tex';
+fid = fopen(fname, 'wt');
+%fprintf(fid, '\\begin{table*}\n');
+%fprintf(fid, '\\centering\n');
+fprintf(fid, '\\begin{tabular}{c c c c c}\n');
+fprintf(fid, 'g(f) & Method & SMSE-f* (std) & NLPD-f* (std) &');
+fprintf(fid, 'SMSE-g* (std) \\\\ \n');
+fprintf(fid, '\\toprule\n');
 for i = 1 : B
     fprintf(fid, '%s ', benchmark{i});
     for j = 1 : M % model
         if (~strcmp(linearMethod{j}, 'GP'))
-            writeLine(modelStat, ['S-',linearMethod{j}], fid, i, j);
+            strMethod = strrep(linearMethod{j}, 'Taylor', '\eks');
+            strMethod = strrep(strMethod, 'Unscented', '\uks');            
+            %writeLine(modelStat, ['S-',linearMethod{j}], fid, i, j);
+            writeLine(modelStat, strMethod, fid, i, j);
         end
     end
     fprintf(fid, '\n');
@@ -46,18 +173,20 @@ for i = 1 : B
     fprintf(fid, '\n');
     
 end
-fprintf(fid, '\\end{tabular}');
+fprintf(fid, '\\bottomrule\n');
+fprintf(fid, '\\end{tabular}\n');
+%fprintf(fid, '\\end{table*}');
 fclose(fid);
 end
 
 
 function writeLine(perfStat, linearMethod, fid, i, j)
-linearMethod = strrep(linearMethod, 'Taylor', 'EGP');
-linearMethod = strrep(linearMethod, 'Unscented', 'UGP');
-
+linearMethod = strrep(linearMethod, 'GP', '\gp');
+linearMethod = strrep(linearMethod, 'Taylor', '\egp');
+linearMethod = strrep(linearMethod, 'Unscented', '\ugp');
 % SMSE-f* (std)
-meanVal = perfStat.smseF{1}(i,j);
-stdVal  = perfStat.smseF{2}(i,j);        
+meanVal = perfStat.smseF.mean(i,j);
+stdVal  = perfStat.smseF.std(i,j);        
 if ( ~isnan(meanVal) )
     fprintf(fid, '& %s ', linearMethod);
     fprintf(fid, '& %.4f (%.4f) & ', meanVal, stdVal);
@@ -65,16 +194,16 @@ else
     fprintf(fid, '& %s & - & ',  linearMethod);
 end
 % NLPD-f* (std)
-meanVal = perfStat.nlpdF{1}(i,j);
-stdVal  = perfStat.nlpdF{2}(i,j);        
+meanVal = perfStat.nlpdF.mean(i,j);
+stdVal  = perfStat.nlpdF.std(i,j);        
 if ( ~isnan(meanVal) )
     fprintf(fid, '%.4f (%.4f) & ',  meanVal, stdVal);
 else
     fprintf(fid, ' - & ');
 end
 % SMSE-g* (std)
-meanVal = perfStat.smseG{1}(i,j);
-stdVal  = perfStat.smseG{2}(i,j);        
+meanVal = perfStat.smseG.mean(i,j);
+stdVal  = perfStat.smseG.std(i,j);        
 if ( ~isnan(meanVal) )
      fprintf(fid, '%.4f (%.4f) ',  meanVal, stdVal);
 else
@@ -86,13 +215,13 @@ end
        
 % perfStat = getPerfStats(perf)
 function perfStat = getPerfStats(perf)
-perfStat.smseF{1} = mean(perf.smseF,3);
-perfStat.nlpdF{1} = mean(perf.nlpdF,3);
-perfStat.smseG{1} = mean(perf.smseG,3);
+perfStat.smseF.mean = mean(perf.smseF,3);
+perfStat.nlpdF.mean = mean(perf.nlpdF,3);
+perfStat.smseG.mean = mean(perf.smseG,3);
 %
-perfStat.smseF{2} = std(perf.smseF,0,3);
-perfStat.nlpdF{2} = std(perf.nlpdF,0,3);
-perfStat.smseG{2} = std(perf.smseG,0,3);
+perfStat.smseF.std = std(perf.smseF,0,3);
+perfStat.nlpdF.std = std(perf.nlpdF,0,3);
+perfStat.smseG.std = std(perf.smseG,0,3);
 
 end
 
@@ -111,16 +240,24 @@ M = length(linearMethod);
 perf.smseF = zeros(B, M, nFolds);
 perf.nlpdF = zeros(B, M, nFolds);
 perf.smseG = zeros(B, M, nFolds);
+fid = fopen('runs-left.txt', 'at');
 for i = 1 : B
     for j = 1 : M
         for k = 1 : nFolds 
             [smseF, nlpdF, smseG] = perfFunc(RESULTS_DIR, DATASET, benchmark{i}, linearMethod{j}, k, D);
+            
+            % prints unexecuted runs
+            if (isnan(smseF) && (strcmp(model,'mteugp')) && (~strcmp(linearMethod{j}, 'GP')))
+                fprintf(fid, '%d %d %d %d 0\n', i, j, k, D);
+            end
             perf.smseF(i,j,k) = smseF;
             perf.nlpdF(i,j,k) = nlpdF;
             perf.smseG(i,j,k) = smseG;
         end
     end
 end
+fclose(fid);
+
 end
 
 
@@ -128,11 +265,18 @@ function  [smseF, nlpdF, smseG] = getModelSingle(RESULTS_DIR, DATASET, benchmark
 smseF = NaN;
 nlpdF = NaN;
 smseG = NaN;
+
+% no GP method for model 
+if (strcmp(linearMethod, 'GP'))
+    return;
+end
+
 RESULTS_DIR = [RESULTS_DIR, '/', DATASET, '/', 'D', num2str(D), '/', linearMethod];
 fname = [RESULTS_DIR, '/', benchmark, '_k', num2str(fold), '.mat'];
 try
     load(fname, 'pred');
 catch ME
+    fprintf('Warning: file %s could not be loaded\n', fname);
     return;
 end
 data  =  mteugpReadSingleFoldToy(DATASET, benchmark, fold );
