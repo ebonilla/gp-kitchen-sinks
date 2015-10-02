@@ -11,8 +11,10 @@ A fairly flexible modeling approach places independent zero-mean Gaussian proces
 the latent functions $\{ f_q \}$ with covariance functions $\kernel_q(\cdot, \cdot)$ and assumes iid observations given these latent functions. When these function are realized at the training data,
 we obtain the following prior and likelihood models:
 \begin{align}
-	p(\latents)  &=  \prod_{q=1}^{Q} \Normal(\latentsq; \vec{0}, \KERNL_q) \\
-	p(\outs | \latents) &= \prod_{n=1}^N p(\outs_n | \nonlinf ( \latentsn )) \text{,}
+	\label{eq:gp-model-1}
+	p(\Latents)  &=  \prod_{q=1}^{Q} \Normal(\latentsq; \vec{0}, \KERNL_q) \\
+	\label{eq:gp-model-2}	
+	p(\Outs | \Latents) &= \prod_{n=1}^N p(\outs_n | \nonlinf ( \latentsn )) \text{,}
 \end{align}
 where $\KERNL_q$ is the covariance matrix induced by evaluating  the covariance 
 function $\kernel_q$ at all input data $\Ins$; $\latentsq$ are  the values 
@@ -34,7 +36,7 @@ but effective optimization procedure.
 
 To build such linearizations they use a Taylor series approximation and the unscented transform 
 and, consequently, they refer to their methods to as the Extended Gaussian Process (\egp) and 
-the Unscented Gaussian process (\ugp). 
+the Unscented Gaussian Process (\ugp). 
 The main advantage of their algorithms is that the linear
 approximation is local and adaptive, as it is constructed around the posterior mean for a
 single data point $n$, and it gets updated at every iteration of the algorithm as a function

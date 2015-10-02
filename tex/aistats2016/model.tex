@@ -1,38 +1,130 @@
-\section{MULTI-TASK RANDOM EXPANSIONS}
+\section{RANDOM FEATURES APPROXIMATIONS}
 %
-We have input data $\ins_n \in \real{d}$, which we can transform into features
-$\featfunc{\ins_n} \in \real{D}$ using some function $\featfunc{\cdot}$. We also
-have output targets $\outs_n \in \real{P}$ and our total dataset is 
-$\cbrac{\Outs, \Ins}$ where $\Outs \in \real{N \times P}$ and, $\Ins \in
-\real{N \times d}$. We also refer to $\feats_n := \featfunc{\ins_n}$ and
-$\Feats := \featfunc{\Ins}$. The multi-task model is,
+Our starting point to scale up linearized GP models builds upon the work of 
+\citeauthor{rahimi-recht-nips-2007} \citeyearpar{rahimi-recht-nips-2007,rahimi-recht-nips-2008},  
+who used Bochner's theorem regarding the relationship between 
+a kernel (a positive definite function) and the Fourier transform of a non-negative measure. In particular, 
+when such a non-negative measure exists, one obtains  Wiener-Khintchine's theorem, which establishes the 
+ the Fourier duality of the covariance function of a stationary  process and its spectral density:
+\begin{align}
+	\label{eq:fourier}
+	\kernel(\tfourier) &= \int \specfourier(\ffourier) e^{2 \pi i \ffourier^T  \tfourier } d \ffourier \text{,} \\
+	\specfourier(\ffourier) &= \int \kernel(\tfourier) e^{- 2 \pi i \ffourier^T \tfourier }  d \tfourier \text{.}
+\end{align}
+\citeauthor{rahimi-recht-nips-2007}'s  main insight  \citeyearpar{rahimi-recht-nips-2007} 
+is that we can approximate the above kernel by explicitly constructing 
+``suitable" random features and (Monte Carlo) averaging over samples from $\specfourier(\ffourier)$: 
 \begin{equation}
-    \outs_n \sim \gaus{\nonlin{\Weights\feats_n}, \Lcov} 
-    \qquad \text{and} \qquad
-    \weights_q = \gaus{\mathbf{0}, \prvar_q \ident{D}},
+	\label{eq:mcapprox}
+	 \kernel(\x-\xprime) = \kernel(\tfourier) 
+	\approx \frac{1}{\idim} \sum_{i=1}^{\idim} \singlefeatfunc{\x}{i} \singlefeatfunc{\xprime}{i}  \text{,}
 \end{equation}
-where there are $Q$ input tasks, and we have weights $\Weights \in \real{Q
-    \times D}$ and $\weights_q \in \real{D}$, and $\Lcov =
-\diag{\sbrac{\lvar_1, \ldots, \lvar_P}}$. Also we also have a non-linear
-forward model, $\nonlinf : \real{Q} \to \real{P}$. It is worth noting that the
-prior latent functions for each task are $\latents_q = \Feats\weights_q$. If we
-use \emph{random kitchen sink} or \emph{fastfood} bases such that
+where $\featfunc{\ins}: \real{d} \to \real{D}$ is a feature map and 
+$\singlefeatfunc{\x}{i}$ corresponds to the $i\mth$ component of that map.
+%
+An example of a feature vector construction in the above approximation is:
+\begin{align}
+	[\singlefeatfunc{\x}{i} ,\singlefeatfunc{\x}{i+1} ] &= \frac{1}{\sqrt{D}} [ \cos(2 \pi \ffourier_i^T \x) , \sin(2 \pi \ffourier_i^T \ins) ] \text{,}\\
+		\ffourier_i & \sim \gausC{\ffourier_i}{\vec{0}, \varfeat \ident{d}} 
+\end{align}
+for $i=1, \ldots, D-1$,  which in fact is a mapping into a $2 D-$dimensional feature space. 
+\citet{rahimi-recht-nips-2007} used the above feature map to approximate the commonly used 
+(isotropic) squared exponential kernel, and showed that such an approximation converges in probability 
+to the true kernel. They refer to algorithms that use such randomized feature expansions 
+as \emph{random kitchen sinks} (\rks).  
+
+If we use \rks bases  such that
 $\kfunc{\ins_i}{\ins_j} = 
-\mathbb{E}[\featfunc{\ins_i}\transpose\featfunc{\ins_j}]$, we can
+\expectation[\featfunc{\ins_i}\transpose\featfunc{\ins_j}]$, we can
 approximate Gaussian processes with simple linear models that can
-be learned with stochastic gradient descent. We can employ the same methodology
-for our joint model,
-\begin{equation}
-    \probC{\Outs, \Weights}{\Ins} =
-        \prod^N_{n=1} \gausC{\outs}{\nonlin{\Weights\feats_n}, \Lcov}
-        \prod^Q_{q=1} \gausC{\weights_q}{\mathbf{0}, \prvar_q \ident{D}}.
-\end{equation}
-Let's now make the simplifying assumption that posterior factorises and has the
-form,
-\begin{equation}
-    \qrob{\Weights} = \prod^Q_{q=1} \gausC{\weights_q}{\pweights_q, \pocov_q},
-\end{equation}
-We can use variation inference to learn this posterior approximation, and
-thereby allowing us to infer the posterior latent tasks,
-$\mathbb{E}[\latents_q] \approx \Feats\pweights_q$.
+be learned with stochastic gradient descent. 
+For our purposes, more than approximating a specific covariance function, we are 
+interested in using such random feature approximations within a variational inference 
+framework in order to estimate the posterior distributions of models of the form given
+in Equations \eqref{eq:gp-model-1} and \eqref{eq:gp-model-2}. 
+ %
+%
+\section{MULTI-TASK GP MODELS}
+%We have input data $\ins_n \in \real{d}$, which we can transform into features
+%$\featfunc{\ins_n} \in \real{D}$ using some function $\featfunc{\cdot}$. We also
+%have output targets $\outs_n \in \real{P}$ and our total dataset is 
+%$\cbrac{\Outs, \Ins}$ where $\Outs \in \real{N \times P}$ and, $\Ins \in
+% \real{N \times d}$.
+ Our next step is to approximate our prior over latent functions in Equation \eqref{eq:gp-model-1} 
+ using the random feature approximation described above, and to specify 
+ our multi-output likelihood in Equation \eqref{eq:gp-model-1}:
+ \begin{align}
+ \label{eq:prior}
+ p(\Weights) &=  \prod^Q_{q=1} \gausC{\weights_q}{\mathbf{0}, \prvar_q \ident{D}} \text{,} \\
+  \label{eq:likelihood}
+    \probC{\Outs }{\Weights} &=
+        \prod^N_{n=1} \gausC{\outs_n}{\nonlin{\Weights\feats_n}, \Lcov}  \text{,}
+\end{align}
+%
+where,  $\feats_n \defeq \featfunc{\ins_n}$  is the 
+ $D-$dimensional vector of features corresponding to datapoint $n$; 
+$\weights_q \in \real{D}$;
+ $\Weights \in \real{Q   \times D}$;
+$\prvar_q$ is the prior variance over the weights; 
+ and $\Lcov = \diag{\sbrac{\lvar_1, \ldots, \lvar_P}}$ is the  
+ noise variance. 
+ 
+Additionally, we note that, as our non-linear
+forward model  is $\nonlinf : \real{Q} \to \real{P}$,  
+we are effectively  approximating our prior over latent functions as 
+ $\latents_q = \Feats\weights_q$, with  $\Feats \defeq \featfunc{\Ins}$
+ being the $N \times \idim$  matrix of features evaluated at all the training data. 
+ 
+Having \rks-based approximations, allow us to circumvent the inherent
+scalability problem in GP models. However, we note that the likelihood model 
+in Equation  \eqref{eq:likelihood}, still involves a non linear transformation 
+of the corresponding latent functions, which yields, as before, intractable posteriors. 
+In order to address this problem, we will build upon the work of 
+\cite{steinberg-bonilla-nips-2014}, and develop a variational inference procedure 
+that exploits linearization methods around the posterior mean.
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -6,6 +6,19 @@
 \newcommand{\eks}{{\sc eks}\xspace}
 \newcommand{\uks}{{\sc uks}\xspace}
 
+% Simplification of long equations
+\newcommand{\gtilden}{\tilde{\nonlinf}_n}
+\newcommand{\errorn}{\vecS{\epsilon}_n}
+
+
+% Parameters of the model
+\newcommand{\paramfeat}{\vecS{\theta}_\phi}
+\newcommand{\varfeat}{\sigma_{\phi}^2}
+
+% Fourier things
+\newcommand{\tfourier}{\vecS{\tau}}   % time space
+\newcommand{\ffourier}{\vec{s}} % freq space
+\newcommand{\specfourier}{S}
 
 
 %% Define bracket commands (normal, square and curly).
@@ -45,6 +58,7 @@
 \newcommand{\Ins}       {\ensuremath{\mathbf{X}}}
 \newcommand{\ins}       {\ensuremath{\mathbf{x}}}
 \newcommand{\featfunc}[1]  {\ensuremath{\phi\!\brac{{#1}}}}
+\newcommand{\singlefeatfunc}[2]  {\ensuremath{\phi_{#2}\!\brac{{#1}}}}
 \newcommand{\Feats}     {\ensuremath{\boldsymbol\Phi}}
 \newcommand{\feats}     {\ensuremath{\boldsymbol\phi}}
 \newcommand{\Weights}   {\ensuremath{\mathbf{W}}}
@@ -133,3 +147,16 @@
 %% Operators
 \DeclareMathOperator*{\argmax}{\operatorname*{argmax}}
 \DeclareMathOperator*{\argmin}{\operatorname*{argmin}}
+
+
+
+\newcommand{\x}{\ins}
+\newcommand{\xprime}{\ins^\prime}
+
+
+
+
+
+
+
+
