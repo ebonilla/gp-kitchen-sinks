@@ -6,9 +6,13 @@ form,
 \end{equation}
 We can use variation inference to learn this posterior approximation, and
 thereby allowing us to infer the posterior latent tasks,
-$\expectation[\latents_q] \approx \Feats\pweights_q$ and 
-$\covariance [\latents_q] \approx \Feats \pweights_q  \Feats^T$.
-%
+\begin{equation}
+\label{eq:posteriorF}
+q(\Latents)  = \prod^Q_{q=1} \gausC{\latents_q}{\Feats\pweights_q, \Feats \pweights_q  \Feats^T} \text{.}
+%$\expectation[\latents_q] \approx \Feats\pweights_q$ and 
+%$\covariance [\latents_q] \approx \Feats \pweights_q  \Feats^T$.
+\end{equation}
+\todo{FIX class in notation: q for posterior approx and for indexing}
 \subsection{Evidence Lower Bound}
 The variational evidence lower bound is,
 \begin{equation}

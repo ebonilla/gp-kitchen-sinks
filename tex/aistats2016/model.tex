@@ -36,8 +36,8 @@ as \emph{random kitchen sinks} (\rks).
 If we use \rks bases  such that
 $\kfunc{\ins_i}{\ins_j} = 
 \expectation[\featfunc{\ins_i}\transpose\featfunc{\ins_j}]$, we can
-approximate Gaussian processes with simple linear models that can
-be learned with stochastic gradient descent. 
+approximate Gaussian processes that involve nonlinear likelihoods 
+with simple linear-in-the-parameters models. 
 For our purposes, more than approximating a specific covariance function, we are 
 interested in using such random feature approximations within a variational inference 
 framework in order to estimate the posterior distributions of models of the form given

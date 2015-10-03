@@ -1,13 +1,82 @@
 \section{LINEARIZATION METHODS}
-So far we have assumed that we are given linearization parameters $\{\Linmat_n, \intcpt_n\}$ that allow us to 
+So far we have assumed that we are given the linearization parameters $\{\Linmat_n, \intcpt_n\}$ that allow us to 
 approximate locally the nonlinear forward model given in Equation   \eqref{eq:linapprox}. As 
 $\nonlin{\cdot}$  is a function of our latent functions approximation ${\Weights_n\feats_n}$,  
 it makes sense to linearize around our current posterior estimates of these latent functions, 
 $\hatlatentsn =\pWeights \feats_n$. In this section we describe two methods for linearizing 
-the  forward model around these posterior estimates $hatlatentsn$ within our variational 
+the  forward model around these posterior estimates within our variational 
 inference framework. The first method uses a Taylor series approximation and the second 
-method uses the unscented transform We refer to the corresponding inference alg
+method uses a statistical linearization \citep{Geist2010} based on the unscented transform \citep{Julier2004}. 
+Because of the relation of our algorithms to the Extended Gaussian Process (\egp) and 
+the  Unscented Gaussian Process (\ugp) of \citet{steinberg-bonilla-nips-2014},   we refer to 
+the proposed inference methods as  the Extended Kitchen Sinks (\eks) and the 
+Unscented Kitchen Sinks (\uks), respectively.
+%
+\subsection{Taylor Series Linearization}
+We can use a first order Taylor series to linearize $\nonlin{\cdot}$ at each
+iteration of \eqref{eq:newt},
+\begin{equation}
+    \nonlin{\Weights\feats_n} \approx \nonlin{\pWeights\feats_n} +
+    \Jacob{n}\brac{\Weights - \pWeights}\feats_n,
+\end{equation}
+where 
+%$\Jacob{n} = \partial\nonlin{\latentsn} /
+%\partial \latentsn  \Big|_{\latentsn = \hatlatentsn }$ and
+%$\hatlatentsn =\pWeights \feats_n$. 
+\begin{equation}
+\Jacob{n} = \frac{ \partial\nonlin{\latentsn} } {  \partial \latentsn }  \Big|_{\latentsn = \pWeights \feats_n } \text{.}
+\end{equation}
+Equating coefficients with \eqref{eq:linapprox} we have that
+\begin{equation}
+    \Linmat_n = \Jacob{n} \qquad \text{and} \qquad \intcpt_n = 
+        \nonlin{\pWeights\feats_n} - \Jacob{n}\pWeights\feats_n.
+\end{equation}
+%
+\subsection{Statistical Linearization}
+In order to have a  statistical approach to estimating the linearization parameters 
+ in  Equation \eqref{eq:linapprox}, we can generate estimate these parameters
+ using, for example, weighted least squares.  The main question 
+is what ``training" data  can we use to fit the linear model? Although we can 
+sample from $\Latents$ using Equation \eqref{eq:posteriorF} to generate these data, 
+the unscented transform  provides a deterministic and more elegant solution. 
 
 
-~\cite{Geist2010}
- \cite{Julier2004}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
