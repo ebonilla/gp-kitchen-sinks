@@ -45,7 +45,8 @@ The main point to notice here is that we are interested in linearizing $\nonlinf
  distribution in Equation $\eqref{eq:linapprox}$ assumes that the joint posterior factorizes 
  across latent functions, and so does the marginal:
  \begin{align}
-	q( \latentsn ) &= \gausC{\latentsn}{ \mufn, \covfn  } \text{, with  } \mufn= \pWeights \feats_n  \text{, and}\\
+ 	\label{eq:meanqf}
+	\qrob{ \latentsn } &= \gausC{\latentsn}{ \mufn, \covfn  } \text{, with  } \mufn= \pWeights \feats_n  \text{, and}\\
 	\label{eq:covqf}
 	[\covfn]_{qq\prime}  &=  \feats_n\transpose  \pocov_q \feats_n  \text{ for } q = q\prime \text{  and } 0 \text{ otherwise}  \text{.}
  \end{align}

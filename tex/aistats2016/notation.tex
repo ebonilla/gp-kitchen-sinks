@@ -52,6 +52,7 @@
 % Variables
 \newcommand{\Latents}   {\ensuremath{\mathbf{F}}}
 \newcommand{\latents}   {\ensuremath{\mathbf{f}}}
+\newcommand{\latentstest}   {\latents_{\test \cdot}}
 \newcommand{\latentss}  {\ensuremath{f}}
 \newcommand{\latentsq}  {\latents_{\cdot q}}
 \newcommand{\latentsn}  {\latents_{n \cdot}}
@@ -65,6 +66,7 @@
 \newcommand{\singlefeatfunc}[2]  {\ensuremath{\phi_{#2}\!\brac{{#1}}}}
 \newcommand{\Feats}     {\ensuremath{\boldsymbol\Phi}}
 \newcommand{\feats}     {\ensuremath{\boldsymbol\phi}}
+\newcommand{\featstest}     {\feats_{\test}}
 \newcommand{\Weights}   {\ensuremath{\mathbf{W}}}
 \newcommand{\weights}   {\ensuremath{\mathbf{w}}}
 \newcommand{\weight}    {\ensuremath{{w}}}
@@ -89,7 +91,12 @@
 \newcommand{\sigmafn}[1]{\vec{e}_{n}^{(#1)}}
 \newcommand{\mufn}{\vecS{\mu}_n}
 \newcommand{\covfn}{\mat{E}_n}
+\newcommand{\muftest}{\vecS{\mu}_{\test}}
+\newcommand{\covftest}{\mat{E}_{\test}}
+\newcommand{\meannonlinftest}{\bar{\nonlinf}_{\test}}
+
 \renewcommand{\matcol}[2]{[#1]_{\cdot,#2}}
+
 
 \newcommand{\lstd}      {\ensuremath{\sigma}}
 \newcommand{\pLatents}  {\ensuremath{\mathbf{M}}}
