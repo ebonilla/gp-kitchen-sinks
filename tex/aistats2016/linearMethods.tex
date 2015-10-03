@@ -1,0 +1,13 @@
+\section{LINEARIZATION METHODS}
+So far we have assumed that we are given linearization parameters $\{\Linmat_n, \intcpt_n\}$ that allow us to 
+approximate locally the nonlinear forward model given in Equation   \eqref{eq:linapprox}. As 
+$\nonlin{\cdot}$  is a function of our latent functions approximation ${\Weights_n\feats_n}$,  
+it makes sense to linearize around our current posterior estimates of these latent functions, 
+$\hatlatentsn =\pWeights \feats_n$. In this section we describe two methods for linearizing 
+the  forward model around these posterior estimates $hatlatentsn$ within our variational 
+inference framework. The first method uses a Taylor series approximation and the second 
+method uses the unscented transform We refer to the corresponding inference alg
+
+
+~\cite{Geist2010}
+ \cite{Julier2004}

@@ -1,2 +1,35 @@
 \subsection{Hyperparameter Learning}
+Once we have found the optimum $\pWeights$ and $\pocov_q$'s, we can optimise
+$\Fengy$ with respect to the parameters $\Lcov$ and $\khypers$ assuming the
+features are parameterised $\feats_n = \featfunc{\ins_n, \khypers}$. Once we
+have found optimum $\Lcov$ and $\khypers$, we then re-optimise for the
+posterior parameters etc.\ in a generalised-EM-like procedure.
+
+Once we have determined the optimum posterior parameters, the trace term in
+Equation \eqref{eq:KL} cancels out with the only term in Equation \eqref{eq:ell_approx} 
+involving $\pocov_q$, i.e.\ $QD -
+\sum_q\trace{\pocov_q}/\prvar_q = 
+\sum_n \sum_q \feats_n\transpose\pocov_q  \feats_n\Linvec_{nq}\transpose\Lcov\inv \Linvec_{nq}$,
+to give,
+\begin{multline}
+    \Fengy \approx 
+        - \frac{N}{2}\sbrac{P\log{2\pi} + \log\deter{\Lcov}}
+    - \frac{1}{2} \sum^N_{n=1} \sbrac{
+        \brac{\errorn}\transpose
+        \Lcov\inv
+        \brac{\errorn}} \\
+        -\frac{1}{2} \sum^\ltdim_{q=1} \sbrac{
+        \frac{1}{\prvar_q} \pweights_q\transpose\pweights_q
+        - \log\deter{\pocov_q} + D \log \prvar_q}.
+    \label{eq:modeF}
+\end{multline}
+Unfortunately, $\pWeights\opt$ is an implicit function of both $\Lcov$ and
+$\khypers$, and so in the case of the EGP, we would require second and higher
+derivatives of $\nonlinf$ in order to calculate partial derivatives of
+\eqref{eq:modeF} with respect to these parameters. Furthermore, in the case
+of the UGP, derivatives of $\nonlinf$ may not exist\footnote{Perhaps we could
+    use repeated applications of statistical linearization to approximate the
+    derivatives.}. However, if we assume \bigo{10} tasks, P, and a lightly
+parameterised feature function, $\featfunc{\cdot}$, then we can use numerical 
+optimisation methods such as COBYLA and BOBYQA.
 

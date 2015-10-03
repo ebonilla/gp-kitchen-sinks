@@ -9,7 +9,7 @@ thereby allowing us to infer the posterior latent tasks,
 $\expectation[\latents_q] \approx \Feats\pweights_q$ and 
 $\covariance [\latents_q] \approx \Feats \pweights_q  \Feats^T$.
 %
-\section{Evidence Lower Bound}
+\subsection{Evidence Lower Bound}
 The variational evidence lower bound is,
 \begin{equation}
     \Fengy = \expec{q\Weights}{\log \probC{\Outs}{\Weights, \Ins}}
@@ -68,7 +68,7 @@ data, and so it should be straight forward to apply parallel or stochastic
 gradient descent algorithms to learn the posterior parameters.
 
 
-\section{Learning the Parameters}
+\subsection{Learning the Variational Parameters}
 
 As before, we can use Newton's method to learn the approximate posterior
 parameters for each task,
