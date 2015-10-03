@@ -1,10 +1,13 @@
-% OTHER
+% Acronyms
 \newcommand{\rks}{{\sc rks}\xspace}
 \newcommand{\gp}{{\sc gp}\xspace}
 \newcommand{\egp}{{\sc egp}\xspace}
 \newcommand{\ugp}{{\sc ugp}\xspace}
 \newcommand{\eks}{{\sc eks}\xspace}
 \newcommand{\uks}{{\sc uks}\xspace}
+\newcommand{\ut}{{\sc ut}\xspace}
+
+
 
 % Simplification of long equations
 \newcommand{\gtilden}{\tilde{\nonlinf}_n}
@@ -79,9 +82,14 @@
 
 \newcommand{\prvar}     {\ensuremath{\omega^2}}  % prior variance
 \newcommand{\prVar}     {\ensuremath{\boldsymbol\omega}} % prior coovarincae
-
 \newcommand{\Lcov}      {\ensuremath{\mat{\Sigma}}} % Likelihood covariance 
 \newcommand{\lvar}      {\ensuremath{\sigma^2}}    % Individual likelihood variances 
+\newcommand{\varlatentsn} {\ensuremath{\mathbb{V}[\latentsn] } }  
+\newcommand{\varlatentn}[1] {\ensuremath{\mathbb{V}[\latentss_{n#1}] } }  
+\newcommand{\sigmafn}[1]{\vec{e}_{n}^{(#1)}}
+\newcommand{\mufn}{\vecS{\mu}_n}
+\newcommand{\covfn}{\mat{E}_n}
+\renewcommand{\matcol}[2]{[#1]_{\cdot,#2}}
 
 \newcommand{\lstd}      {\ensuremath{\sigma}}
 \newcommand{\pLatents}  {\ensuremath{\mathbf{M}}}
