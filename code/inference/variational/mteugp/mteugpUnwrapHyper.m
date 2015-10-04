@@ -14,8 +14,8 @@ theta_w    = theta(nFeatParam + P + 1 : L); % should be Q-dimensional
 % Updating corresponding structures
 model.featParam = theta_phi;
 model.Phi       = feval(model.featFunc, model.X, theta_phi); 
-model.sigma2y   = exp(theta_y);
-model.sigma2w   = exp(theta_w);
+model.sigma2y   = exp(theta_y(:));
+model.sigma2w   = exp(theta_w(:));
 
 
 end

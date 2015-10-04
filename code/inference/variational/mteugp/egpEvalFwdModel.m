@@ -20,7 +20,10 @@ else
         % fprintf('done\n');
      end
 end
-fwdVal  = fwdVal(:); % column vector    
+
+% Commented out 04/10/2015: FwdFunc should control 
+% dimensions. This does not work for Q>1
+%fwdVal  = fwdVal(:); % column vector
 
 
 end

@@ -17,7 +17,8 @@ for n = 1 : N
      trTerm = 0;
     for q = 1 : model.Q
         Cq = model.C(:,:,q);
-        anq = An(:,q)';
+        %anq = An(:,q)';
+        anq = An(:,q);
         trTerm = trTerm + trace(phin*anq'*Sigmainv*anq*phin'*Cq); % TODO: improve efficiency 
     end
     ell  = ell + quadTerm + trTerm;

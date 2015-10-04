@@ -6,7 +6,7 @@ for n = 1 : N
     phin     = model.Phi(n,:)';
     anq      = model.A(n,:,q)';
     bn       = model.B(n,:)';
-    grad_mq  =  grad_mq + phin*(anq'.*diagSigmainv)*(yn - anq*mq'*phin - bn);                 
+    grad_mq  =  grad_mq + phin*(anq'.*diagSigmainv')*(yn - anq*mq'*phin - bn);                 
 end
 
 
