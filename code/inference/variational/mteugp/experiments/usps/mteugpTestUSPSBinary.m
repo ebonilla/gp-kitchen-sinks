@@ -1,12 +1,11 @@
-function  mteugpTestUSPSBinary( str_idxMethod, str_D, str_writeLog )
+function  mteugpTestUSPSBinary( str_idxMethod, str_D, str_boolSample, str_writeLog )
 %MTEUGPTESTUSPS Run MTEUGP on USPSP data
 %   Detailed explanation goes here
 DATASET       = 'uspsData';
 RESULTS_DIR   = 'results';
 linearMethod  = {'Taylor', 'Unscented'};
-boolSample    = 1; % subsample data: just for testing
 
-[idxMethod, D, writeLog] = parseInput(str_idxMethod, str_D, str_writeLog);
+[idxMethod, D, boolSample, writeLog] = parseInput(str_idxMethod, str_D, str_boolSample, str_writeLog);
 if (writeLog)
     str = datestr(now, 30);
     diary([RESULTS_DIR, '/',DATASET, '/', str, '.log']);
@@ -86,10 +85,12 @@ data.ytrain = data.ytrain(idx,:);
 end
 
 %
-function [idxMethod, D, writeLog] = parseInput(str_idxMethod, str_D, str_writeLog)
+function [idxMethod, D, boolSample, writeLog] = parseInput(str_idxMethod, str_D, str_boolSample, str_writeLog);
+
 
 idxMethod = str2num(str_idxMethod);
 D         = str2num(str_D);
+boolSample  = str2num(str_boolSample);
 writeLog  = str2num(str_writeLog);
 
 end
