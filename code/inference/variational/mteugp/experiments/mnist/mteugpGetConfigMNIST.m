@@ -8,6 +8,9 @@ Z            = randn(D,d);
 featFunc     =  @(xx, ss) getRandomRBF(xx, Z, ss); % function of (x, vargargin)
 initFeatFunc = @initRandomRBF;
 
+%% Save random matrix just in case
+model.Z = Z;
+
 %% set up model
 model.Q            = size(Y,2); % latent functions
 model.P            = size(Y,2); % Outputs
