@@ -6,6 +6,9 @@ function [g, dg]  = mteugpFwdSoftmax( f )
 g = softmax(f);
 
 
+if (nargout == 1)
+    return;
+end
 
 % gradient/Jacobian only works for a single f_n vector
 Q  = size(f,2); % assumes row vector
