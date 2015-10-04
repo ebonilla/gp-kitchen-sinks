@@ -14,7 +14,7 @@ function  Gstar  = mteugpPredict( model, MeanF, VarF )
 [Nstar, Q] = size(MeanF);
 P          = model.P;
 nSamples   = model.nSamples;
-stdF       = std(VarF);
+stdF       = sqrt(VarF);
 
 %% MC averaging
 Z  = randn(Nstar, Q, nSamples);
