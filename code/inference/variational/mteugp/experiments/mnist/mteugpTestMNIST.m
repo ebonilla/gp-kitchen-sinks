@@ -1,5 +1,5 @@
 function  mteugpTestMNIST( str_idxMethod, str_D, str_boolSample, str_writeLog )
-%MTEUGPTESTUSPS Run MTEUGP on USPSP data
+%mteugpTestMNIST Run MTEUGP on MNIST data
 %   Detailed explanation goes here
 DATASET       = 'mnistData';
 RESULTS_DIR   = 'results';
@@ -29,7 +29,9 @@ system(['mkdir -p ', RESULTS_DIR]);
 
 data         = loadDataMNIST(DATASET, boolSample);
 
-model        = mteugpGetConfigMNIST( data.xtrain, data.ytrain,linearMethod, D );
+model              = mteugpGetConfigMNIST( data.xtrain, data.ytrain,linearMethod, D );
+model.resultsFname =  fname;
+
 model        = mteugpLearn( model );
 save(fname, 'model');
 [pred.mFpred, pred.vFpred]  = mteugpGetPredictive( model, data.xtest );
@@ -45,7 +47,7 @@ end
 
 %% showProgress(benchmark, linearMethod, perf)
 function showProgress(linearMethod, perf)
-fprintf('USPS: %s: --> NLP=%.4f, ERROR=%.4f \n',linearMethod, perf.mnlp, perf.errorRate );
+fprintf('MNIST: %s: --> NLP=%.4f, ERROR=%.4f \n',linearMethod, perf.mnlp, perf.errorRate );
 end
 
 

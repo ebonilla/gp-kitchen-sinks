@@ -17,7 +17,13 @@ while (( i < optConf.iter) && (tol > optConf.ftol) )
     
     model.nelbo(i) =  mteugpNelbo( model );
     showProgress(i, model.nelbo(i));
-
+    
+    % We save results here ufter optimizing variational parameters
+    if (isfield(model,'resultsFname'))
+        fprintf('*** Saving partial results i=%d ***\n', i);
+        save(model.resultsFname, 'model');
+    end
+    
     %model = mteugpOptimizeFeatures(model);    
     model  = mteugpOptimizeHyper(model);
 
