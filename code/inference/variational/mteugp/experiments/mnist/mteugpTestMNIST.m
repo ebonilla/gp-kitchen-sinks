@@ -12,8 +12,7 @@ if (writeLog)
 end
 
 
-perf = runSingle(RESULTS_DIR, DATASET, linearMethod{idxMethod}, D, boolSample);
-showProgress(linearMethod{idxMethod}, perf);
+runSingle(RESULTS_DIR, DATASET, linearMethod{idxMethod}, D, boolSample);
 
 
 diary off;
@@ -26,36 +25,28 @@ function perf = runSingle(RESULTS_DIR, DATASET, linearMethod, D, boolSample)
 RESULTS_DIR = [RESULTS_DIR, '/', DATASET, '/', 'D', num2str(D), '/', linearMethod];
 fname = [RESULTS_DIR, '/', DATASET, '.mat'];
 system(['mkdir -p ', RESULTS_DIR]);
+data           = loadDataMNIST(DATASET, boolSample);
 
-data         = loadDataMNIST(DATASET, boolSample);
-
+% Learning Model
 model              = mteugpGetConfigMNIST( data.xtrain, data.ytrain,linearMethod, D );
 model.resultsFname =  fname;
-
-model        = mteugpLearn( model );
+model.perfFunc = @mteugpGetPerformanceMultiClass;
+model              = mteugpLearn( model, data.xtest, data.ytest );
 save(fname, 'model');
+
+% Predictions
 [pred.mFpred, pred.vFpred]  = mteugpGetPredictive( model, data.xtest );
 pred.gpred                  = mteugpPredict( model, pred.mFpred, pred.vFpred ); %         
+
+% Performance
 perf = mteugpGetPerformanceMultiClass(data.ytest, pred);
+mteugpShowPerformance(length(model.nelbo), model.resultsFname, model.linearMethod, perf);
+
+
 save(fname, 'model', 'pred', 'perf');
 end
 
 
-
-
-
-
-%% showProgress(benchmark, linearMethod, perf)
-function showProgress(linearMethod, perf)
-fprintf('MNIST: %s: --> NLP=%.4f, ERROR=%.4f \n',linearMethod, perf.mnlp, perf.errorRate );
-end
-
-
-function perf = mteugpGetPerformanceMultiClass(ytest, pred)
-perf.mnlp      = myMNLPMulti( [], ytest, pred.gpred  );
-perf.errorRate = myErrorRateMulti([], ytest, pred.gpred );
-
-end
 
 %
 function dd  = loadDataMNIST(DATASET, boolSample)

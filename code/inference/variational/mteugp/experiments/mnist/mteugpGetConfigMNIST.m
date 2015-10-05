@@ -30,13 +30,13 @@ model.kappa        = 1/2; % parameter of Unscented linearization
 model.nSamples     = 1000; % Number of samples for approximating predictive dist.
 
 % global optimization configuration
-optConf.iter     = 50;    % maximum global iterations
-optConf.ftol     = 1e-5;
+optConf.iter     = 100;    % maximum global iterations
+optConf.ftol     = 1e-3;
 model.globalConf = optConf;
 
 % variational parameter optimization configuration
 optConf.iter    = 200;  % maximum iterations on variational parameters
-optConf.ftol   = 1e-5;
+optConf.ftol   = 1e-3;
 % optConf.xtol   = 1e-8; % tolerance for Newton iterations
 optConf.alpha   = 0.9;  % learning rate for Newton iterations
 model.varConf   = optConf;
@@ -45,8 +45,8 @@ model.varConf   = optConf;
 optConf.iter      = [];  % maximum iterations for hyper parametes (minfunc parameter)
 optConf.eval      = 50;  % Maxium evals for hyper paramters func (minFunc parameter)
 optConf.optimizer = 'nlopt'; % for hyper-parameters
-optConf.ftol       = 1e-5; % Tolerance in f
-optConf.xtol       = 1e-8; % Tolerance in x
+optConf.ftol       = 1e-3; % Tolerance in f
+optConf.xtol       = 1e-3; % Tolerance in x
 optConf.verbose   = 1; % 0: none, 1: full
 model.hyperConf   = optConf;
 
@@ -56,5 +56,5 @@ model.initFunc    = @mteugpInitMNIST;
 end
 
 
- 
-  
+
+

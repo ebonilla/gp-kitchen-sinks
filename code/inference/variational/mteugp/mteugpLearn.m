@@ -24,7 +24,7 @@ while (( i < optConf.iter) && (tol > optConf.ftol) )
     if (isfield(model,'resultsFname'))
         [pred.mFpred, pred.vFpred]  = mteugpGetPredictive( model, xtest );
         pred.gpred                  = mteugpPredict( model, pred.mFpred, pred.vFpred ); %         
-        perf                        = mteugpGetPerformanceBinaryClass(ytest, pred);
+        perf                        = model.perfFunc(ytest, pred);
         mteugpShowPerformance(i, model.resultsFname, model.linearMethod, perf)
         save(model.resultsFname, 'model');
     end

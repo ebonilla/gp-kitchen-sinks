@@ -30,6 +30,7 @@ data         = loadDataUSPS(DATASET, boolSample);
 % Learning Model
 model        = mteugpGetConfigUSPSBinary( data.xtrain, data.ytrain,linearMethod, D );
 model.resultsFname =  fname;
+model.perfFunc = @mteugpGetPerformanceBinaryClass;
 model        = mteugpLearn( model, data.xtest, data.ytest );
 save(fname, 'model');
 
