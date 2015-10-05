@@ -29,6 +29,8 @@ system(['mkdir -p ', RESULTS_DIR]);
 
 data         = loadDataUSPS(DATASET, boolSample);
 model        = mteugpGetConfigUSPSBinary( data.xtrain, data.ytrain,linearMethod, D );
+
+model.resultsFname =  fname;
 model        = mteugpLearn( model );
 save(fname, 'model');
 [pred.mFpred, pred.vFpred]  = mteugpGetPredictive( model, data.xtest );
@@ -75,9 +77,9 @@ end
 
 % Just for testing
 function data = subSampleData(data)
-N = 20;
+N = 50;
 v = randperm(size(data.xtrain,1));
-idx = v(1:100);
+idx = v(1:N);
 data.xtrain = data.xtrain(idx,:);
 data.ytrain = data.ytrain(idx,:);
 
