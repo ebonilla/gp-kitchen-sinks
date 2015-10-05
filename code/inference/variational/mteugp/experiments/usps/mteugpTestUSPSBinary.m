@@ -12,8 +12,7 @@ if (writeLog)
 end
 
 
-perf = runSingle(RESULTS_DIR, DATASET, linearMethod{idxMethod}, D, boolSample);
-showProgress(linearMethod{idxMethod}, perf);
+runSingle(RESULTS_DIR, DATASET, linearMethod{idxMethod}, D, boolSample);
 
 
 diary off;
@@ -26,16 +25,22 @@ function perf = runSingle(RESULTS_DIR, DATASET, linearMethod, D, boolSample)
 RESULTS_DIR = [RESULTS_DIR, '/', DATASET, '/', 'D', num2str(D), '/', linearMethod];
 fname = [RESULTS_DIR, '/', 'uspsData', '.mat'];
 system(['mkdir -p ', RESULTS_DIR]);
-
 data         = loadDataUSPS(DATASET, boolSample);
-model        = mteugpGetConfigUSPSBinary( data.xtrain, data.ytrain,linearMethod, D );
 
+% Learning Model
+model        = mteugpGetConfigUSPSBinary( data.xtrain, data.ytrain,linearMethod, D );
 model.resultsFname =  fname;
-model        = mteugpLearn( model );
+model        = mteugpLearn( model, data.xtest, data.ytest );
 save(fname, 'model');
+
+% Predictions
 [pred.mFpred, pred.vFpred]  = mteugpGetPredictive( model, data.xtest );
 pred.gpred                  = mteugpPredict( model, pred.mFpred, pred.vFpred ); %         
+
+%Performance
 perf = mteugpGetPerformanceBinaryClass(data.ytest, pred);
+mteugpShowPerformance(length(model.nelbo), model.resultsFname, model.linearMethod, perf);
+
 save(fname, 'model', 'pred', 'perf');
 end
 
@@ -47,13 +52,6 @@ end
 %% showProgress(benchmark, linearMethod, perf)
 function showProgress(linearMethod, perf)
 fprintf('USPS: %s: --> NLP=%.4f, ERROR=%.4f \n',linearMethod, perf.mnlp, perf.errorRate );
-end
-
-
-function perf = mteugpGetPerformanceBinaryClass(ytest, pred)
-perf.mnlp      = myMNLP( [], ytest, pred.gpred  );
-perf.errorRate = myErrorRate([], ytest, pred.gpred );
-
 end
 
 %

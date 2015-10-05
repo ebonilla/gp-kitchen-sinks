@@ -1,6 +1,8 @@
-function  model  = mteugpLearn( model )
+function  model  = mteugpLearn( model, xtest, ytest )
 %MTEUGPLEARN Summary of this function goes here
 %   Detailed explanation goes here
+% xtest, ytest: used only to evaluate the model as we go -> to check
+% progress
 
 optConf = model.globalConf;
 
@@ -18,9 +20,12 @@ while (( i < optConf.iter) && (tol > optConf.ftol) )
     model.nelbo(i) =  mteugpNelbo( model );
     showProgress(i, model.nelbo(i));
     
-    % We save results here ufter optimizing variational parameters
+    % We save results here after optimizing variational parameters
     if (isfield(model,'resultsFname'))
-        fprintf('*** Saving partial results i=%d ***\n', i);
+        [pred.mFpred, pred.vFpred]  = mteugpGetPredictive( model, xtest );
+        pred.gpred                  = mteugpPredict( model, pred.mFpred, pred.vFpred ); %         
+        perf                        = mteugpGetPerformanceBinaryClass(ytest, pred);
+        mteugpShowPerformance(i, model.resultsFname, model.linearMethod, perf)
         save(model.resultsFname, 'model');
     end
     
@@ -43,6 +48,9 @@ model.nelbo(T+1:end) = [];
 
 end
  
+
+%
+
 
 %% showProgress(iter, val)
 function showProgress(iter, val)
