@@ -6,7 +6,7 @@ function [MeanF, VarF ] = mteugpGetPredictive( model, xstar )
 % Mf: Nstar x Q of all mean(f*)
 % VarF = Nstar x Q of all var(f*)
 
-PhiStar  = feval(model.featFunc, xstar, model.featParam);
+PhiStar  = feval(model.featFunc, xstar, model.Z, model.featParam);
 
 
 MeanF = PhiStar*model.M;

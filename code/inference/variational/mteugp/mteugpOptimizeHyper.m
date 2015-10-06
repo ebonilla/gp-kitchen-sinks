@@ -31,6 +31,10 @@ switch optConf.optimizer
         opt.ftol_rel       = optConf.ftol; % relative tolerance in f
         opt.xtol_rel       = optConf.xtol;
         
+        
+        % setting lower bounds
+        thetaLB          = mteugpGetHyperLB( model  );
+        opt.lower_bounds = thetaLB; 
         [theta, fminval, retcode] = nlopt_optimize(opt, theta);
     
 end

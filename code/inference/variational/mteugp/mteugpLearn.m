@@ -6,8 +6,13 @@ function  model  = mteugpLearn( model, xtest, ytest )
 
 optConf = model.globalConf;
 
-model                = model.initFunc(model); 
-model.nelbo          = zeros(optConf.iter + 2,1);
+model.nelbo = [];
+model            = model.initFunc(model); 
+if (~isempty(model.nelbo)) % There awas a previous run 
+     model  = mteugpOptimizeHyper(model);
+end
+oldNelbo         = model.nelbo;
+model.nelbo      = zeros(optConf.iter + 2,1);
 i = 1;
 model.nelbo(i) =  mteugpNelbo( model ); 
 showProgress(i, model.nelbo(i));
@@ -21,18 +26,12 @@ while (( i < optConf.iter) && (tol > optConf.ftol) )
     showProgress(i, model.nelbo(i));
     
     % We save results here after optimizing variational parameters
-    if (isfield(model,'resultsFname'))
-        [pred.mFpred, pred.vFpred]  = mteugpGetPredictive( model, xtest );
-        pred.gpred                  = mteugpPredict( model, pred.mFpred, pred.vFpred ); %         
-        perf                        = model.perfFunc(ytest, pred);
-        mteugpShowPerformance(i, model.resultsFname, model.linearMethod, perf)
-        save(model.resultsFname, 'model');
-    end
+    mteugpSavePerformance(i, model, xtest, ytest);
     
     %model = mteugpOptimizeFeatures(model);    
     model  = mteugpOptimizeHyper(model);
 
-     tol = abs( model.nelbo(i) - model.nelbo(i-1) );
+    tol = abs( model.nelbo(i) - model.nelbo(i-1) );
     % tol = abs( (model.nelbo(i) - model.nelbo(i-1))/model.nelbo(i)   );
 end
 i = i + 1;
@@ -45,6 +44,8 @@ showProgress(i, model.nelbo(i));
 
 T = i;
 model.nelbo(T+1:end) = [];
+
+model.nelbo = [oldNelbo; model.nelbo];
 
 end
  

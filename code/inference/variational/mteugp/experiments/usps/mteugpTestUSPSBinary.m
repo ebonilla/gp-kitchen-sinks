@@ -21,7 +21,7 @@ diary off;
 end
 
 
-function perf = runSingle(RESULTS_DIR, DATASET, linearMethod, D, boolSample)
+function runSingle(RESULTS_DIR, DATASET, linearMethod, D, boolSample)
 RESULTS_DIR = [RESULTS_DIR, '/', DATASET, '/', 'D', num2str(D), '/', linearMethod];
 fname = [RESULTS_DIR, '/', 'uspsData', '.mat'];
 system(['mkdir -p ', RESULTS_DIR]);
@@ -35,14 +35,9 @@ model        = mteugpLearn( model, data.xtest, data.ytest );
 save(fname, 'model');
 
 % Predictions
-[pred.mFpred, pred.vFpred]  = mteugpGetPredictive( model, data.xtest );
-pred.gpred                  = mteugpPredict( model, pred.mFpred, pred.vFpred ); %         
+model.resultsFname = fname;
+mteugpSavePerformance(inf, model, data.xtest, data.ytest);
 
-%Performance
-perf = mteugpGetPerformanceBinaryClass(data.ytest, pred);
-mteugpShowPerformance(length(model.nelbo), model.resultsFname, model.linearMethod, perf);
-
-save(fname, 'model', 'pred', 'perf');
 end
 
 
@@ -76,7 +71,7 @@ end
 
 % Just for testing
 function data = subSampleData(data)
-N = 50;
+N = 10;
 v = randperm(size(data.xtrain,1));
 idx = v(1:N);
 data.xtrain = data.xtrain(idx,:);
