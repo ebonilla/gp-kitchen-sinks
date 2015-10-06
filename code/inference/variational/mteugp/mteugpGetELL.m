@@ -1,4 +1,37 @@
-function [ ell ] = mteugpGetELL( model )
+function ell = mteugpGetELL(model)
+sigma2y      = model.sigma2y;
+diagSigmaInv = 1./(sigma2y);
+P            = model.P;
+N            = model.N;
+Q            = model.Q;
+D            = model.D;
+
+%% Quadratic term
+PhiM    = model.Phi*model.M; % N*Q
+C = zeros(N, P);
+for p = 1 : P
+    Ap     = squeeze(model.A(:,p,:));
+    C(:,p) = sum(Ap.*PhiM,2);
+end
+C        = model.Y - C - model.B;
+quadTerm = sum(sum(bsxfun(@times,C, diagSigmaInv).*C)); % quad term
+
+%% Trace term
+C1 = zeros(N, Q);
+C2 = zeros(N, Q);
+for  q = 1 : Q
+    C1(:,q) = diagProd(model.Phi, model.C(:,:,q)*model.Phi');
+    C2(:,q) = sum(bsxfun(@times,model.A(:,:,q), diagSigmaInv).*model.A(:,:,q),2);  
+end
+trTerm = sum(sum(C1.*C2));
+
+ell  =   quadTerm + trTerm;
+
+ell = -0.5*( ell + N*(P*log(2*pi) + sum(log(sigma2y))) ) ;
+
+end
+
+function [ ell ] = mteugpGetELLOld( model )
 %MTEUGPGETELL Summary of this function goes here
 %   Detailed explanation goes here
 N = model.N;
