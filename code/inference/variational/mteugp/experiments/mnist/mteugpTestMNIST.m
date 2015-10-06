@@ -35,15 +35,9 @@ model              = mteugpLearn( model, data.xtest, data.ytest );
 save(fname, 'model');
 
 % Predictions
-[pred.mFpred, pred.vFpred]  = mteugpGetPredictive( model, data.xtest );
-pred.gpred                  = mteugpPredict( model, pred.mFpred, pred.vFpred ); %         
+model.resultsFname = fname;
+mteugpSavePerformance(inf, model, data.xtest, data.ytest);
 
-% Performance
-perf = mteugpGetPerformanceMultiClass(data.ytest, pred);
-mteugpShowPerformance(length(model.nelbo), model.resultsFname, model.linearMethod, perf);
-
-
-save(fname, 'model', 'pred', 'perf');
 end
 
 

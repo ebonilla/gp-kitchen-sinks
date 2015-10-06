@@ -4,12 +4,9 @@ d = size(X,2);
 %D = 100; % Number of features to use
 
 %% feature function
-Z            = randn(D,d);
-featFunc     =  @(xx, ss) getRandomRBF(xx, Z, ss); % function of (x, vargargin)
-initFeatFunc = @initRandomRBF;
-
-%% Save random matrix just in case
-model.Z = Z;
+model.Z            = randn(D,d);
+model.featFunc     = @getRandomRBF; % function of (x, Z, vargargin)
+model.initFeatFunc = @initRandomRBF;
 
 %% set up model
 model.Q            = size(Y,2); % latent functions
@@ -18,9 +15,6 @@ model.N            = size(X,1);
 model.D            = D;
 model.Y            = Y;
 model.X            = X;
-
-model.featFunc     = featFunc;  % feature function
-model.initFeatFunc = initFeatFunc; % initializes Parameters of feature function
 
 model.linearMethod = linearMethod; % 'Taylor' or 'Unscented'
 model.fwdFunc      = @mteugpFwdSoftmax;  
@@ -49,6 +43,9 @@ optConf.ftol       = 1e-3; % Tolerance in f
 optConf.xtol       = 1e-3; % Tolerance in x
 optConf.verbose   = 1; % 0: none, 1: full
 model.hyperConf   = optConf;
+
+% lower bounds on hyperparameters
+model.hyperLB.sigma2y   = 1e-7*ones(model.P,1);
 
 % initialization Function
 model.initFunc    = @mteugpInitMNIST;

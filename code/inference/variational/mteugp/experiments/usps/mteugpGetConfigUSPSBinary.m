@@ -44,7 +44,6 @@ optConf.xtol       = 1e-3; % Tolerance in x
 optConf.verbose   = 1; % 0: none, 1: full
 model.hyperConf   = optConf;
 
-
 % lower bounds on hyperparameters
 model.hyperLB.sigma2y   = 1e-7*ones(model.P,1);
 
