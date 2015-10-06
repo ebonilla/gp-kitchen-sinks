@@ -24,7 +24,7 @@ model.kappa        = 1/2; % parameter of Unscented linearization
 model.nSamples     = 1000; % Number of samples for approximating predictive dist.
 
 % global optimization configuration
-optConf.iter     = 100;    % maximum global iterations
+optConf.iter     = 50;    % maximum global iterations
 optConf.ftol     = 1e-3;
 model.globalConf = optConf;
 
@@ -48,7 +48,7 @@ model.hyperConf   = optConf;
 model.hyperLB.sigma2y   = 1e-7*ones(model.P,1);
 
 % initialization Function
-model.initFunc    = @mteugpInitUSPSBinary;
+model.initFunc    = @mteugpInitMNISTBinary;
 
 end
 
