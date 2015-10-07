@@ -2,7 +2,7 @@ function  mteugpTestUSPSBinary( str_idxMethod, str_D, str_boolSample, str_writeL
 %MTEUGPTESTUSPS Run MTEUGP on USPSP data
 %   Detailed explanation goes here
 DATASET       = 'uspsData';
-RESULTS_DIR   = 'results';
+RESULTS_DIR   = 'tmp/results';
 linearMethod  = {'Taylor', 'Unscented'};
 
 [idxMethod, D, boolSample, writeLog] = parseInput(str_idxMethod, str_D, str_boolSample, str_writeLog);
@@ -25,7 +25,7 @@ function runSingle(RESULTS_DIR, DATASET, linearMethod, D, boolSample)
 RESULTS_DIR = [RESULTS_DIR, '/', DATASET, '/', 'D', num2str(D), '/', linearMethod];
 fname = [RESULTS_DIR, '/', 'uspsData', '.mat'];
 system(['mkdir -p ', RESULTS_DIR]);
-data         = loadDataUSPS(DATASET, boolSample);
+data         = mteugpLoadDataUSPS(DATASET, boolSample);
 
 % Learning Model
 model        = mteugpGetConfigUSPSBinary( data.xtrain, data.ytrain,linearMethod, D );
@@ -50,35 +50,9 @@ function showProgress(linearMethod, perf)
 fprintf('USPS: %s: --> NLP=%.4f, ERROR=%.4f \n',linearMethod, perf.mnlp, perf.errorRate );
 end
 
-%
-function data = loadDataUSPS(DATASET, boolSample)
-x = []; xx = []; y = []; yy = [];
-load(['data/', DATASET, '/USPS_3_5_data.mat']);
-
-% Change class labels -1 -> 0
-y(y == -1)   = 0; 
-yy(yy == -1) = 0;
-data.xtrain = x;
-data.ytrain = y;
-data.xtest   = xx;
-data.ytest   = yy;
-
-if (boolSample)
-    data = subSampleData(data);
-end 
-end
 
 
-% Just for testing
-function data = subSampleData(data)
-N = 10;
-v = randperm(size(data.xtrain,1));
-idx = v(1:N);
-data.xtrain = data.xtrain(idx,:);
-data.ytrain = data.ytrain(idx,:);
 
-
-end
 
 %
 function [idxMethod, D, boolSample, writeLog] = parseInput(str_idxMethod, str_D, str_boolSample, str_writeLog);
