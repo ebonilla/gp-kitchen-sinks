@@ -2,7 +2,7 @@ function [mnlp, errorRate] = mteugpEvaluateResultsUSPSBinary(  )
 %MTEUGPEVALUATERESULTSUSPSBINARY Summary of this function goes here
 %   Detailed explanation goes here
 RESULTS_DIR = 'results/uspsData';
-strDim       = {'100', '200', '500'};
+strDim       = {'100', '200', '400'};
 linearMethod = {'Taylor', 'Unscented'}; 
 aliasMethod  = {'EKS', 'UKS'};
 B = length(linearMethod);

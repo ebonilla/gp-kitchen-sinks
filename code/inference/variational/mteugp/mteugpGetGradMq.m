@@ -4,7 +4,7 @@ grad_mq = - (1/sigma2w)*mq;
 Aq    = model.A(:,:,q); % NxP
 PhiMq = model.Phi*mq; %  Nx1
 LHS = model.Y - bsxfun(@times, Aq, PhiMq) - model.B; % NxP
-RHS = bsxfun(@times, Aq, diagSigmainv); % NxP
+RHS = bsxfun(@times, Aq, diagSigmainv'); % NxP
 g       = sum(LHS.*RHS,2); % Nx1
 grad_mq =  grad_mq  + sum(bsxfun(@times, model.Phi, g),1)';
 

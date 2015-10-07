@@ -14,14 +14,14 @@ for p = 1 : P
     C(:,p) = sum(Ap.*PhiM,2);
 end
 C        = model.Y - C - model.B;
-quadTerm = sum(sum(bsxfun(@times,C, diagSigmaInv).*C)); % quad term
+quadTerm = sum(sum(bsxfun(@times,C, diagSigmaInv').*C)); % quad term
 
 %% Trace term
 C1 = zeros(N, Q);
 C2 = zeros(N, Q);
 for  q = 1 : Q
     C1(:,q) = diagProd(model.Phi, model.C(:,:,q)*model.Phi');
-    C2(:,q) = sum(bsxfun(@times,model.A(:,:,q), diagSigmaInv).*model.A(:,:,q),2);  
+    C2(:,q) = sum(bsxfun(@times,model.A(:,:,q), diagSigmaInv').*model.A(:,:,q),2);  
 end
 trTerm = sum(sum(C1.*C2));
 
