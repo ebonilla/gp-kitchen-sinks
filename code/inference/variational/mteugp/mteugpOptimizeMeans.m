@@ -3,13 +3,22 @@ function [ model ] = mteugpOptimizeMeans( model )
 %   Detailed explanation goes here
 % Optmize means and linearization parameters
 
+fprintf('Optimizing Means Starting...\n');
+model  = mteugpOptimizeMeansMap( model);
+fprintf('Optimizing Means Done\n');
+ 
+
+end
+
+
+
+function model = optimizeMeansOld(model)
 % optimization of means
 for q = 1 : model.Q
         model  = optimizeSingleM(model, q, model.varConf);  
 end
 
 end
-
 
 
 function model = optimizeSingleM(model, q, optconf)

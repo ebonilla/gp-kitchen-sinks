@@ -6,7 +6,7 @@ end
 [pred.mFpred, pred.vFpred]  = mteugpGetPredictive( model, xtest );
 pred.gpred                  = mteugpPredict( model, pred.mFpred, pred.vFpred ); %         
 perf                        = model.perfFunc(ytest, pred);
-mteugpShowPerformance(i, model.resultsFname, model.linearMethod, perf)
+mteugpShowPerformance(i, model.resultsFname, model.linearMethod, perf);
 save(model.resultsFname, 'model', 'pred', 'perf');
 
 end
