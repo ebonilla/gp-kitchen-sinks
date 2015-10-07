@@ -32,9 +32,11 @@ switch optConf.optimizer
         opt.xtol_rel       = optConf.xtol;
         
         
-        % setting lower bounds
+        % setting lower and upper bounds
         thetaLB          = mteugpGetHyperLB( model  );
-        opt.lower_bounds = thetaLB; 
+        thetaUB          = mteugpGetHyperUB( model  );
+        opt.lower_bounds = thetaLB;
+        opt.upper_bounds = thetaUB;        
         [theta, fminval, retcode] = nlopt_optimize(opt, theta);
     
 end

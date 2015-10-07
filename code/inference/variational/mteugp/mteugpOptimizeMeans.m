@@ -3,16 +3,21 @@ function [ model ] = mteugpOptimizeMeans( model )
 %   Detailed explanation goes here
 % Optmize means and linearization parameters
 
+if ( isfield(model, 'useNewton') ) 
+    if (model.useNewton == 1) 
+        model = optimizeMeansNewton(model);
+        return;
+    end
+end
+
 fprintf('Optimizing Means Starting...\n');
 model  = mteugpOptimizeMeansMap( model);
 fprintf('Optimizing Means Done\n');
- 
 
-end
-
+end   
 
 
-function model = optimizeMeansOld(model)
+function model = optimizeMeansNewton(model)
 % optimization of means
 for q = 1 : model.Q
         model  = optimizeSingleM(model, q, model.varConf);  

@@ -1,5 +1,5 @@
 function thetaLB  = mteugpGetHyperLB( model  )
-%MTEUGPSETHYPERLB Get Hyperparameter lower bounds
+%MTEUGPGETHYPERLB Get Hyperparameter lower bounds
 %   Detailed explanation goes here
 m.featParam = -Inf*ones(size(model.featParam));
 m.sigma2y   =  zeros(size(model.sigma2y)); 
