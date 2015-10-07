@@ -24,20 +24,22 @@ model.kappa        = 1/2; % parameter of Unscented linearization
 model.nSamples     = 1000; % Number of samples for approximating predictive dist.
 
 % global optimization configuration
-optConf.iter     = 100;    % maximum global iterations
+optConf.iter     = 10;    % maximum global iterations
 optConf.ftol     = 1e-3;
 model.globalConf = optConf;
 
 % variational parameter optimization configuration
-optConf.iter    = 200;  % maximum iterations on variational parameters
-optConf.ftol   = 1e-3;
-% optConf.xtol   = 1e-8; % tolerance for Newton iterations
+optConf.iter    = 100;  % maximum iterations on variational parameters
+optConf.eval    = 100;
+optConf.ftol   = 1e-5;
+optConf.xtol   = 1e-8; % tolerance for Newton iterations
 optConf.alpha   = 0.9;  % learning rate for Newton iterations
+optConf.verbose = 0;
 model.varConf   = optConf;
  
 % Hyperparameter optimization configuration
 optConf.iter      = [];  % maximum iterations for hyper parametes (minfunc parameter)
-optConf.eval      = 50;  % Maxium evals for hyper paramters func (minFunc parameter)
+optConf.eval      = 100;  % Maxium evals for hyper paramters func (minFunc parameter)
 optConf.optimizer = 'nlopt'; % for hyper-parameters
 optConf.ftol       = 1e-3; % Tolerance in f
 optConf.xtol       = 1e-3; % Tolerance in x
@@ -45,14 +47,18 @@ optConf.verbose   = 1; % 0: none, 1: full
 model.hyperConf   = optConf;
 
 % lower bounds on hyperparameters
-model.hyperLB.sigma2y   = 1e-7*ones(model.P,1);
+model.hyperLB.sigma2y   = 1e-5*ones(model.P,1);
+
+% wupper bounds on hyperparameters
+model.hyperUB.sigma2w    =  100*ones(model.Q,1);
 
 % initialization Function
 model.initFunc    = @mteugpInitMNISTBinary;
 
 %
-model.initFromFile = 0;
+model.useNewton  = 1; % use own Newton optimizer for var para,
 
+model.initFromFile = 0;
 end
 
 
