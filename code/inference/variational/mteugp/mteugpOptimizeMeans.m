@@ -40,8 +40,6 @@ mqOld = model.M(:,q);
 while ( (i <= optconf.iter)  && (tol > optconf.ftol))    
     grad_mq      =  mteugpGetGradMq(model, mq, sigma2w, diagSigmaInv, N, q);
     H            =  mteugpGetHessMq(model, mq, sigma2w, diagSigmaInv, N, q); % does not really depend on mq
-    sigma2w
-    diagSigmaInv
     L            = getCholSafe(H);
     dmq          = solve_chol(L',grad_mq);
     [mq, A, B, difNelbo, diverge] = lineSearch(model, mq, dmq, q, optconf.alpha, 20);
