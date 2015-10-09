@@ -29,7 +29,7 @@ end
 function model = optimizeSingleM(model, q, optconf)
 % We need to check the objcetive function
 N            = model.N;
-diagSigmainv = 1./ model.sigma2y;
+diagSigmaInv = 1./ model.sigma2y;
 mq           = model.M(:,q);
 sigma2w      = model.sigma2w(q);
 
@@ -38,8 +38,10 @@ i = 1;
 tol = inf;
 mqOld = model.M(:,q);
 while ( (i <= optconf.iter)  && (tol > optconf.ftol))    
-    grad_mq      =  mteugpGetGradMq(model, mq, sigma2w, diagSigmainv, N, q);
-    H            =  mteugpGetHessMq(model, mq, sigma2w, diagSigmainv, N, q); % does not really depend on mq
+    grad_mq      =  mteugpGetGradMq(model, mq, sigma2w, diagSigmaInv, N, q);
+    H            =  mteugpGetHessMq(model, mq, sigma2w, diagSigmaInv, N, q); % does not really depend on mq
+    sigma2w
+    diagSigmaInv
     L            = getCholSafe(H);
     dmq          = solve_chol(L',grad_mq);
     [mq, A, B, difNelbo, diverge] = lineSearch(model, mq, dmq, q, optconf.alpha, 20);
@@ -101,7 +103,7 @@ function model = optimizeSingleM2(model, q, optconf)
 % optconf.alpha: learning rate
 
 N            = model.N;
-diagSigmainv = 1./ model.sigma2y;
+diagSigmaInv = 1./ model.sigma2y;
 mq           = model.M(:,q);
 sigma2w      = model.sigma2w(q);
 
@@ -110,8 +112,8 @@ i = 1;
 tol = inf;
 mqOld = model.M(:,q);
 while ( (i <= optconf.iter) && (tol > optconf.xtol) )    
-    grad_mq      =  mteugpGetGradMq(model, mq, sigma2w, diagSigmainv, N, q);
-    H            =  mteugpGetHessMq(model, mq, sigma2w, diagSigmainv, N, q); % does not really depend on mq
+    grad_mq      =  mteugpGetGradMq(model, mq, sigma2w, diagSigmaInv, N, q);
+    H            =  mteugpGetHessMq(model, mq, sigma2w, diagSigmaInv, N, q); % does not really depend on mq
     L            = getCholSafe(H);
     dmq          = solve_chol(L',grad_mq);
     mq           = mq  - optconf.alpha*dmq;

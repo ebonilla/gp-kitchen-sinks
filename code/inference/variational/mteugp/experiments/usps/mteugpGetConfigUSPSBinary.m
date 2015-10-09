@@ -47,10 +47,10 @@ optConf.verbose   = 1; % 0: none, 1: full
 model.hyperConf   = optConf;
 
 % lower bounds on hyperparameters
-model.hyperLB.sigma2y   = 1e-5*ones(model.P,1);
+%model.hyperLB.sigma2y   = 1e-5*ones(model.P,1);
 
 % wupper bounds on hyperparameters
-model.hyperUB.sigma2w    =  100*ones(model.Q,1);
+%model.hyperUB.sigma2w    =  100*ones(model.Q,1);
 
 % initialization Function
 model.initFunc    = @mteugpInitUSPSBinary;

@@ -2,7 +2,7 @@ function  mteugpTestUSPSBinary( str_idxMethod, str_D, str_boolSample, str_writeL
 %MTEUGPTESTUSPS Run MTEUGP on USPSP data
 %   Detailed explanation goes here
 DATASET       = 'uspsData';
-RESULTS_DIR   = 'results';
+RESULTS_DIR   = 'tmp/results';
 linearMethod  = {'Taylor', 'Unscented'};
 
 [idxMethod, D, boolSample, writeLog] = parseInput(str_idxMethod, str_D, str_boolSample, str_writeLog);
