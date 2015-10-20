@@ -33,13 +33,13 @@ D            = model.D;
 
 PhiM    = model.Phi*model.M; % N*Q
 %[N P Q] = siz(model.A);
-C = zeros(N, P);
+G = zeros(N, P);
 for p = 1 : P
     Ap     = squeeze(model.A(:,p,:));
-    C(:,p) = sum(Ap.*PhiM,2);
+    G(:,p) = sum(Ap.*PhiM,2);
 end
-C        = model.Y - C - model.B;
-elbo = sum(sum(bsxfun(@times,C, diagSigmaInv').*C)); % quad term
+G        = model.Y - G - model.B;
+elbo = sum(sum(bsxfun(@times,G, diagSigmaInv').*G)); % quad term
 
 % remaining terms coming from KL and likelihood after cancelation of traces at optimal M,C
 elbo = elbo +  N*( P*log(2*pi) + sum(log(sigma2y)) );
