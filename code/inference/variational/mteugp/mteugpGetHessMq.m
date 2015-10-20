@@ -14,7 +14,12 @@ H =  - (1/sigma2w) * eye(D);
 Aq  = model.A(:,:,q); % NxP
 Phi = model.Phi; % NxD
 v = diagProd(bsxfun(@times, Aq, diagSigmainv'), Aq'); % Nx1
-H = H - (bsxfun(@times,Phi', v')*Phi);
+
+% It was like this before
+% H = H - (bsxfun(@times,Phi', v')*Phi);
+% Here we simply ensure that the resulting matrix is symmetric
+AA = bsxfun(@times,Phi', sqrt(v'));
+H  = H - AA*AA';
 
 % minimizing negative elbo
 H = - H;

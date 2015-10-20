@@ -12,10 +12,12 @@ function nelbo  = mteugpNelboHyper( theta, model )
 
 model = mteugpUpdateHyper( model, theta );
 
+% UNCOMMENT ME PLEAE
 model = mteugpOptimizeMeans(model);
 model = mteugpOptimizeCovariances(model);
-
 nelbo =  getNelboHyper(model);
+% DELETE BELOW
+%nelbo =  mteugpNelbo(model);
 
 end
 

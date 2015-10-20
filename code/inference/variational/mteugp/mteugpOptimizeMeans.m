@@ -56,7 +56,11 @@ while ( (i <= optconf.iter)  && (tol > optconf.ftol))
     %tol = max(abs((mq - mqOld)./mq));
     tol  = abs(difNelbo);
     
-    fprintf('Newton nelbo(%d)=%.4f\n',i, mteugpNelbo(model));
+    nelbo =  mteugpNelbo(model);
+%    if ( nelbo > 10^20 )
+%       warning('VerifNelbo: Too large Results are weirg');
+%    end
+    fprintf('Newton nelbo(%d)=%.4f\n',i,nelbo);
     mqOld = mq;
     i = i + 1;
 end
