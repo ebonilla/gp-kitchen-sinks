@@ -38,7 +38,7 @@ gradM  = zeros(size(M));
 switch (model.linearMethod)
     case 'Taylor',
         MuF = model.Phi*M;
-        [Gval, J] =  getStatsEGP(MuF, model.fwdFunc, model.jacobian, model.N, model.P, model.Q);
+        [Gval, J] =  egpGetStats(MuF, model.fwdFunc, model.jacobian, model.N, model.P, model.Q);
         Ytilde    = model.Y - Gval;
         Ys        = bsxfun(@times, Ytilde, diagSigmayinv); % NxP
         lmap      = sum(sum(Ys.*Ytilde));
@@ -61,16 +61,7 @@ end
 
 
 
-function [Gval, J] =  getStatsEGP(MuF, fwdFunc, jacobian, N, P, Q)
-J    = zeros(N,P,Q);
-Gval = zeros(N,P);
-for n = 1 : N
-    f = MuF(n,:);
-    [gvaln, Jn] = egpEvalFwdModel(fwdFunc, f, jacobian);
-    J(n,:,:)  = Jn;
-    Gval(n,:) = gvaln; 
-end        
 
 
-end
+
   
