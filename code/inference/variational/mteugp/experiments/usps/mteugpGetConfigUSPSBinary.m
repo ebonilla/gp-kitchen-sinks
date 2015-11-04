@@ -34,9 +34,9 @@ optConf.eval    = 100;
 optConf.ftol   = 1e-5;
 optConf.xtol   = 1e-8; % tolerance for Newton iterations
 optConf.alpha   = 0.9;  % learning rate for Newton iterations
-optConf.verbose = 0;
+optConf.verbose = 1;
 model.varConf   = optConf;
- 
+  
 % Hyperparameter optimization configuration
 optConf.iter      = [];  % maximum iterations for hyper parametes (minfunc parameter)
 optConf.eval      = 100;  % Maxium evals for hyper paramters func (minFunc parameter)
@@ -56,7 +56,7 @@ model.hyperConf   = optConf;
 model.initFunc    = @mteugpInitUSPSBinary;
 
 %
-model.useNewton  = 1; % use own Newton optimizer for var para,
+model.useNewton  = 0; % use own Newton optimizer for var param
 
 model.initFromFile = 0;
 end

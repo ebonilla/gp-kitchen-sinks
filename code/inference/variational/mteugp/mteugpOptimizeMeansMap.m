@@ -10,6 +10,8 @@ function  model  = mteugpOptimizeMeansMap(model)
 %                'DerivativeCheck','on', 'numDiff', 0); 
 % theta = model.M(:);
 % [theta, nelboFeat, exitFlag]  = minFunc(@mapObjective, theta, opt, model); 
+fprintf('Optimizing Means Starting...\n');
+
 
 optConf             = model.varConf;
 opt.verbose         = optConf.verbose;
@@ -25,6 +27,9 @@ model.M =  reshape(theta, model.D, model.Q);
 
 % Updates linearization parametes
 [model.A, model.B] = mteugpUpdateLinearization(model); 
+
+fprintf('Optimizing Means Done\n');
+
 
 end
  

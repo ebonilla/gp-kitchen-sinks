@@ -10,9 +10,7 @@ if ( isfield(model, 'useNewton') )
     end
 end
 
-fprintf('Optimizing Means Starting...\n');
 model  = mteugpOptimizeMeansMap( model);
-fprintf('Optimizing Means Done\n');
 
 end   
 

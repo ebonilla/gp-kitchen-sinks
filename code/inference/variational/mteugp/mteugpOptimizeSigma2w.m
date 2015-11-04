@@ -1,6 +1,8 @@
 function model = mteugpOptimizeSigma2w( model )
 %MTEUGPOPTIMIZESIGMA2W Summary of this function goes here
 %   Detailed explanation goes here
+fprintf('Optimizing sigma2w starting \n');
+
 theta =  wrapSigma2w(model.sigma2w);
 
 optConf = model.hyperConf;
@@ -12,10 +14,20 @@ switch optConf.optimizer
                 'progTol', optConf.ftol, ...
                 'DerivativeCheck','on', 'numDiff', 0); 
         [theta, nelbo, exitFlag]  = minFunc(@mteugpNelboSigma2w, theta, opt, model); 
-        
+    case 'nlopt', % Using nlopt
+        opt.verbose             = optConf.verbose;
+        opt.algorithm           = NLOPT_LD_LBFGS;
+        opt.min_objective       = @(xx) mteugpNelboSigma2w(xx, model);
+        opt.maxeval             = optConf.eval;
+        opt.ftol_rel            = optConf.ftol; % relative tolerance in f
+        opt.xtol_rel            = optConf.xtol;
+        opt.lower_bounds        =   -100*ones(size(theta)); % just to avoid numerical problems
+        [theta, nelbo, retcode] = nlopt_optimize(opt, theta);        
 end
 
 model.sigma2w = unwrapSigma2w(theta);
+
+fprintf('Optimizing sigma2w done \n');
 
 end
 
@@ -62,13 +74,20 @@ end
 
 
 function theta = wrapSigma2w(sigma2w)
-% We work on the precison space
+% We work on the log precison space
 lambdaw = 1./sigma2w;
 theta   = log(lambdaw);
 
 end
 
 function sigma2w  =unwrapSigma2w(theta)
+% theta is the log precision
 sigma2w = exp(-theta);
 
 end
+
+
+
+
+
+
