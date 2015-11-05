@@ -6,8 +6,8 @@ fprintf('Optimizing feature parameters starting \n');
 theta   = model.featParam; % wrapping of feat param managed by feat func
 
 optConf = model.hyperConf;
-switch optConf.optimizer
-    case 'minFunc',
+switch lower(optConf.optimizer)
+    case 'minfunc',
         % numDiff = 0: use user gradients, 1: fwd-diff, 2: centra-diff
         opt = struct('Display', 'full', 'Method', 'lbfgs', ...
                 'MaxIter', optConf.iter, 'MaxFunEvals', optConf.eval, ...
@@ -21,7 +21,11 @@ switch optConf.optimizer
         opt.maxeval             = optConf.eval;
         opt.ftol_rel            = optConf.ftol; % relative tolerance in f
         opt.xtol_rel            = optConf.xtol;
-        [theta, nelbo, retcode] = nlopt_optimize(opt, theta);        
+        [theta, nelbo, retcode] = nlopt_optimize(opt, theta);     
+    otherwise,
+       ME = MException('VerifyOpitions:InvalidOptimizer', ...
+             ['Invalid Optimizer ', optConf.optimizer ]);
+          throw(ME);             
 end
 
 % update features
@@ -52,14 +56,19 @@ diagSigmayinv = 1./(model.sigma2y);
   
 % TODO: Vectorize code
 % TODO: Some things  could be computed elsewhere (outside func)?
-[Gval, J] =  egpGetStats(MuF, model.fwdFunc, model.jacobian, N, P, Q);
+[Gval, J,  H] =  egpGetStats(MuF, model.fwdFunc, model.jacobian, model.diaghess, N, P, Q);
 Ytilde    = model.Y - Gval;
 Ys        = bsxfun(@times, Ytilde, diagSigmayinv'); % NxP (Sigmay^{-1} x (Y - G) )
 
-% Computing C for new valeus of Phi
-C = zeros(D, D, Q);
+% Computing C for new values of Phi
+C    = zeros(D, D, Q);
+PcP = zeros(N,Q);
 for q = 1 : Q % grad of log det term
     C(:,:,q)    =  mteugpGetCq(J(:,:,q), model.Phi, model.sigma2w(q), diagSigmayinv);
+    
+    % Pre-compute Phi_n^T Cq Phi_n
+    PcP(:,q) = diagProd(model.Phi*C(:,:,q), model.Phi');
+    
 end
 
 
@@ -77,8 +86,16 @@ for n = 1 : N
     
     for q = 1 : Q % grad of log det term
         anq      =  squeeze(J(n,:,q));
-        alpha_nq =   anq'*(anq.*diagSigmayinv); % 1x1
+       alpha_nq  =   anq'*(anq.*diagSigmayinv); % 1x1
        grad      = grad +  alpha_nq*gPhin'*C(:,:,q)*phin;
+       
+       % implicit gradient
+       dl_danq     = PcP(n,q)*diagSigmayinv.*anq; % P x 1
+       hnq         = squeeze(H(n,:,q));
+       danq_dtheta = hnq*M(:,q)'*gPhin;  % P X L
+       grad_imp    = dl_danq'*danq_dtheta;
+       
+       grad        = grad + grad_imp;
     end
     
 end

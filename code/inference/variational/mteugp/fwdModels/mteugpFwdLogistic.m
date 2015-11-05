@@ -1,4 +1,4 @@
-function [ g, dg ] = mteugpFwdLogistic( f )
+function [ g, dg, d2g ] = mteugpFwdLogistic( f )
 %MTEUGPFWDBINARYCLASS Implementation of logistic sigmoid function for binary classification
 %   Detailed explanation goes here
 % 
@@ -6,6 +6,7 @@ function [ g, dg ] = mteugpFwdLogistic( f )
 g  = logisticSigmoid(f);
 dg = g.*(1-g);
 
+d2g = dg.*(1-2*g);
 
 end
 

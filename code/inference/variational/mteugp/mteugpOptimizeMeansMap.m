@@ -43,7 +43,7 @@ gradM  = zeros(size(M));
 switch (model.linearMethod)
     case 'Taylor',
         MuF = model.Phi*M;
-        [Gval, J] =  egpGetStats(MuF, model.fwdFunc, model.jacobian, model.N, model.P, model.Q);
+        [Gval, J] =  egpGetStats(MuF, model.fwdFunc, model.jacobian, model.diaghess, model.N, model.P, model.Q);
         Ytilde    = model.Y - Gval;
         Ys        = bsxfun(@times, Ytilde, diagSigmayinv); % NxP
         lmap      = sum(sum(Ys.*Ytilde));

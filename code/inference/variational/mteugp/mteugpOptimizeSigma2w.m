@@ -6,8 +6,8 @@ fprintf('Optimizing sigma2w starting \n');
 theta =  wrapSigma2w(model.sigma2w);
 
 optConf = model.hyperConf;
-switch optConf.optimizer
-    case 'minFunc',
+switch lower(optConf.optimizer)
+    case 'minfunc',
         % numDiff = 0: use user gradients, 1: fwd-diff, 2: centra-diff
         opt = struct('Display', 'full', 'Method', 'lbfgs', ...
                 'MaxIter', optConf.iter, 'MaxFunEvals', optConf.eval, ...
@@ -22,7 +22,11 @@ switch optConf.optimizer
         opt.ftol_rel            = optConf.ftol; % relative tolerance in f
         opt.xtol_rel            = optConf.xtol;
         opt.lower_bounds        =   -100*ones(size(theta)); % just to avoid numerical problems
-        [theta, nelbo, retcode] = nlopt_optimize(opt, theta);        
+        [theta, nelbo, retcode] = nlopt_optimize(opt, theta);       
+    otherwise,
+       ME = MException('VerifyOpitions:InvalidOptimizer', ...
+             ['Invalid Optimizer ', optConf.optimizer ]);
+          throw(ME);        
 end
 
 model.sigma2w = unwrapSigma2w(theta);
@@ -46,7 +50,7 @@ MuF           = model.Phi*M; % Mu_f = M*Phi
 diagSigmayinv = 1./(model.sigma2y);
 
 if (nargout == 2) % gradient
-    [Gval, J] =  egpGetStats(MuF, model.fwdFunc, model.jacobian, N, P, Q);
+    [Gval, J] =  egpGetStats(MuF, model.fwdFunc, model.jacobian, model.diaghess, N, P, Q);
     grad = sum(M.*M,1)' - D*model.sigma2w;
     for q = 1 : model.Q
         Cq  =  mteugpGetCq(J(:,:,q), model.Phi, model.sigma2w(q), diagSigmayinv);

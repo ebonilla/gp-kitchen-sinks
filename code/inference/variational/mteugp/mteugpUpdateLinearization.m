@@ -16,7 +16,7 @@ switch (model.linearMethod)
     case 'Taylor',
         for n = 1 : N
             f = MuF(n,:);
-            [fval, Jn] = egpEvalFwdModel(model.fwdFunc, f, model.jacobian);
+            [fval, Jn] = egpEvalFwdModel(model.fwdFunc, f, model.jacobian, model.diaghess);
             A(n,:,:) = Jn;
             B(n,:)   = fval - f*Jn'; 
         end

@@ -19,6 +19,7 @@ model.X            = X;
 model.linearMethod = linearMethod; % 'Taylor' or 'Unscented'
 model.fwdFunc      = @mteugpFwdLogistic;  
 model.jacobian     = 1;  % 1/0 if jacobian is provided
+model.diaghess     = 1;  % 1/0 if diag hessian is provided
 model.kappa        = 1/2; % parameter of Unscented linearization
 
 model.nSamples     = 1000; % Number of samples for approximating predictive dist.

@@ -16,7 +16,7 @@ MuF           = model.Phi*M; % Mu_f = M*Phi
 
 switch (model.linearMethod)
     case 'Taylor',
-        [Gval, J] =  egpGetStats(MuF, model.fwdFunc, model.jacobian, N, P, Q);
+        [Gval, J] =  egpGetStats(MuF, model.fwdFunc, model.jacobian, model.diaghess, N, P, Q);
         Ytilde    = model.Y - Gval;
         Ys        = bsxfun(@times, Ytilde, diagSigmayinv'); % NxP
         ell       = sum(sum(Ys.*Ytilde)); % (y - g)^T Sigmay^-1 (y - g)
