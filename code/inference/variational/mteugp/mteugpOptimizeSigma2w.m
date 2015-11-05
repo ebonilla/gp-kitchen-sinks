@@ -1,5 +1,5 @@
 function model = mteugpOptimizeSigma2w( model )
-%MTEUGPOPTIMIZESIGMA2W Summary of this function goes here
+%MTEUGPOPTIMIZESIGMA2W Optimize sigma2w using simplified nelbo
 %   Detailed explanation goes here
 fprintf('Optimizing sigma2w starting \n');
 
@@ -49,7 +49,7 @@ if (nargout == 2) % gradient
     [Gval, J] =  egpGetStats(MuF, model.fwdFunc, model.jacobian, N, P, Q);
     grad = sum(M.*M,1)' - D*model.sigma2w;
     for q = 1 : model.Q
-        Cq  =  getCq(J(:,:,q), model.Phi, model.sigma2w(q), diagSigmayinv);
+        Cq  =  mteugpGetCq(J(:,:,q), model.Phi, model.sigma2w(q), diagSigmayinv);
         grad(q) = grad(q) + trace(Cq);
     end
     lambdaw =  1./model.sigma2w;
@@ -61,16 +61,7 @@ end
 
 
 
-function Cq = getCq(Aq, Phi, sigma2wq, diagSigmayinv)
-D          = size(Phi,2);
-Hq         =   (1/sigma2wq) * eye(D); 
-v          = diagProd(bsxfun(@times, Aq, diagSigmayinv'), Aq'); % Nx1
-AA         = bsxfun(@times,Phi', sqrt(v'));
-Hq         = Hq + AA*AA';           % Cq^{-1} 
-cholHq     = getCholSafe(Hq);
-Cq         = getInverseChol(cholHq);
 
-end
 
 
 function theta = wrapSigma2w(sigma2w)

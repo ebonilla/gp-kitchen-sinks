@@ -18,7 +18,7 @@ switch (model.linearMethod)
     case 'Taylor',
         [Gval, J] =  egpGetStats(MuF, model.fwdFunc, model.jacobian, N, P, Q);
         Ytilde    = model.Y - Gval;
-        Ys        = bsxfun(@times, Ytilde, diagSigmayinv); % NxP
+        Ys        = bsxfun(@times, Ytilde, diagSigmayinv'); % NxP
         ell       = sum(sum(Ys.*Ytilde)); % (y - g)^T Sigmay^-1 (y - g)
         ell       = ell + N*( P*log(2*pi) + sum(log(sigma2y)) );
         kl        = sum(sum(bsxfun(@times, M, diagSigmawinv).*M)); 
@@ -31,6 +31,8 @@ switch (model.linearMethod)
              'Method Unscented currently unsupported');
           throw(ME);
 end
+
+
 nelbo = 0.5*(ell + kl); 
 
 end
