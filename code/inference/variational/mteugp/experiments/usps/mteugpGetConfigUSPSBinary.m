@@ -36,6 +36,8 @@ optConf.ftol   = 1e-5;
 optConf.xtol   = 1e-8; % tolerance for Newton iterations
 optConf.alpha   = 0.9;  % learning rate for Newton iterations
 optConf.verbose = 1;
+optConf.optimizer = 'minfunc'; % for hyper-parameters
+
 model.varConf   = optConf;
   
 % Hyperparameter optimization configuration

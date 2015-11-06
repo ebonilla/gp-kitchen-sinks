@@ -89,13 +89,13 @@ for n = 1 : N
        alpha_nq  =   anq'*(anq.*diagSigmayinv); % 1x1
        grad      = grad +  alpha_nq*gPhin'*C(:,:,q)*phin;
        
-       % implicit gradient
+       % implicit gradient: 
        dl_danq     = PcP(n,q)*diagSigmayinv.*anq; % P x 1
-       hnq         = squeeze(H(n,:,q));
+       hnq         = squeeze(H(n,:,q)); % P x 1
        danq_dtheta = hnq*M(:,q)'*gPhin;  % P X L
        grad_imp    = dl_danq'*danq_dtheta;
        
-       grad        = grad + grad_imp;
+       grad        = grad + grad_imp; % TODO: TRANSPOSE OF THIS?
     end
     
 end

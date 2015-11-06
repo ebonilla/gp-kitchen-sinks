@@ -17,8 +17,10 @@ showProgress(i, model.nelbo(i));
 tol = inf;
 while (( i < optConf.iter) && (tol > optConf.ftol) )
     i = i + 1;
-    model = mteugpOptimizeMeansMap(model);         
-    model = mteugpOptimizeCovariances(model);  
+    model = mteugpOptimizeMeansSimplified(model);         
+    %model = mteugpOptimizeCovariances(model);  
+    
+    pause;
     
     model.nelbo(i) =  mteugpNelboSimplified( model );
     showProgress(i, model.nelbo(i));

@@ -31,11 +31,11 @@ model        = mteugpGetConfigUSPSBinary( data.xtrain, data.ytrain,linearMethod,
 model.resultsFname =  fname;
 model.perfFunc = @mteugpGetPerformanceBinaryClass;
 
-% model        = mteugpLearn( model, data.xtest, data.ytest );
+%model        = mteugpLearn( model, data.xtest, data.ytest );
 model        = mteugpLearnSimplified( model, data.xtest, data.ytest );
 
 save(fname, 'model');
-
+a
 % Predictions
 model.resultsFname = fname;
 mteugpSavePerformance(inf, model, data.xtest, data.ytest);
