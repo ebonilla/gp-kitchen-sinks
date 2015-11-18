@@ -24,7 +24,7 @@ while (( i < optConf.iter) && (tol > optConf.ftol) )
     
     % We save results here after optimizing variational parameters
     if ( mod(i,5) == 0 )
-        model = mteugpUpdateCovariances(model);     
+       % model = mteugpUpdateCovariances(model);     
         mteugpSavePerformance(i, model, xtest, ytest);
     end
     
@@ -60,3 +60,4 @@ fprintf('Nelbo(%d) %.4f\n', iter-1, val );
 end
 
 
+ 
