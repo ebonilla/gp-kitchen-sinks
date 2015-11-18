@@ -53,7 +53,7 @@ model.hyperConf   = optConf;
 %model.hyperLB.sigma2y   = 1e-5*ones(model.P,1);
 
 % wupper bounds on hyperparameters
-%model.hyperUB.sigma2w    =  100*ones(model.Q,1);
+%model.hyperUB.sigma2w    =  100*ones(model.Q,1); % used to avoid numerical problems
 
 % initialization Function
 model.initFunc    = @mteugpInitUSPSBinary;
