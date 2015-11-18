@@ -29,7 +29,7 @@ switch lower(optConf.optimizer)
 end
 
 % update features
-model = updateFeatures(model, theta);
+model = mteugpUpdateFeatures(model, theta);
 
 fprintf('Optimizing feature parameters done \n');
 
@@ -37,7 +37,7 @@ end
 
 
 function [nelbo, grad] = mteugpNelboFeatParam(theta, model)
-model  = updateFeatures(model, theta);
+model  = mteugpUpdateFeatures(model, theta);
 nelbo  = mteugpNelboSimplified( model );
 
 if (nargout == 1) 
@@ -105,11 +105,6 @@ end
 end
 
 
-
-function model = updateFeatures(model, theta)
-model.featParam = theta;
-model.Phi       = feval(model.featFunc, model.X, model.Z, model.featParam);
-end
 
 
 

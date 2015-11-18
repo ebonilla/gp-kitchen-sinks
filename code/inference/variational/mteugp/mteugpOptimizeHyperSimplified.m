@@ -5,7 +5,7 @@ function model  = mteugpOptimizeHyperSimplified(model )
 % theta = [featureParam; likelihoodParam; PriorParam]
 %       = [featureParam; theta_y; theta_w]
 %
-theta  = mteugpWrapHyper(model);
+theta  = mteugpWrapHyperSimplified(model);
 
 optConf = model.hyperConf;
 switch optConf.optimizer
@@ -25,7 +25,7 @@ switch optConf.optimizer
     case 'nlopt', % Using nlopt
         opt.verbose        = optConf.verbose;
         opt.algorithm     = NLOPT_LD_LBFGS;
-        opt.min_objective  = @(xx) mteugpNelboHyperSimplified(xx, model);s        
+        opt.min_objective  = @(xx) mteugpNelboHyperSimplified(xx, model);        
         opt.maxeval        = optConf.eval;
         opt.ftol_rel       = optConf.ftol; % relative tolerance in f
         opt.xtol_rel       = optConf.xtol;
@@ -40,9 +40,64 @@ switch optConf.optimizer
     
 end
 
- model  = mteugpUnwrapHyper( model, theta );
+ model  = mteugpUnwrapHyperSimplified( model, theta );
 
 
 end
 
- 
+function [nelbo, grad] = mteugpNelboHyperSimplified(theta, model)
+model =  mteugpUnwrapHyperSimplified(model, theta);
+
+nelbo  = mteugpNelboSimplified( model );
+
+if (nargout == 1) 
+    return;
+end
+
+% if gradients are required
+% I AM HERE 
+
+end
+
+
+function theta = mteugpWrapHyperSimplified(model)
+ theta   = model.featParam;
+ theta  =  [theta; mteugpWrapSigma2y(model.sigma2y)];
+ theta   = [theta; mteugpWrapSigma2w(model.sigma2w)];
+
+end
+
+function  model =  mteugpUnwrapHyperSimplified(model, theta)
+L          = length(theta);
+P          = model.P; % Number of tasks
+Q          = model.Q; % Number of latent functions
+
+nFeatParam = L - P - Q; % Number of feature parameters
+theta_f    = theta(1:nFeatParam);
+theta_y    = theta(nFeatParam + 1 : nFeatParam + P);
+theta_w    = theta(nFeatParam + P + 1 : L); % should be Q-dimensional
+
+model.sigma2y = mteugpUnrwapSigma2y(theta_y);
+model.sigma2w = mteugpUnrwapSigma2w(theta_w);
+model         = mteugpUpdateFeatures(model, theta_f);
+
+
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
