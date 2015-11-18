@@ -3,7 +3,7 @@ function model = mteugpOptimizeSigma2w( model )
 %   Detailed explanation goes here
 fprintf('Optimizing sigma2w starting \n');
 
-theta =  wrapSigma2w(model.sigma2w);
+theta =  mteugpWrapSigma2w(model.sigma2w);
 
 optConf = model.hyperConf;
 switch lower(optConf.optimizer)
@@ -29,7 +29,7 @@ switch lower(optConf.optimizer)
           throw(ME);        
 end
 
-model.sigma2w = unwrapSigma2w(theta);
+model.sigma2w = mteugpUnrwapSigma2w(theta);
 
 fprintf('Optimizing sigma2w done \n');
 
@@ -39,7 +39,7 @@ end
 
 
 function [nelbo, grad] = mteugpNelboSigma2w(theta, model)
-model.sigma2w = unwrapSigma2w(theta);
+model.sigma2w = mteugpUnrwapSigma2w(theta);
 nelbo  = mteugpNelboSimplified( model );
 P             = model.P;
 N             = model.N;
@@ -68,18 +68,7 @@ end
 
 
 
-function theta = wrapSigma2w(sigma2w)
-% We work on the log precison space
-lambdaw = 1./sigma2w;
-theta   = log(lambdaw);
 
-end
-
-function sigma2w  =unwrapSigma2w(theta)
-% theta is the log precision
-sigma2w = exp(-theta);
-
-end
 
 
 

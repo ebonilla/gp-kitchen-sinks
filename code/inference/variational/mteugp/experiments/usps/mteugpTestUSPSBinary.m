@@ -35,7 +35,7 @@ model.perfFunc = @mteugpGetPerformanceBinaryClass;
 model        = mteugpLearnSimplified( model, data.xtest, data.ytest );
 
 save(fname, 'model');
-a
+
 % Predictions
 model.resultsFname = fname;
 mteugpSavePerformance(inf, model, data.xtest, data.ytest);

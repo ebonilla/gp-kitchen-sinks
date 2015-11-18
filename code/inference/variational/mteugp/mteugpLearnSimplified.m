@@ -18,27 +18,30 @@ tol = inf;
 while (( i < optConf.iter) && (tol > optConf.ftol) )
     i = i + 1;
     model = mteugpOptimizeMeansSimplified(model);         
-    %model = mteugpOptimizeCovariances(model);  
-    
-    pause;
-    
+        
     model.nelbo(i) =  mteugpNelboSimplified( model );
     showProgress(i, model.nelbo(i));
     
     % We save results here after optimizing variational parameters
-    mteugpSavePerformance(i, model, xtest, ytest);
-    
-    model  = mteugpOptimizeSigma2w(model);
+    if ( mod(i,5) == 0 )
+        model = mteugpUpdateCovariances(model);     
+        mteugpSavePerformance(i, model, xtest, ytest);
+    end
     
     model  = mteugpOptimizeFeatParam( model );
+    
+    model  = mteugpOptimizeSigma2y( model );
+     
+    model  = mteugpOptimizeSigma2w(model);
+    
 
     tol = abs( model.nelbo(i) - model.nelbo(i-1) );
     % tol = abs( (model.nelbo(i) - model.nelbo(i-1))/model.nelbo(i)   );
 end
 i = i + 1;
-% After final update of features / hyper-parameters
-model = mteugpOptimizeMeansMap(model);        
-model = mteugpOptimizeCovariances(model);   
+% After final update of  hyper-parameters
+model = mteugpOptimizeMeansSimplified(model);         
+model = mteugpUpdateCovariances(model);     
 
 model.nelbo(i) =  mteugpNelboSimplified( model );
 showProgress(i, model.nelbo(i));
