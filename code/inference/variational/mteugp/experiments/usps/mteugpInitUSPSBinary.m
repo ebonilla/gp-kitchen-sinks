@@ -11,7 +11,7 @@ end
 
 if(~exitCode) % Default initialization
     model.featParam = feval(model.initFeatFunc);    
-    model.sigma2y   = 1*ones(model.P,1);   % likelihood variances
+    model.sigma2y   = 0.01*ones(model.P,1);   % likelihood variances
     model.sigma2w   = ones(model.Q,1);  % hyper-parameters (of prior on w)
     model.Phi       = feval(model.featFunc, model.X, model.Z, model.featParam); 
     model.D         = size(model.Phi,2); % actual number of features    
@@ -39,6 +39,9 @@ fprintf('Initial sigma2w = %.4f\n', model.sigma2w);
 
 % fprintf('Initial Nelbo = %.2f\n', mteugpNelbo( model ) );
 
+% Save initial model on target directory
+strFile = strrep(model.resultsFname, '.mat', '_0.mat');
+save(strFile, 'model');
 
 end
 

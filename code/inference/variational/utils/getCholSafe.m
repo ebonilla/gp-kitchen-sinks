@@ -55,9 +55,11 @@ for i = 1:maxTries
   if nonPosDef
     jitter = jitter*10;
     if (i == maxTries)
-      error(['Matrix is non positive definite tried ' num2str(i) ...
-             ' times adding jitter, but failed with jitter ' ...
-             'of ' num2str(jitter) '. Increase max tries'])
+        errID = 'InvalidMatrix:NonPD';
+        errMsg = ['Tried ', num2str(i), ' times adding jitter, but failed with jitter ', ...
+             'of ' num2str(jitter)];
+        ME = MException(errID, errMsg);
+        throw(ME);
     end
   else
     error(ME.message);

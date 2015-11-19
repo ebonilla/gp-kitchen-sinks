@@ -30,6 +30,7 @@ switch optConf.optimizer
         opt.ftol_rel       = optConf.ftol; % relative tolerance in f
         opt.xtol_rel       = optConf.xtol;
         opt.lower_bounds   =   mteugpSetLB(theta, model.P, model.Q); % just to avoid numerical problems
+        opt.upper_bounds   =   mteugpSetUB(theta, model.P, model.Q); % just to avoid numerical problems
         
         [theta, fminval, retcode] = nlopt_optimize(opt, theta);
     
@@ -44,12 +45,25 @@ function theta_lb = mteugpSetLB(theta, P, Q)
 L          = length(theta);
 
 nFeatParam = L - P - Q; % Number of feature parameters
-theta_f    = -inf*ones(nFeatParam,1);
-theta_y    = -inf*ones(P,1);
-theta_w    = -100*ones(Q,1); % upper bound on variance
+theta_f    = -500*ones(nFeatParam,1); 
+theta_y    = -500*ones(P,1); % upper bound on variance
+theta_w    = -500*ones(Q,1); % upper bound on variance
 theta_lb   = [theta_f; theta_y; theta_w]; 
 
 end
+
+function theta_up = mteugpSetUB(theta, P, Q)
+L          = length(theta);
+
+nFeatParam = L - P - Q; % Number of feature parameters
+theta_f    = 500*ones(nFeatParam,1); % jusy to avoid numerical problems
+theta_y    = 500*ones(P,1); % 
+theta_w    = 500*ones(Q,1); % 
+theta_up   = [theta_f; theta_y; theta_w]; 
+
+end
+
+
 
 
 

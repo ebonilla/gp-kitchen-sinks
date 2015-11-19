@@ -1,6 +1,8 @@
 function  mteugpTestUSPSBinary( str_idxMethod, str_D, str_boolSample, str_writeLog )
 %MTEUGPTESTUSPS Run MTEUGP on USPSP data
 %   Detailed explanation goes here
+%seed = rng('default');
+%seed = rng('shuffle');
 DATASET       = 'uspsData';
 RESULTS_DIR   = 'tmp2/results';
 linearMethod  = {'Taylor', 'Unscented'};
@@ -27,9 +29,9 @@ fname = [RESULTS_DIR, '/', 'uspsData', '.mat'];
 data         = mteugpLoadDataUSPS(DATASET, boolSample);
 
 % Learning Model
-model        = mteugpGetConfigUSPSBinary( data.xtrain, data.ytrain,linearMethod, D );
+model              = mteugpGetConfigUSPSBinary( data.xtrain, data.ytrain,linearMethod, D );
 model.resultsFname =  fname;
-model.perfFunc = @mteugpGetPerformanceBinaryClass;
+model.perfFunc     = @mteugpGetPerformanceBinaryClass;
 
 %model        = mteugpLearn( model, data.xtest, data.ytest );
 model        = mteugpLearnSimplified( model, data.xtest, data.ytest );
@@ -43,18 +45,6 @@ mteugpSavePerformance(inf, model, data.xtest, data.ytest);
 diary off;
 
 end
-
-
-
-
-
-
-%% showProgress(benchmark, linearMethod, perf)
-function showProgress(linearMethod, perf)
-fprintf('USPS: %s: --> NLP=%.4f, ERROR=%.4f \n',linearMethod, perf.mnlp, perf.errorRate );
-end
-
-
 
 
 

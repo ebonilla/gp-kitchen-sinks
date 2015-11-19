@@ -76,7 +76,7 @@ switch (model.linearMethod)
         end
 
 
-        % Implicit gradient here
+        % Implicit gradient here: dl_danq danq_dm
         for n = 1 : N
             phin     = model.Phi(n,:)';
             
