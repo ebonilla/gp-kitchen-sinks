@@ -4,13 +4,12 @@ function  model  = mteugpLearn( model, xtest, ytest )
 % xtest, ytest: used only to evaluate the model as we go -> to check
 % progress
 
-optConf = model.globalConf;
-
 model.nelbo = [];
 model            = model.initFunc(model); 
-if (~isempty(model.nelbo)) % There awas a previous run 
-     model  = mteugpOptimizeHyper(model);
-end
+optConf = model.globalConf;
+%if (~isempty(model.nelbo)) % There awas a previous run 
+%     model  = mteugpOptimizeHyper(model);
+%end
 oldNelbo         = model.nelbo;
 model.nelbo      = zeros(optConf.iter + 2,1);
 i = 1;

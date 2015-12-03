@@ -106,6 +106,23 @@ grad = gradM(:);
 end
 
 
+function testGradients(model)
+order = 1;
+type = 2; 
+L =  length(model.M(:));
+R = 10;
+delta = zeros(L,R);
+for r = 1 : 10
+    theta   = 10*randn(L,1);    
+    [delta(:,r), userG, diffG] = derivativeCheck(@mteugpNelboMeans, theta, order, type, model);
+end
+
+hist(delta(:));
+
+
+
+end
+
 
 
 

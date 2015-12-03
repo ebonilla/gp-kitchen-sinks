@@ -5,6 +5,9 @@ function model  = mteugpOptimizeHyperSimplified(model )
 % theta = [featureParam; likelihoodParam; PriorParam]
 %       = [featureParam; theta_y; theta_w]
 %
+ 
+fprintf('Optimizing Hyper starting \n')
+
 theta  = mteugpWrapHyper(model);
 
 optConf = model.hyperConf;
@@ -24,7 +27,7 @@ switch optConf.optimizer
     
     case 'nlopt', % Using nlopt
         opt.verbose        = optConf.verbose;
-        opt.algorithm      = NLOPT_LD_LBFGS;
+        opt.algorithm      = NLOPT_LD_LBFGS;        
         opt.min_objective  = @(xx) mteugpNelboHyperSimplified(xx, model);        
         opt.maxeval        = optConf.eval;
         opt.ftol_rel       = optConf.ftol; % relative tolerance in f
@@ -38,7 +41,7 @@ end
 
  model  = mteugpUnwrapHyper( model, theta );
 
-
+fprintf('Optimizing hyper done \n');
 end
 
 function theta_lb = mteugpSetLB(theta, P, Q)
@@ -76,7 +79,7 @@ if (nargout == 1)
 end
 
 % We get here if gradients are required
-[Phi, GradPhi] = feval(model.featFunc, model.X, model.Z, model.featParam); 
+[Phi, GradPhi] = model.featFunc(model.X, model.Z, model.featParam); 
 [N, D, L] = size(GradPhi);  % L: number of feat paramters
 P             = model.P;
 Q             = model.Q;
@@ -145,7 +148,7 @@ for n = 1 : N
        dl_danq     = PcP(n,q)*diagSigmayinv.*anq; % P x 1
        hnq         = squeeze(H(n,:,q)); % P x 1
        danq_dtheta = hnq*M(:,q)'*gPhin;  % P X L
-       grad_imp    = dl_danq'*danq_dtheta;
+       grad_imp    = danq_dtheta'*dl_danq;
        
        grad_f        = grad_f + grad_imp; % TODO: TRANSPOSE OF THIS?
     end
@@ -158,6 +161,26 @@ end
 
 
 
+function testGradients(model)
+order = 1;
+type = 2; 
+theta  = mteugpWrapHyper(model);
+L =  length(theta);
+R = 100;
+Theta   = -5 + 5*rand(L,R);
+delta = zeros(L,R);
+userG = zeros(L,R);
+diffG = zeros(L,R);
+for r = 1 : R
+    theta = Theta(:,r);
+    [delta(:,r), userG(:,r), diffG(:,r)] = derivativeCheck(@mteugpNelboHyperSimplified, theta, order, type, model);
+end
+
+hist(delta(:));
+
+
+
+end
 
 
 
