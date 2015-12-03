@@ -28,6 +28,11 @@ end
 fname = [RESULTS_DIR, '/', 'uspsData', '.mat'];
 data         = mteugpLoadDataUSPS(DATASET, boolSample);
 
+% % data processing
+% [data.xtrain, u, dev] = normalise(data.xtrain); 
+% [data.xtest] = normalise(data.xtest, u, dev); 
+
+
 % Learning Model
 model              = mteugpGetConfigUSPSBinary( data.xtrain, data.ytrain,linearMethod, D );
 model.resultsFname =  fname;
