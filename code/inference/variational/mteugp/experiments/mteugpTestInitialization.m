@@ -17,6 +17,9 @@ load('tmp2/results-bad/uspsData/D100/Taylor/uspsData_0.mat', 'model');
 %good = load('tmp2/results-good/uspsData/D100/Taylor/uspsData_0.mat', 'model');
 %model.M = good.model.M;
 
+% replace featParam with new mapping
+sigma_z         = exp(model.featParam);
+model.featParam = sqrt(sigma_z);
 
 end
 
