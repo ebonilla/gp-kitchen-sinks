@@ -10,9 +10,9 @@ if ( model.initFromFile )
 end
 
 if(~exitCode) % Default initialization
-    model.featParam = feval(model.initFeatFunc);    
-    model.sigma2y   = 0.01*ones(model.P,1);   % likelihood variances
-    model.sigma2w   = ones(model.Q,1);  % hyper-parameters (of prior on w)
+    model.featParam = -4; %feval(model.initFeatFunc);    
+    model.sigma2y   = 1e-20*ones(model.P,1);   % likelihood variances
+    model.sigma2w   = 1e5*ones(model.Q,1);  % hyper-parameters (of prior on w)
     model.Phi       = feval(model.featFunc, model.X, model.Z, model.featParam); 
     model.D         = size(model.Phi,2); % actual number of features    
     model.M         = 0.01*randn(model.D,model.Q);

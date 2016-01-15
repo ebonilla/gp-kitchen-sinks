@@ -13,6 +13,10 @@ data.ytest   = yy;
 if (boolSample)
     data = subSampleData(data);
 end 
+
+data = reshuffle_training_data(data);
+
+
 end
 
 
@@ -24,5 +28,14 @@ idx = v(1:N);
 data.xtrain = data.xtrain(idx,:);
 data.ytrain = data.ytrain(idx,:);
 
+
+end
+
+
+function data = reshuffle_training_data(data)
+
+idx         = randperm(size(data.ytrain,1));
+data.xtrain = data.xtrain(idx,:);
+data.ytrain = data.ytrain(idx,:);
 
 end

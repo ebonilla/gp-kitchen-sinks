@@ -32,6 +32,8 @@ while (( i < optConf.iter) && (tol > optConf.ftol) )
     %model  = mteugpOptimizeSigma2w(model);
     model          = mteugpOptimizeHyperSimplified(model );
     model          = mteugpOptimizeMeansSimplified(model);         
+    model          = mteugpUpdateCovariances(model);     
+
     i = i + 1;
     model.nelbo(i) =  mteugpNelboSimplified( model );
     mteugpShowProgress(i, model.nelbo(i));
@@ -42,7 +44,6 @@ while (( i < optConf.iter) && (tol > optConf.ftol) )
     % tol = abs( (model.nelbo(i) - model.nelbo(i-1))/model.nelbo(i)   );
 end
 % After final update covariances
-model = mteugpUpdateCovariances(model);     
 T = i;
 model.nelbo(T+1:end) = [];
 

@@ -7,8 +7,9 @@ sigma_z = getOptimalSigmaz(1);
 % DELETE ME
 % sigma_z = 10;
 
-% sigma_z = exp(theta) 
-theta = log(sigma_z);
+
+theta = log(sigma_z); % exponential mapping
+%theta = sqrt(sigma_z); % quadratic mapping 
 
 end
 

@@ -18,8 +18,24 @@ load('tmp2/results-bad/uspsData/D100/Taylor/uspsData_0.mat', 'model');
 %model.M = good.model.M;
 
 % replace featParam with new mapping
-sigma_z         = exp(model.featParam);
-model.featParam = sqrt(sigma_z);
+%
+% quadratic mapping
+% sigma_z         = exp(model.featParam); model.featParam = sqrt(sigma_z);
+%
+% linear mapping
+% sigma_z         = exp(model.featParam); model.featParam = sigma_z;
+%
+% model           = mteugpUpdateFeatures(model, model.featParam);
+
+
+% adding noise to targets 
+% model.Y = model.Y + 1e-2*randn(size(model.Y));
+
+% we suffle the examples 
+idx     = randperm(length(model.Y));
+model.X = model.X(idx,:);
+model.Y = model.Y(idx,:);
+model   = mteugpUpdateFeatures(model, model.featParam);
 
 end
 

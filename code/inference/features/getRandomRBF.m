@@ -7,10 +7,9 @@ function [Phi, GradPhi] = getRandomRBF(x, Z, theta)
 % sigma_z is the std deviation of the features
 
 
-% sigma_z = exp(theta) --> theta = log(sigma_z)
-%sigma_z = exp(theta);
-sigma_z = theta.^2;
-%sigma_z = theta;
+sigma_z = exp(theta); % exponential mapping
+%sigma_z = theta.^2;  % quadratic mapping
+%sigma_z = theta;     % linear mapping
 
 D = size(Z,1); % dimensionality of new fatures (# bases)
 
@@ -20,9 +19,8 @@ Phi   = (1/sqrt(D))*[cos(sigma_z*W), sin(sigma_z*W)]; %
 if (nargout == 2) % Gradients are required
     GradPhi =  (1/sqrt(D))*[-sin(sigma_z*W).*W, cos(sigma_z*W).*W]; 
     
-    % sigma_z = exp(theta) 
-    %GradPhi = GradPhi*sigma_z;
-    GradPhi = 2*GradPhi*theta;
+    GradPhi = GradPhi*sigma_z; % exponential mapping
+    %GradPhi = 2*GradPhi*theta; % quadratic mapping
     
 end
 

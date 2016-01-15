@@ -17,7 +17,7 @@ switch optConf.optimizer
         opt = struct('Display', 'full', 'Method', 'lbfgs', ...
                 'MaxIter', optConf.iter, 'MaxFunEvals', optConf.eval, ...
                 'progTol', optConf.ftol, ...
-                'DerivativeCheck','on', 'numDiff', 0); 
+                'DerivativeCheck','off', 'numDiff', 0); 
 
         % Using minFunc
         [theta, nelboFeat, exitFlag]  = minFunc(@mteugpNelboHyperSimplified, theta, opt, model); 
@@ -38,7 +38,7 @@ switch optConf.optimizer
         [theta, fminval, retcode] = nlopt_optimize(opt, theta);
     
 end 
-
+ 
  model  = mteugpUnwrapHyper( model, theta );
 
 fprintf('Optimizing hyper done \n');
@@ -49,7 +49,7 @@ L          = length(theta);
 
 nFeatParam = L - P - Q; % Number of feature parameters
 theta_f    = -500*ones(nFeatParam,1); 
-theta_y    = -500*ones(P,1); % upper bound on variance
+theta_y    = 30*ones(P,1); % upper bound on variance
 theta_w    = -500*ones(Q,1); % upper bound on variance
 theta_lb   = [theta_f; theta_y; theta_w]; 
 
@@ -79,7 +79,7 @@ if (nargout == 1)
 end
 
 % We get here if gradients are required
-[Phi, GradPhi] = model.featFunc(model.X, model.Z, model.featParam); 
+[model.Phi, GradPhi] = model.featFunc(model.X, model.Z, model.featParam); 
 [N, D, L] = size(GradPhi);  % L: number of feat paramters
 P             = model.P;
 Q             = model.Q;
@@ -157,6 +157,7 @@ end
 
 
 grad = [grad_f; grad_y; grad_w];
+
 end
 
 

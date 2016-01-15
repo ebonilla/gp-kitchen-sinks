@@ -38,7 +38,7 @@ optConf.alpha   = 0.9;  % learning rate for Newton iterations
 optConf.verbose = 1;
 optConf.optimizer = 'nlopt'; % for hyper-parameters
 
-model.varConf   = optConf;
+model.varConf   = optConf; 
   
 % Hyperparameter optimization configuration
 optConf.iter      = 100;  % maximum iterations for hyper parametes (minfunc parameter)
@@ -67,5 +67,5 @@ end
 
  
 
-
+  
   
