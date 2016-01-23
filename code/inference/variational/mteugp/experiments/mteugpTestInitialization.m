@@ -11,7 +11,7 @@ end
 
 
 function model =  loadModelFromFile(model)
-load('tmp2/results-bad/uspsData/D100/Taylor/uspsData_0.mat', 'model');
+load('recycle/tmp2/results-bad/uspsData/D100/Taylor/uspsData_0.mat', 'model');
 
 % replace mean with good model
 %good = load('tmp2/results-good/uspsData/D100/Taylor/uspsData_0.mat', 'model');
@@ -29,13 +29,17 @@ load('tmp2/results-bad/uspsData/D100/Taylor/uspsData_0.mat', 'model');
 
 
 % adding noise to targets 
-% model.Y = model.Y + 1e-2*randn(size(model.Y));
+% model.Y(model.Y==1) = 1 - 0.1;
+% model.Y(model.Y==0) = 0.1;
+
+% 
+model.predMethod = 'mc';
 
 % we suffle the examples 
-idx     = randperm(length(model.Y));
-model.X = model.X(idx,:);
-model.Y = model.Y(idx,:);
-model   = mteugpUpdateFeatures(model, model.featParam);
+% idx     = randperm(length(model.Y));
+% model.X = model.X(idx,:);
+% model.Y = model.Y(idx,:);
+% model   = mteugpUpdateFeatures(model, model.featParam);
 
 end
 

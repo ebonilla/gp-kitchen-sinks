@@ -6,7 +6,7 @@ function  model  = mteugpInitToy( model )
 
 % Initializing features
 model.featParam = feval(model.initFeatFunc);
-model.Phi       = feval(model.featFunc, model.X, model.featParam); 
+model.Phi       = feval(model.featFunc, model.X, model.Z, model.featParam); 
 model.D         = size(model.Phi,2); % actual number of features
 
 % likelihood variances

@@ -11,19 +11,25 @@ function  Gstar  = mteugpPredict( model, MeanF, VarF )
 % Gstar: matrix of Nstar x P predictions
 % 
 
-[Nstar, Q] = size(MeanF);
-P          = model.P;
-nSamples   = model.nSamples;
-stdF       = sqrt(VarF);
+switch model.predMethod,
+    case 'mc',
+        [Nstar, Q] = size(MeanF);
+        P          = model.P;
+        nSamples   = model.nSamples;
+        stdF       = sqrt(VarF);
 
-%% MC averaging
-Z  = randn(Nstar, Q, nSamples);
-G  = zeros(Nstar, P, nSamples);
-for i = 1 : nSamples
-    Fstar    = MeanF + Z(:,:,i).*stdF; % sample p(f*)
-    G(:,:,i) = feval(model.fwdFunc, Fstar);  % g*
+        %% MC averaging
+        Z  = randn(Nstar, Q, nSamples);
+        G  = zeros(Nstar, P, nSamples);
+        for i = 1 : nSamples
+            Fstar    = MeanF + Z(:,:,i).*stdF; % sample p(f*)
+            G(:,:,i) = feval(model.fwdFunc, Fstar);  % g*
+        end
+        Gstar = mean(G,3);    
+    case 'Taylor', 
+        Gstar = feval(model.fwdFunc, MeanF);
+    % TODO: implement EGP
 end
-Gstar = mean(G,3);    
 
 end
 

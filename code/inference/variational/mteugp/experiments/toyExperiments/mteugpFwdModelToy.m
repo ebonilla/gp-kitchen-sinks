@@ -1,10 +1,11 @@
-function [ g, dg ] = mteugpFwdModelToy(f,benchmark )
+function [ g, dg, dg2 ] = mteugpFwdModelToy(f,benchmark )
 %MTEUGPTESTFWDFUNC Fwd models in toy experiments
 %   Detailed explanation goes here
 switch benchmark,
 case 'lineardata',
-    g  = f;
-    dg = ones(size(f));
+    g   = f;
+    dg  = ones(size(f));
+    dg2 = zeros(size(f));
 case 'poly3data',
     g  = f.^3 + f.^2 + f;
     dg = 3*f.^2 + 2*f + 1;

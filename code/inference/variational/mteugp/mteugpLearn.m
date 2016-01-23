@@ -25,7 +25,9 @@ while (( i < optConf.iter) && (tol > optConf.ftol) )
     showProgress(i, model.nelbo(i));
     
     % We save results here after optimizing variational parameters
-    mteugpSavePerformance(i, model, xtest, ytest);
+    if (nargin > 1)
+        mteugpSavePerformance(i, model, xtest, ytest);
+    end
     
     %model = mteugpOptimizeFeatures(model);    
     model  = mteugpOptimizeHyper(model);

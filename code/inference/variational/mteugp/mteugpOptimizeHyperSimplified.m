@@ -8,7 +8,7 @@ function model  = mteugpOptimizeHyperSimplified(model )
  
 fprintf('Optimizing Hyper starting \n')
 
-theta  = mteugpWrapHyper(model);
+theta  = mteugpWrapHyperSimplified(model);
 
 optConf = model.hyperConf;
 switch optConf.optimizer
@@ -39,7 +39,7 @@ switch optConf.optimizer
     
 end 
  
- model  = mteugpUnwrapHyper( model, theta );
+ model  = mteugpUnwrapHyperSimplified( model, theta );
 
 fprintf('Optimizing hyper done \n');
 end
@@ -49,8 +49,8 @@ L          = length(theta);
 
 nFeatParam = L - P - Q; % Number of feature parameters
 theta_f    = -500*ones(nFeatParam,1); 
-theta_y    = 30*ones(P,1); % upper bound on variance
-theta_w    = -500*ones(Q,1); % upper bound on variance
+theta_y    = -500*ones(P,1); % lower bound on log precision
+theta_w    = -500*ones(Q,1); % lower bound on log precision
 theta_lb   = [theta_f; theta_y; theta_w]; 
 
 end
@@ -60,8 +60,8 @@ L          = length(theta);
 
 nFeatParam = L - P - Q; % Number of feature parameters
 theta_f    = 500*ones(nFeatParam,1); % jusy to avoid numerical problems
-theta_y    = 500*ones(P,1); % 
-theta_w    = 500*ones(Q,1); % 
+theta_y    = 500*ones(P,1);   % uper bound on log precision
+theta_w    = 500*ones(Q,1);   % upper bound on log precision  
 theta_up   = [theta_f; theta_y; theta_w]; 
 
 end
@@ -72,11 +72,12 @@ end
 
 
 function [nelbo, grad] = mteugpNelboHyperSimplified(theta, model)
-model =  mteugpUnwrapHyper(model, theta);
+model =  mteugpUnwrapHyperSimplified(model, theta);
 nelbo  = mteugpNelboSimplified( model );
 if (nargout == 1) 
     return;
 end
+
 
 % We get here if gradients are required
 [model.Phi, GradPhi] = model.featFunc(model.X, model.Z, model.featParam); 
