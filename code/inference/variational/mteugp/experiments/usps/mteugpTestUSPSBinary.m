@@ -4,7 +4,7 @@ function  mteugpTestUSPSBinary( str_idxMethod, str_D, str_boolSample, str_writeL
 %seed = rng('default');
 %seed = rng('shuffle');
 DATASET       = 'uspsData';
-RESULTS_DIR   = 'tmp2/results';
+RESULTS_DIR   = 'results';
 linearMethod  = {'Taylor', 'Unscented'};
 
 [idxMethod, D, boolSample, writeLog] = parseInput(str_idxMethod, str_D, str_boolSample, str_writeLog);

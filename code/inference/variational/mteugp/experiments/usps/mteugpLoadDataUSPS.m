@@ -14,7 +14,8 @@ if (boolSample)
     data = subSampleData(data);
 end 
 
-data = reshuffle_training_data(data);
+% TODO: we need to do this for SGD, keeping out for debuggin purposes now
+% data = reshuffle_training_data(data);
 
 
 end

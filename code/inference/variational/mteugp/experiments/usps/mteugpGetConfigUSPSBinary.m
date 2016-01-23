@@ -22,7 +22,9 @@ model.jacobian     = 1;  % 1/0 if jacobian is provided
 model.diaghess     = 1;  % 1/0 if diag hessian is provided
 model.kappa        = 1/2; % parameter of Unscented linearization
 
+% prediction settings
 model.nSamples     = 1000; % Number of samples for approximating predictive dist.
+model.predMethod   = 'mc'; % {'mc', 'Taylor'}
 
 % global optimization configuration
 optConf.iter     = 100;    % maximum global iterations
@@ -36,7 +38,7 @@ optConf.ftol   = 1e-5;
 optConf.xtol   = 1e-8; % tolerance for Newton iterations
 optConf.alpha   = 0.9;  % learning rate for Newton iterations
 optConf.verbose = 1;
-optConf.optimizer = 'nlopt'; % for hyper-parameters
+optConf.optimizer = 'nlopt'; % 
 
 model.varConf   = optConf; 
   
