@@ -80,9 +80,9 @@ model             = mteugpGetConfigToy( data.xtrain, data.ytrain, benchmark, lin
 %model.initFunc = initFunc;
 
 %model             = mteugpLearn( model );
-%model             = mteugpLearnSimplified( model, data.xtest, data.gtest );
-model             = mteugpLearnAllSimplified( model );
-
+model             = mteugpLearnSimplified( model, data.xtest, data.gtest );
+%model             = mteugpLearnAllSimplified( model );
+ 
 
 [pred.mFpred, pred.vFpred]  = mteugpGetPredictive( model, data.xtest );
 pred.gpred                  = mteugpPredict( model, pred.mFpred, pred.vFpred ); %         

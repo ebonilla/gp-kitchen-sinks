@@ -3,11 +3,15 @@ function  [model, nelbo, exitFlag] = mteugpOptimizeAllSimplified( model )
 % using simplified Nelbo
 %   Detailed explanation goes here
 
+
 fprintf('Optimizing all parameters starting \n');
 
 theta_m   = model.M(:); % wrapping of feat param managed by feat func
 theta_h   = mteugpWrapHyperSimplified(model);
 theta = [theta_m; theta_h];
+
+testGradients(model, theta); pause;
+
 
 % Getting optimization bounds
 [lb_m, ub_m] = get_mean_bounds(theta_m);
@@ -75,8 +79,10 @@ ub   = [theta_f; theta_y; theta_w];
 end
 
 
-
+%%
 function [nelbo, grad] = mteugpNelboAll(theta, model)
+% Computes the Nelbo and its gradients for a specific model with 
+% all the parameters specified in vector theta
 D             = model.D;
 Q             = model.Q;
 l_m           = D*Q;
@@ -196,15 +202,17 @@ end
 
 
 
-function testGradients(model)
+function testGradients(model, theta)
 order = 1;
 type = 2; 
-L =  length(model.M(:));
+L =  length(theta);
 R = 10;
 delta = zeros(L,R);
+userG = zeros(L,R);
+diffG = zeros(L,R);
 for r = 1 : 10
     theta   = 10*randn(L,1);    
-    [delta(:,r), userG, diffG] = derivativeCheck(@mteugpNelboAll, theta, order, type, model);
+    [delta(:,r), userG(:,r), diffG(:,r)] = derivativeCheck(@mteugpNelboAll, theta, order, type, model);
 end
 
 hist(delta(:));

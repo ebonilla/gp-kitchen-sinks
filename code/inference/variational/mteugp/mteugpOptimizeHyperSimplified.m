@@ -5,7 +5,8 @@ function model  = mteugpOptimizeHyperSimplified(model )
 % theta = [featureParam; likelihoodParam; PriorParam]
 %       = [featureParam; theta_y; theta_w]
 %
- 
+%testGradients(model); pause;
+
 fprintf('Optimizing Hyper starting \n')
 
 theta  = mteugpWrapHyperSimplified(model);
@@ -72,7 +73,13 @@ end
 
 
 function [nelbo, grad] = mteugpNelboHyperSimplified(theta, model)
+
 model =  mteugpUnwrapHyperSimplified(model, theta);
+
+% TODO: [EVB] DELETE? TEMPORARY HERE, DOES THIS ACTUALLY WORK?
+model = mteugpOptimizeMeansSimplified( model );
+
+ 
 nelbo  = mteugpNelboSimplified( model );
 if (nargout == 1) 
     return;
@@ -169,7 +176,8 @@ type = 2;
 theta  = mteugpWrapHyper(model);
 L =  length(theta);
 R = 100;
-Theta   = -5 + 5*rand(L,R);
+%Theta   = -5 + 5*rand(L,R);
+Theta = 10*randn(L,R); 
 delta = zeros(L,R);
 userG = zeros(L,R);
 diffG = zeros(L,R);
@@ -188,7 +196,7 @@ end
 
 
 
-
+ 
 
 
 

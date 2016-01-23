@@ -11,13 +11,16 @@ function nelbo  = mteugpNelboHyper( theta, model )
 %
 
 model = mteugpUpdateHyper( model, theta );
-
-% UNCOMMENT ME PLEAE
 model = mteugpOptimizeMeans(model);
 model = mteugpOptimizeCovariances(model);
 nelbo =  getNelboHyper(model);
-% DELETE BELOW
-%nelbo =  mteugpNelbo(model);
+
+
+% nelbo2 = mteugpNelboSimplified( model );
+% fprintf('nelbo = %.4f\n', nelbo);
+% fprintf('nelbo2 = %.4f\n', nelbo2);
+% fprintf('diff = %.4f\n', (nelbo - nelbo2)')
+
 
 end
 
