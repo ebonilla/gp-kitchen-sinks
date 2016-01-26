@@ -19,9 +19,12 @@ model.X            = X;
 model.linearMethod = linearMethod; % 'Taylor' or 'Unscented'
 model.fwdFunc      = @mteugpFwdLogistic;  
 model.jacobian     = 1;  % 1/0 if jacobian is provided
+model.diaghess     = 1;  % 1/0 if diag hessian is provided [not used]
 model.kappa        = 1/2; % parameter of Unscented linearization
 
+% prediction settings
 model.nSamples     = 1000; % Number of samples for approximating predictive dist.
+model.predMethod   = 'mc'; % {'mc', 'Taylor'}
 
 % global optimization configuration
 optConf.iter     = 10;    % maximum global iterations
@@ -29,34 +32,40 @@ optConf.ftol     = 1e-3;
 model.globalConf = optConf;
 
 % variational parameter optimization configuration
-optConf.iter    = 100;  % maximum iterations on variational parameters
-optConf.eval    = 100;
-optConf.ftol   = 1e-5;
-optConf.xtol   = 1e-8; % tolerance for Newton iterations
-optConf.alpha   = 0.9;  % learning rate for Newton iterations
-optConf.verbose = 0;
-model.varConf   = optConf;
+optConf.optimizer   = 'nlopt'; % 
+model.useNewton     = 0; % use own Newton optimizer for var param
+optConf.iter        = 100;  % maximum iterations on variational parameters
+optConf.eval        = 100;
+optConf.ftol        = 1e-5;
+optConf.xtol        = 1e-8; % tolerance for Newton iterations
+optConf.alpha       = 0.9;  % learning rate for Newton iterations
+optConf.verbose     = 0;
+model.varConf       = optConf;
  
 % Hyperparameter optimization configuration
-optConf.iter      = [];  % maximum iterations for hyper parametes (minfunc parameter)
-optConf.eval      = 100;  % Maxium evals for hyper paramters func (minFunc parameter)
-optConf.optimizer = 'nlopt'; % for hyper-parameters
-optConf.ftol       = 1e-3; % Tolerance in f
-optConf.xtol       = 1e-3; % Tolerance in x
-optConf.verbose   = 1; % 0: none, 1: full
-model.hyperConf   = optConf;
+optConf.optimizer   = 'nlopt'; % for hyper-parameters
+optConf.iter        = [];  % maximum iterations for hyper parametes (minfunc parameter)
+optConf.eval        = 100;  % Maxium evals for hyper paramters func (minFunc parameter)
+optConf.ftol        = 1e-3; % Tolerance in f
+optConf.xtol        = 1e-3; % Tolerance in x
+optConf.verbose     = 0; % 0: none, 1: full
+model.hyperConf     = optConf;
 
-% lower bounds on hyperparameters
-model.hyperLB.sigma2y   = 1e-5*ones(model.P,1);
+% transforms on hyperparameters for unconstrained optimization [not used]
+model.featTransform     = 'linear'; % Note this is control by feature function
+model.lambdayTransform  = 'exp'; % Precisions are exponential of parameter
+model.lambdawTransform  = 'exp'; % precisions are exponential of parameter
 
-% wupper bounds on hyperparameters
-model.hyperUB.sigma2w    =  100*ones(model.Q,1);
+% lower and upper bounds on hyperparameters
+model.hyperLB.sigma2y   = 1e-3*ones(model.P,1);
+model.hyperUB.sigma2w    = 1e3*ones(model.Q,1); % used to avoid numerical problems
 
 % initialization Function
 model.initFunc    = @mteugpInitMNISTBinary;
 
-%
-model.useNewton  = 1; % use own Newton optimizer for var para,
+% Performance function
+model.perfFunc     = @mteugpGetPerformanceBinaryClass;
+
 
 model.initFromFile = 0;
 end

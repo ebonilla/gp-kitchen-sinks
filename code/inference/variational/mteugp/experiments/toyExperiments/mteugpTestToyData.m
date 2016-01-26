@@ -61,8 +61,10 @@ end
 
 for k = idxFold
     data  =  mteugpReadSingleFoldToy(DATASET, benchmark, k);
-    [model, pred, perf] = runSingleFold(data, benchmark, linearMethod, k, D);    
+    [model, pred, perf] = runSingle(data, benchmark, linearMethod, D);    
     fname = [RESULTS_DIR, '/', benchmark, '_k', num2str(k), '.mat'];
+    
+    % Saving model, predictions and performance
     save(fname, 'model', 'pred', 'perf');
     showProgress(benchmark, k, linearMethod, perf);
 end
@@ -74,16 +76,11 @@ end
 
 
 %%  [model, pred, perf] = runSingleFold(data, benchmark, linearMethod, D )
-function [model, pred, perf] = runSingleFold(data, benchmark, linearMethod, fold, D )
+function [model, pred, perf] = runSingle(data, benchmark, linearMethod, D )
 
 model             = mteugpGetConfigToy( data.xtrain, data.ytrain, benchmark, linearMethod, D );
-
-% DELETE ME 
-%initFunc       = @(model) mteugpInitToyFromFile(benchmark, linearMethod, fold, D);
-%model.initFunc = initFunc;
-
-%model             = mteugpLearn( model );
-model             = mteugpLearnSimplified( model, data.xtest, data.gtest );
+model             = mteugpLearn( model );
+%model             = mteugpLearnSimplified( model, data.xtest, data.gtest );
 %model             = mteugpLearnAllSimplified( model );
  
 
@@ -93,9 +90,9 @@ pred.gpred                  = mteugpPredict( model, pred.mFpred, pred.vFpred ); 
 % Model performance
 perf = mteugpGetPerformanceToy(pred, data.ftest, data.gtest);
 
-
 end
 
+ 
 
 %% showProgress(benchmark, linearMethod, perf)
 function showProgress(benchmark, fold, linearMethod, perf)

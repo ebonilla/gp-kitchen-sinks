@@ -28,7 +28,6 @@ data           = loadDataMNIST(DATASET, boolSample);
 % Learning Model
 model              = mteugpGetConfigMNIST( data.xtrain, data.ytrain,linearMethod, D );
 model.resultsFname =  fname;
-model.perfFunc = @mteugpGetPerformanceMultiClass;
 model              = mteugpLearn( model, data.xtest, data.ytest );
 save(fname, 'model');
 

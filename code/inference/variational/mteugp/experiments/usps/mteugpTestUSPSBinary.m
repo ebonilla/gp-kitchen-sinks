@@ -16,7 +16,7 @@ runSingle(RESULTS_DIR, DATASET, linearMethod{idxMethod}, D, boolSample, writeLog
 
 end
 
-
+%%
 function runSingle(RESULTS_DIR, DATASET, linearMethod, D, boolSample, writeLog)
 RESULTS_DIR = [RESULTS_DIR, '/', DATASET, '/', 'D', num2str(D), '/', linearMethod];
 system(['mkdir -p ', RESULTS_DIR]);
@@ -40,9 +40,7 @@ data         = mteugpLoadDataUSPS(DATASET, boolSample);
 % Learning Model
 model              = mteugpGetConfigUSPSBinary( data.xtrain, data.ytrain,linearMethod, D );
 model.resultsFname =  fname;
-model.perfFunc     = @mteugpGetPerformanceBinaryClass;
-
-model        = mteugpLearn( model, data.xtest, data.ytest );
+model              = mteugpLearn( model, data.xtest, data.ytest );
 %model        = mteugpLearnSimplified( model, data.xtest, data.ytest );
 
 save(fname, 'model');
@@ -57,7 +55,7 @@ end
 
 
 
-%
+%%
 function [idxMethod, D, boolSample, writeLog] = parseInput(str_idxMethod, str_D, str_boolSample, str_writeLog);
 
 

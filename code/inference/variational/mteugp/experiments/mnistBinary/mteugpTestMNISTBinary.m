@@ -14,7 +14,7 @@ runSingle(RESULTS_DIR, DATASET, linearMethod{idxMethod}, D, boolSample, writeLog
 
 end
 
-
+%%
 function runSingle(RESULTS_DIR, DATASET, linearMethod, D, boolSample, writeLog)
 RESULTS_DIR = [RESULTS_DIR, '/', DATASET, '/', 'D', num2str(D), '/', linearMethod];
 system(['mkdir -p ', RESULTS_DIR]);
@@ -26,14 +26,13 @@ end
 fname = [RESULTS_DIR, '/', DATASET, '.mat'];
 data         = loadDataMNISTBinary(DATASET, boolSample);
 
-% Learning Model
-model        = mteugpGetConfigMNISTBinary( data.xtrain, data.ytrain,linearMethod, D );
+%% Learning Model
+model              = mteugpGetConfigMNISTBinary( data.xtrain, data.ytrain,linearMethod, D );
 model.resultsFname =  fname;
-model.perfFunc = @mteugpGetPerformanceBinaryClass;
-model        = mteugpLearn( model, data.xtest, data.ytest );
-save(fname, 'model');
+model              = mteugpLearn( model, data.xtest, data.ytest );
+save(fname, 'model'); 
 
-% Predictions
+%% Predictions
 model.resultsFname = fname;
 mteugpSavePerformance(inf, model, data.xtest, data.ytest);
 
@@ -42,7 +41,7 @@ diary off;
 end
 
 
-%
+%%
 function data = loadDataMNISTBinary(DATASET, boolSample)
 x = []; xx = []; y = []; yy = [];
 load(['data/', DATASET, '/mnistBinary.mat']);

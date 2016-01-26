@@ -38,8 +38,8 @@ end
 
 function [lmap, grad] = mapObjective(theta, model)
 M             = reshape(theta, model.D, model.Q);
-diagSigmayinv  = 1./model.sigma2y;
-diagSigmawinv = 1./model.sigma2w;   
+diagSigmayinv  = 1./model.sigma2y; % Px1 
+diagSigmawinv = 1./model.sigma2w;  % Qx1  
 gradM  = zeros(size(M));
 
 switch (model.linearMethod)
@@ -47,9 +47,9 @@ switch (model.linearMethod)
         MuF = model.Phi*M;
         [Gval, J] =  egpGetStats(MuF, model.fwdFunc, model.jacobian, model.diaghess, model.N, model.P, model.Q);
         Ytilde    = model.Y - Gval;
-        Ys        = bsxfun(@times, Ytilde, diagSigmayinv); % NxP
+        Ys        = bsxfun(@times, Ytilde, diagSigmayinv'); % NxP
         lmap      = sum(sum(Ys.*Ytilde));
-         Ms        = bsxfun(@times, M, diagSigmawinv); % DxQ
+         Ms        = bsxfun(@times, M, diagSigmawinv'); % DxQ
         lmap      = 0.5*(lmap +  sum(sum(Ms.*M)));
         
         for q = 1 : model.Q
@@ -65,9 +65,9 @@ switch (model.linearMethod)
         [Gval, J] = ugpGetStats(MuF, model.fwdFunc, VarF, model.kappa, model.N, model.P, model.Q);
 
         Ytilde = model.Y - Gval;
-        Ys     = bsxfun(@times, Ytilde, diagSigmayinv); % NxP
+        Ys     = bsxfun(@times, Ytilde, diagSigmayinv'); % NxP
         lmap   = sum(sum(Ys.*Ytilde));
-         Ms    = bsxfun(@times, M, diagSigmawinv); % DxQ
+         Ms    = bsxfun(@times, M, diagSigmawinv'); % DxQ
         lmap   = 0.5*(lmap +  sum(sum(Ms.*M)));
         
         for q = 1 : model.Q
