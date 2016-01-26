@@ -17,7 +17,7 @@ writeLog=${parameterArray[4]}
 
 ##### Execute Program #####
 printf "Values used are %d %d %d %d %d\n" $idxBench $idxMethod $idxFold $d $writeLog
-./run_mteugp_cluster_array.sh $idxBench $idxMethod $idxFold $d $writeLog
+./run_mteugp_cluster_array_toyData.sh $idxBench $idxMethod $idxFold $d $writeLog
 
 
 
