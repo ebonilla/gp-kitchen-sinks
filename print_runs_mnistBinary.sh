@@ -4,9 +4,8 @@ boolSample=0
 writeLog=0
 NMETHOD=2
 DLIST='
-100
-200
 500
+1000
 '
 
 for d in $DLIST; do

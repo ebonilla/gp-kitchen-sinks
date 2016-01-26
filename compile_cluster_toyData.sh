@@ -1,7 +1,7 @@
 #!/bin/bash
 source ~/.bashrc
 
-FILENAME='code/inference/variational/mteugp/test/toyExperiments/mteugpTestToyData.m'
+FILENAME='code/inference/variational/mteugp/experiments/toyExperiments/mteugpTestToyData.m'
 P1='./data'
 P2='./code/inference/variational/mteugp'
 P3='./code/inference/variational/utils'
