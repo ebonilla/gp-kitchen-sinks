@@ -1,17 +1,34 @@
 function model = mteugpTestInitialization()
 
+model = testIntializationUSPS();
+
+
+end
+
+function model = testIntializationUSPS()
 % loads initialization that yields bad local optima 
-model.initFunc = @loadModelFromFile;
 data   = mteugpLoadDataUSPS('uspsData', 0);
 
-model = mteugpLearnSimplified( model, data.xtest, data.ytest );
-%mteugpLearn( model, data.xtest, data.ytest );
+
+fname = 'recycle/tmp2/results-bad/uspsData/D100/Taylor/uspsData_0.mat';
+model.initFunc = @(model) loadModelFromFile(model, fname);
+% adding some new structures
+
+%model = mteugpLearnSimplified( model, data.xtest, data.ytest );
+mteugpLearn( model, data.xtest, data.ytest );
 
 end
 
 
-function model =  loadModelFromFile(model)
-load('recycle/tmp2/results-bad/uspsData/D100/Taylor/uspsData_0.mat', 'model');
+function model =  loadModelFromFile(model, fname)
+load(fname, 'model');
+
+% structures in new implementation
+model.featTransform    = 'linear';
+model.lambdayTransform = 'exp';
+model.lambdawTransform = 'exp';
+model.predMethod       = 'mc';
+
 
 % replace mean with good model
 %good = load('tmp2/results-good/uspsData/D100/Taylor/uspsData_0.mat', 'model');
@@ -33,7 +50,7 @@ load('recycle/tmp2/results-bad/uspsData/D100/Taylor/uspsData_0.mat', 'model');
 % model.Y(model.Y==0) = 0.1;
 
 % 
-model.predMethod = 'mc';
+
 
 % we suffle the examples 
 % idx     = randperm(length(model.Y));

@@ -4,6 +4,10 @@ function model  = mteugpOptimizeHyper(model )
 % theta = [featureParam; likelihoodParam; PriorParam]
 %       = [featureParam; theta_y; theta_w]
 %
+if (model.hyperConf.verbose)
+    fprintf('Optimizing Hyper starting \n')
+end
+
 theta  = mteugpWrapHyper(model);
 
 optConf = model.hyperConf;
@@ -43,6 +47,9 @@ end
 
  model  = mteugpUnwrapHyper( model, theta );
 
+ if (model.hyperConf.verbose)
+    fprintf('Optimizing hyper done \n');
+end
 
 end
 

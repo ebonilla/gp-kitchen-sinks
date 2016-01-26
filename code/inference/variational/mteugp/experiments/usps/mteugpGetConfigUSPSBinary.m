@@ -37,7 +37,7 @@ optConf.eval    = 100;
 optConf.ftol   = 1e-5;
 optConf.xtol   = 1e-8; % tolerance for Newton iterations
 optConf.alpha   = 0.9;  % learning rate for Newton iterations
-optConf.verbose = 1;
+optConf.verbose = 0;
 optConf.optimizer = 'nlopt'; % 
 
 model.varConf   = optConf; 
@@ -46,16 +46,22 @@ model.varConf   = optConf;
 optConf.iter      = 100;  % maximum iterations for hyper parametes (minfunc parameter)
 optConf.eval      = 100;  % Maxium evals for hyper paramters func (minFunc parameter)
 optConf.optimizer = 'nlopt'; % for hyper-parameters
-optConf.ftol       = 1e-5; % Tolerance in f
-optConf.xtol       = 1e-5; % Tolerance in x
+optConf.ftol      = 1e-5; % Tolerance in f
+optConf.xtol      = 1e-5; % Tolerance in x
 optConf.verbose   = 1; % 0: none, 1: full
 model.hyperConf   = optConf;
 
+% transforms on hyperparameters for unconstrained optimization
+model.featTransform     = 'linear'; % Note this is control by feature function
+model.lambdayTransform  = 'exp'; % Precisions are exponential of parameter
+model.lambdawTransform  = 'exp'; % precisions are exponential of parameter
+
+
 % lower bounds on hyperparameters
-%model.hyperLB.sigma2y   = 1e-5*ones(model.P,1);
+model.hyperLB.sigma2y   = 1e-3*ones(model.P,1);
 
 % wupper bounds on hyperparameters
-%model.hyperUB.sigma2w    =  100*ones(model.Q,1); % used to avoid numerical problems
+model.hyperUB.sigma2w    = 1e3*ones(model.Q,1); % used to avoid numerical problems
 
 % initialization Function
 model.initFunc    = @mteugpInitUSPSBinary;

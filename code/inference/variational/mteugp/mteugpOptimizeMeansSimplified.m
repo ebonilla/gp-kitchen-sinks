@@ -1,8 +1,15 @@
-function  model = mteugpOptimizeMeansSimplified( model )
+function  [model, nelbo, exitFlag] = mteugpOptimizeMeansSimplified( model )
 %MTEUGPOPTIMIZEMEANSSIMPLIFIED Optimize means using simplified Nelbo
 %   Detailed explanation goes here
 
-fprintf('Optimizing Means starting \n');
+% DELETE ME?
+model = mteugpOptimizeMeansMap(model);
+return;
+
+ 
+if (model.varConf.verbose)
+    fprintf('Optimizing Means starting \n');
+end
 
 theta   = model.M(:); % wrapping of feat param managed by feat func
 
@@ -22,7 +29,7 @@ switch lower(optConf.optimizer)
         opt.maxeval             = optConf.eval;
         opt.ftol_rel            = optConf.ftol; % relative tolerance in f
         opt.xtol_rel            = optConf.xtol;
-        [theta, nelbo, retcode] = nlopt_optimize(opt, theta);     
+        [theta, nelbo, exitFlag] = nlopt_optimize(opt, theta);     
     otherwise,
        ME = MException('VerifyOpitions:InvalidOptimizer', ...
              ['Invalid Optimizer ', optConf.optimizer ]);
@@ -32,7 +39,13 @@ end
 % update features
 model.M = reshape(theta, model.D, model.Q);
 
-fprintf('Optimizing Means done \n');
+% Updates linearization parametes
+[model.A, model.B] = mteugpUpdateLinearization(model); 
+
+if (model.varConf.verbose)
+    fprintf('Optimizing Means done \n');
+end
+
 
 end
 

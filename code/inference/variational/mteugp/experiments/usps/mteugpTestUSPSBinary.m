@@ -32,14 +32,18 @@ data         = mteugpLoadDataUSPS(DATASET, boolSample);
 % [data.xtrain, u, dev] = normalise(data.xtrain); 
 % [data.xtest] = normalise(data.xtest, u, dev); 
 
+% TODO: [EVB] delete me?
+%data.ytrain(data.ytrain == 0) = 0.1;
+%data.ytrain(data.ytrain == 1) = 0.9;
+
 
 % Learning Model
 model              = mteugpGetConfigUSPSBinary( data.xtrain, data.ytrain,linearMethod, D );
 model.resultsFname =  fname;
 model.perfFunc     = @mteugpGetPerformanceBinaryClass;
 
-%model        = mteugpLearn( model, data.xtest, data.ytest );
-model        = mteugpLearnSimplified( model, data.xtest, data.ytest );
+model        = mteugpLearn( model, data.xtest, data.ytest );
+%model        = mteugpLearnSimplified( model, data.xtest, data.ytest );
 
 save(fname, 'model');
 
@@ -62,4 +66,4 @@ D         = str2num(str_D);
 boolSample  = str2num(str_boolSample);
 writeLog  = str2num(str_writeLog);
 
-end
+end 

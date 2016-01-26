@@ -9,21 +9,16 @@ function   mteugpTestToyData( str_idxBench, str_idxMethod, str_idxFold, ...
 % D: Dimensionality of feature space
 [idxBench, idxMethod, idxFold, D, writeLog] = ...
                 parseInput(str_idxBench, str_idxMethod, str_idxFold, str_D, str_writeLog);
-
 RESULTS_DIR = 'results';  % 
-if (writeLog)
-    str = datestr(now, 30);
-    diary([RESULTS_DIR, '/',str, '.log']);
-end
+
 
 DATASET     = 'toyData';
 benchmark   = {'lineardata', 'poly3data', 'expdata', 'sindata', 'tanhdata'};
 
 for i = idxBench
-    evaluateBenchmark(RESULTS_DIR, DATASET, benchmark{i}, idxMethod, idxFold, D);
+    evaluateBenchmark(RESULTS_DIR, DATASET, benchmark{i}, idxMethod, idxFold, D, writeLog);
 end
 
-diary off;
 
 end
 
@@ -43,11 +38,11 @@ end
 
 
 %% evaluateBenchmark(DATASET, benchmark)
-function evaluateBenchmark(RESULTS_DIR, DATASET, benchmark, idxMethod, idxFold, D)
+function evaluateBenchmark(RESULTS_DIR, DATASET, benchmark, idxMethod, idxFold, D, writeLog)
 % Just avoids Matlab sending me stupid warning
 linearMethod = {'Taylor', 'Unscented'};
 for i = idxMethod                    
-    runAllFolds(RESULTS_DIR, DATASET, benchmark, linearMethod{i}, idxFold, D);
+    runAllFolds(RESULTS_DIR, DATASET, benchmark, linearMethod{i}, idxFold, D, writeLog);
 end
 
 
@@ -55,9 +50,14 @@ end
 
 
 %% runAllFolds() 
-function runAllFolds(RESULTS_DIR, DATASET, benchmark, linearMethod, idxFold, D)
+function runAllFolds(RESULTS_DIR, DATASET, benchmark, linearMethod, idxFold, D, writeLog)
 RESULTS_DIR = [RESULTS_DIR, '/', DATASET, '/', 'D', num2str(D), '/', linearMethod];
 system(['mkdir -p ', RESULTS_DIR]);
+
+if (writeLog)
+    str = datestr(now, 30);
+    diary([RESULTS_DIR, '/',str, '.log']);
+end
 
 for k = idxFold
     data  =  mteugpReadSingleFoldToy(DATASET, benchmark, k);
@@ -66,6 +66,9 @@ for k = idxFold
     save(fname, 'model', 'pred', 'perf');
     showProgress(benchmark, k, linearMethod, perf);
 end
+
+diary off;
+
 
 end
 

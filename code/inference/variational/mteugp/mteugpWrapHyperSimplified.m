@@ -1,11 +1,12 @@
 function theta = mteugpWrapHyperSimplified(model)
- theta   = model.featParam;
- theta  =  [theta; mteugpWrapSigma2y(model.sigma2y)];
- theta   = [theta; mteugpWrapSigma2w(model.sigma2w)];
-
+ theta_f = mteugpWrapParameter(model.featParam, model.featTransform);
+ theta_y = mteugpWrapParameter(model.lambday, model.lambdayTransform);
+ theta_w = mteugpWrapParameter(model.lambdaw,model.lambdawTransform );
+ theta  =  [theta_f; theta_y; theta_w ];
+ 
 end
 
-
+ 
 % Old version
 % function [ theta ] = mteugpWrapHyper( model )
 % %MTEUGPWRAPHYPER Summary of this function goes here
