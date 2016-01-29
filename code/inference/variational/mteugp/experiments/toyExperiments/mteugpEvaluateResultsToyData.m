@@ -14,7 +14,7 @@ end
 
 function evaluateResultsAllD()
 close all;
-boolExport = 0; % export results to latex Table?
+boolExport = 1; % export results to latex Table?
 linearMethod = {'EKS', 'UKS', 'GP'};
 benchmark    = upper({'linear', 'poly3', 'exp', 'sin', 'tanh'});
 % strDim       = {'10', '20', '50', '100'};
@@ -72,14 +72,14 @@ box off;
 %     'Units', 'normalized', ...
 %     'FontSize', FONT_SIZE);
 % legend boxon;
-fname = ['tex/aistats2016/figures/', ...
+fname = ['tex/icml2016/figures/', ...
             'toyData-', strMethod, '-', strrep(strYlabel, '*', 'star'), '.eps'];
 % print('-depsc2', fname);        
 %
 % saveas(gcf, fname, 'epsc' );
 %system(['epstopdf ', fname]);
 %
-export_fig(fname);
+%export_fig(fname);
 end
 
 
@@ -108,7 +108,7 @@ end
 function [basePerf, modelPerf, baseStat, modelStat] = evaluateResultsToyData(D, boolExport)
 
 % Evaluates results on toy data
-RESULTS_DIR = 'results';
+RESULTS_DIR = 'results/cluster';
 DATASET = 'toyData';
 benchmark = {'lineardata', 'poly3data', 'expdata', 'sindata', 'tanhdata'};
 linearMethod = {'Taylor', 'Unscented', 'GP'};
@@ -146,7 +146,7 @@ end
 
 
 
-fname = 'tex/aistats2016/table-toy.tex';
+fname = 'tex/icml2016/table-toy.tex';
 fid = fopen(fname, 'wt');
 %fprintf(fid, '\\begin{table*}\n');
 %fprintf(fid, '\\centering\n');
