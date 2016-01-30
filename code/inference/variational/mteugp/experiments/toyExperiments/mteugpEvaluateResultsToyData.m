@@ -76,8 +76,8 @@ fname = ['tex/icml2016/figures/', ...
             'toyData-', strMethod, '-', strrep(strYlabel, '*', 'star'), '.eps'];
 % print('-depsc2', fname);        
 %
-% saveas(gcf, fname, 'epsc' );
-%system(['epstopdf ', fname]);
+saveas(gcf, fname, 'epsc' );
+system(['epstopdf ', fname]);
 %
 %export_fig(fname);
 end

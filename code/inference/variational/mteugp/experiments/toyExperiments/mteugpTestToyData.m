@@ -92,7 +92,7 @@ perf = mteugpGetPerformanceToy(pred, data.ftest, data.gtest);
 
 end
 
- 
+  
 
 %% showProgress(benchmark, linearMethod, perf)
 function showProgress(benchmark, fold, linearMethod, perf)

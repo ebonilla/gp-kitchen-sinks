@@ -9,6 +9,7 @@ function nelbo  = mteugpNelboHyper( theta, model )
 % Although  sigma2w is a D-dimensional here we consider an isotropic 
 % parameterization sigma2w = exp(theta_w)*ones(D,1)
 %
+global best_M; % to share with mteugpOptimizeHyper
 
 model = mteugpUpdateHyper( model, theta );
 model = mteugpOptimizeMeans(model);
@@ -21,6 +22,7 @@ nelbo =  getNelboHyper(model);
 % fprintf('nelbo2 = %.4f\n', nelbo2);
 % fprintf('diff = %.4f\n', (nelbo - nelbo2)')
 
+best_M = model.M; 
 
 end
 

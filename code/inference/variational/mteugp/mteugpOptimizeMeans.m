@@ -34,7 +34,7 @@ sigma2w      = model.sigma2w(q);
 %% Newton iterations
 i = 1;
 tol = inf;
-mqOld = model.M(:,q);
+%mqOld = model.M(:,q);
 while ( (i <= optconf.iter)  && (tol > optconf.ftol))    
     grad_mq      =  mteugpGetGradMq(model, mq, sigma2w, diagSigmaInv, N, q);
     H            =  mteugpGetHessMq(model, mq, sigma2w, diagSigmaInv, N, q); % does not really depend on mq
@@ -58,8 +58,10 @@ while ( (i <= optconf.iter)  && (tol > optconf.ftol))
 %    if ( nelbo > 10^20 )
 %       warning('VerifNelbo: Too large Results are weirg');
 %    end
-    fprintf('Newton nelbo(%d)=%.4f\n',i,nelbo);
-    mqOld = mq;
+    if (model.varConf.verbose == 1)
+        fprintf('Newton nelbo(%d)=%.4f\n',i,nelbo);
+    end
+    %mqOld = mq;
     i = i + 1;
 end
 

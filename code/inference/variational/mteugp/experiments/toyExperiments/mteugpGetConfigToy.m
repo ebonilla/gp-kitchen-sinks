@@ -23,7 +23,7 @@ model.diaghess     = 1;
 model.kappa        = 1/2; % parameter of Unscented linearization
 
 % prediction settings
-model.nSamples     = 1000; % Number of samples for approximating predictive dist.
+model.nSamples     = 1000; % Number of samples for approximating g* wehen using mc
 model.predMethod   = 'mc'; % {'mc', 'Taylor'} % for prediction of g* 
 
 % global optimization configuration
@@ -33,7 +33,7 @@ model.globalConf = optConf;
 
 % variational parameter optimization configuration
 optConf.optimizer = 'nlopt'; % for hyper-parameters
-model.useNewton   = 0;       % use own Newton optimizer for var param
+model.useNewton   = 1;       % use own Newton optimizer for var param
 optConf.iter      = 100;     % maximum iterations on variational parameters
 optConf.eval      = 200;
 optConf.ftol      = 1e-5;

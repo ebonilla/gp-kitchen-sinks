@@ -4,6 +4,9 @@ function model  = mteugpOptimizeHyper(model )
 % theta = [featureParam; likelihoodParam; PriorParam]
 %       = [featureParam; theta_y; theta_w]
 %
+global best_M; % to share with mteugpNelboHyper;
+best_M = model.M;
+
 if (model.hyperConf.verbose)
     fprintf('Optimizing Hyper starting \n')
 end
@@ -45,11 +48,15 @@ switch optConf.optimizer
     
 end
 
- model  = mteugpUnwrapHyper( model, theta );
+model  = mteugpUnwrapHyper( model, theta );
 
+% assigns best mean found during optimization of hyper
+model.M  = best_M;
+ 
+ 
  if (model.hyperConf.verbose)
     fprintf('Optimizing hyper done \n');
-end
+ end
 
 end
 

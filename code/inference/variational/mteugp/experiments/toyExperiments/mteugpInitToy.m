@@ -18,8 +18,9 @@ model.sigma2w = ones(model.Q,1);
 
 
 % means, lineariz. and covariances
-%model.M            = randn(model.D,model.Q);
-model.M            = 0.01*randn(model.D,model.Q);
+%model.M = randn(model.D,model.Q);
+model.M  = zeros(model.D,model.Q);
+%model.M = 0.01*randn(model.D,model.Q);
 
 
 % The UGP needs the covariances 
