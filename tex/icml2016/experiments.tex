@@ -1,4 +1,7 @@
 \section{Experiments}
+
+\subsection{Synthetic Inversion Problem}
+%
 \begin{table*}
 \caption{Performance of the \eks and \uks methods compared to their GP counterparts (\egp and \ugp) on a range of synthetic benchmarks. 
 \gp is the corresponds to the GP analytical solution in the linear case.
@@ -20,6 +23,18 @@
 \end{tabular}
 \caption{The performance of the \eks (top) and \uks (bottom) as a function of the number of features used. }
 \end{figure*}
+%
+\subsection{Binary Handwritten Digit Classification}
+\begin{figure*}
+\centering
+\begin{tabular}{c c}
+\includegraphics[width=0.45\linewidth]{uspsData-NLP}  &
+\includegraphics[width=0.45\linewidth]{uspsData-ERROR-RATE}  
+\end{tabular}
+\caption{The performance of the \eks and \uks (bottom) on the binary classification problem for the \usps dataset as a function of 
+the number of  basis used. \egp and \ugp are the original (full) \gp models.}
+\end{figure*}
+
 
 \subsection{Seismic Inversion}
 
