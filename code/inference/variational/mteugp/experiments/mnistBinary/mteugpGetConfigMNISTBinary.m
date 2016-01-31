@@ -58,7 +58,7 @@ model.lambdawTransform  = 'exp'; % precisions are exponential of parameter
 
 % lower and upper bounds on hyperparameters
 model.hyperLB.sigma2y   = 1e-3*ones(model.P,1);
-model.hyperUB.sigma2w    = 1e3*ones(model.Q,1); % used to avoid numerical problems
+model.hyperUB.sigma2w    = 1*ones(model.Q,1); % used to avoid numerical problems
 
 % initialization Function
 model.initFunc    = @mteugpInitMNISTBinary;
@@ -69,9 +69,9 @@ model.perfFunc     = @mteugpGetPerformanceBinaryClass;
 
 model.initFromFile = 0;
 end
-
-
  
 
+ 
+ 
 
   
