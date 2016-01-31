@@ -49,7 +49,7 @@ L = size(errorMeasure,1);
 x_model = 1 : L;
 x_line  = L + 0.5;
 x_base  = L + 1;
-x_tick_base = L + 0.75 : 0.5 :  L + length(baseName) - 0.5;
+x_tick_base = L + 0.8 : 0.5 :  L + length(baseName) - 0.5;
 x_all  = [x_model, x_base];
 bar(x_model, errorMeasure); colormap(summer);
 hold on;
