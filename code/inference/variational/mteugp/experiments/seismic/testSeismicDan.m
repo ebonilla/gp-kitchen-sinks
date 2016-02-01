@@ -21,7 +21,7 @@ function testSeismicDan()
     end
       
     n_layers = length(voffsets);
-    n_x = length(x);
+    n_x      = length(x);
     
     % SSE solver settings (regularisers)
     if ~realdata 
@@ -65,9 +65,9 @@ function testSeismicDan()
         plot(x, y(layer, :), 'g', 'linewidth', 3);
     end
     set(gca,'YDir','reverse');
-    title('Travel times')
-    xlabel('Sensor location (m)')
-    ylabel('Time (s)')
+    title('Travel times');
+    xlabel('Sensor location (m)');
+    ylabel('Time (s)');
     
     % plot world model -- Depth
     figure;
@@ -110,7 +110,7 @@ function testSeismicDan()
     % plot forward predictions vs real observations
     if ~realdata
         layercolor = {'r', 'b'};
-        ysim = G(fopt, v);
+        ysim = G(fopt, vopt);
         figure;
         hold on;
         for layer = 1 : n_layers
@@ -125,26 +125,26 @@ end
 % Simulate a random world
 function [x, doffsets, voffsets, y, v, f] = simulateworld()
 % make a grid of x's
-n_x         = 50;
-width       = 3000;
-x           = linspace(0, width, n_x);
 n_layers    = 2;
+n_x         = 50;
+n_spline    = 20;  % Knot points
+width       = 3000;
 layer_noise = [0.01, 0.015];  % noise on each layer
-layer_std   = 100; % Height standard deviation, m
 doffsets    = [700, 1300];  % prior depth offsets for each layer, m
+layer_std   = 100; % Height standard deviation, m
 voffsets    = [2000, 4000];  % velocity offsets of each layer, m/s
 velgrads    = [0.01, 0.02];
-n_spline    = 20;  % Knot points
 
 % Generate a spline
+x   = linspace(0, width, n_x);
 sx  = linspace(0, width, n_spline);
 sy  = layer_std * randn(n_layers, n_spline);
 f   = geom_model(sx, sy, x, doffsets);
 v   = vel_model(voffsets, velgrads, x);
 
-% generate observations
-g = G(f, v);
+% generate observations,
 % Simulate some noisy y's by adding Gaussian observation noise:
+g = G(f, v);
 y = zeros(n_layers, n_x);
 for layer = 1 : n_layers
     y(layer, :) = g(layer, :) + randn(1, n_x)*layer_noise(layer);
