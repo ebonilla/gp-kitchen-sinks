@@ -1,5 +1,5 @@
-function   mteugpTestToyData( str_idxBench, str_idxMethod, str_idxFold, ...
-                            str_D, str_writeLog  )
+function   mteugpTestToyData( idxBench, idxMethod, idxFold, ...
+                            D, writeLog  )
 %MTEUGPTESTTOYDATA Tests MTEUGP on a series of toy data examples 
 %   Data generated and evaluated using the model of Steinberg and Bonilla
 %   (NIPS, 2014)
@@ -7,14 +7,10 @@ function   mteugpTestToyData( str_idxBench, str_idxMethod, str_idxFold, ...
 % idxMethod: 1 : 2
 % idxFold: 1:5
 % D: Dimensionality of feature space
-if (nargin == 0) % Support for cluster
-    pbs_idx = getenv('PBS_ARRAY_INDEX'); 
-    fprintf('pbs_idx = %dn', pbs_idx);
-    return;
-end
-[idxBench, idxMethod, idxFold, D, writeLog] = ...
-                    parseInput(str_idxBench, str_idxMethod, str_idxFold, str_D, str_writeLog);
- 
+if ( ischar(idxBench) )
+    [idxBench, idxMethod, idxFold, D, writeLog] = ...
+                        parseInput(idxBench, idxMethod, idxFold, D, writeLog);
+end 
                 
 RESULTS_DIR = 'results';  % 
 
