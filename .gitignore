@@ -7,4 +7,5 @@
 *.mexmaci64
 *.*~
 *.out
+.DS_Store
 
