@@ -1,13 +1,10 @@
 #!/bin/bash
 # prints a file with the all the multiple inputs to run 
-D=100
 writeLog=1
 NBENCH=5
 NMETHOD=2
 NFOLD=5
 DLIST='
-10
-20
 50
 100
 '
