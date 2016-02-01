@@ -5,10 +5,11 @@ NBENCH=5
 NMETHOD=2
 NFOLD=5
 DLIST='
+25
 50
 100
-'
-
+'   
+ 
 for d in $DLIST; do
    for ((idxBench=1;idxBench<=$NBENCH;idxBench+=1)); do
        for ((idxMethod=1;idxMethod<=$NMETHOD;idxMethod+=1)); do
@@ -19,6 +20,7 @@ for d in $DLIST; do
    done
 done
 
+ 
 
 
 
