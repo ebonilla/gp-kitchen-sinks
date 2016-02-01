@@ -34,26 +34,29 @@ function testSeismicDan()
         l_d = 1e-5;
     end
     
-    % Optimise f for a solution:
-    opt.xtol_rel = 1e-8;
-    opt.ftol_rel = 1e-7;
-    opt.maxeval = 50000;
-    % TODO: [EVB] Change back above value 
-    %opt.maxeval = 500;
+    % Optimization with NLPOY
+     height0 = bsxfun(@plus, zeros(n_layers, n_x) , doffsets');
+     L = n_layers*n_x;
+     vel0    = bsxfun(@plus, zeros(n_layers, n_x) , voffsets');
+     f0 = [height0(:); vel0(:)];
+     fobj = @(theta) llh(theta, y, doffsets, l_off, l_d, l_v, n_layers, n_x);
+%      opt.lower_bounds = zeros(1, 2 * prod(f_shape)) + 1e-5;
+%      opt.min_objective = fobj;    
+%     opt.xtol_rel = 1e-8;
+%     opt.ftol_rel = 1e-7;
+%     opt.maxeval = 50000;    
+%     opt.algorithm = NLOPT_LN_BOBYQA;
+
+%     [ores, fmin, retcode] = nlopt_optimize(opt, f0);
+%     retcode
     
-    opt.algorithm = NLOPT_LN_BOBYQA;
-    f0 = [bsxfun(@plus, zeros(n_layers, n_x) , doffsets');
-          bsxfun(@plus, zeros(n_layers, n_x) , voffsets')];
-    f0 = f0(:)';
-    f_shape = [n_layers, n_x];
-    opt.min_objective = @(z) llh(reshape(z(1:prod(f_shape)), f_shape), ...
-                                 reshape(z(prod(f_shape)+1:end), f_shape), ... 
-                                 y, doffsets, l_off, l_d, l_v);
-    opt.lower_bounds = zeros(1, 2 * prod(f_shape)) + 1e-5;
-    [ores, fmin, retcode] = nlopt_optimize(opt, f0);
+    % Optimization with Matlab's optimizer
+    options = optimoptions('fminunc','Algorithm','quasi-newton');
+    options.MaxIter = 10000;  
+    [ores, fminVal, retcode ] = fminunc(fobj, f0, options);
     retcode
-    fopt = reshape(ores(1:prod(f_shape)), f_shape);
-    vopt = reshape(ores(prod(f_shape)+1:end), f_shape);
+    fopt = reshape(ores(1 : L), n_layers, n_x);
+    vopt = reshape(ores(L+1:end), n_layers, n_x);
     
     % plot travel times
     clf;
@@ -121,34 +124,31 @@ end
 
 % Simulate a random world
 function [x, doffsets, voffsets, y, v, f] = simulateworld()
-    
-    % make a grid of x's
-    n_x = 50;
-    width = 3000;
-    x = linspace(0, width, n_x);
-    
-    % Some simulation settings
-    n_layers = 2;
-    layer_noise = [0.01, 0.015];  % noise on each layer
-    layer_std = 100;
-    doffsets = [700, 1300];  % prior depth offsets for each layer, m
-    voffsets = [2000, 4000];  % velocity offsets of each layer, m/s
-    velgrads = [0.01, 0.02];
+% make a grid of x's
+n_x         = 50;
+width       = 3000;
+x           = linspace(0, width, n_x);
+n_layers    = 2;
+layer_noise = [0.01, 0.015];  % noise on each layer
+layer_std   = 100; % Height standard deviation, m
+doffsets    = [700, 1300];  % prior depth offsets for each layer, m
+voffsets    = [2000, 4000];  % velocity offsets of each layer, m/s
+velgrads    = [0.01, 0.02];
+n_spline    = 20;  % Knot points
 
-    % Generate a spline
-    n_spline = 20;  % Knot points
-    sx = linspace(0, width, n_spline);
-    sy = layer_std * randn(n_layers, n_spline);
-    f = geom_model(sx, sy, x, doffsets);
-    v = vel_model(voffsets, velgrads, x);
+% Generate a spline
+sx  = linspace(0, width, n_spline);
+sy  = layer_std * randn(n_layers, n_spline);
+f   = geom_model(sx, sy, x, doffsets);
+v   = vel_model(voffsets, velgrads, x);
 
-    % generate observations
-    g = G(f, v);
-    
-    % Simulate some noisy y's by adding Gaussian observation noise:
-    for layer=1:n_layers
-        y(layer, :) = g(layer, :) + randn(1, n_x)*layer_noise(layer);
-    end
+% generate observations
+g = G(f, v);
+% Simulate some noisy y's by adding Gaussian observation noise:
+y = zeros(n_layers, n_x);
+for layer = 1 : n_layers
+    y(layer, :) = g(layer, :) + randn(1, n_x)*layer_noise(layer);
+end
 
 end
 
@@ -176,32 +176,39 @@ end
 % define an un-normalised log likelhood function that will be optimized!
 % This is just a SSE objective so will try to fit the *noisy* observations
 % exactly!
-function obj = llh(f, v, y, doffsets, l_off, l_d, l_v)
-    y_sim = G(f, v);
-    sse = sum(sum( (y - y_sim).^2 ));
-    regoff = sum(sum( (bsxfun(@minus, f,  doffsets')).^2 ));
-    regdvar = sum(sum( abs(f(:, 1:end-1) - f(:, 2:end)) ));
-    regvvar = sum(sum( abs(v(:, 1:end-1) - v(:, 2:end)) ));
-    obj = sse + l_off*regoff + l_d*regdvar + l_v*regvvar;
-    fprintf('Objective: %f\n', obj);
+function obj = llh(theta, y, doffsets, l_off, l_d, l_v, n_layers, n_x)
+L       = n_layers * n_x;
+f       = reshape(theta(1:L), n_layers, n_x);
+v       = reshape(theta(L+1:end), n_layers, n_x);
+y_sim   = G(f, v);
+
+% Data fit
+sse     = sum(sum( (y - y_sim).^2 ));
+
+% REgular
+regoff  = sum(sum( (bsxfun(@minus, f,  doffsets')).^2 ));
+regdvar = sum(sum( abs(f(:, 1:end-1) - f(:, 2:end)) ));
+regvvar = sum(sum( abs(v(:, 1:end-1) - v(:, 2:end)) ));
+obj     = sse + l_off*regoff + l_d*regdvar + l_v*regvvar;
+fprintf('Objective: %f\n', obj);
     %fflush(stdout); 
 end
 
 
 % Compute the layer heights
 function f = geom_model(sx, sy, x, doffsets)
-    n_layers = size(sy, 1);
-    n_x = numel(x);
-    f = zeros(n_layers, n_x);
-    for layer=1:n_layers
-        sy(layer, :) = sy(layer, :) + doffsets(layer);
-        f(layer, :) = interp1(sx, sy(layer, :), x, 'spline');
-        if layer==1
-            f(layer, :) = max(f(layer, :), 0);
-        else
-            f(layer, :) = max(f(layer, :), f(layer-1, :));
-        end
+n_layers = size(sy, 1);
+n_x = numel(x);
+f = zeros(n_layers, n_x);
+for layer=1:n_layers
+    sy(layer, :) = sy(layer, :) + doffsets(layer);
+    f(layer, :) = interp1(sx, sy(layer, :), x, 'spline');
+    if layer==1
+        f(layer, :) = max(f(layer, :), 0);
+    else
+        f(layer, :) = max(f(layer, :), f(layer-1, :));
     end
+end
 end 
 
 % Compute the layer velocity functions
@@ -215,18 +222,18 @@ end
 % Edwin: Close over vel for now (see how we call NLOPT). But we do eventually
 % want to also learn vel (though we may need a prior/regulariser).
 function g = G(f, vel)
-    n_layers = size(f, 1);
-    n_x = size(f,2);
-    g = zeros(n_layers, n_x);
-    for layer = 1 : n_layers
-        if layer == 1
-            g(layer, :) = 2*f(layer, :)./vel(layer,:);
-        else
-            g(layer, :) = 2*(f(layer,:)-f(layer-1,:))./vel(layer, :) ...
+n_layers = size(f, 1);
+n_x = size(f,2);
+g = zeros(n_layers, n_x);
+for layer = 1 : n_layers
+    if layer == 1
+        g(layer, :) = 2*f(layer, :)./vel(layer,:);
+    else
+        g(layer, :) = 2*(f(layer,:)-f(layer-1,:))./vel(layer, :) ...
                 + g(layer-1, :);
-        end
     end
 end
+end 
 
 
 
