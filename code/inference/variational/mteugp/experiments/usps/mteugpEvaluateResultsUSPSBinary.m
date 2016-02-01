@@ -39,8 +39,8 @@ for i = 1 : L
     end
 end
 
-barPlotModelOnly(errorRate, aliasMethod, strDimLabel, [0 0.05], 'Error Rate', '')
-barPlotModelOnly(mnlp, aliasMethod, strDimLabel, [0 0.25], 'NLP', '')
+barPlotModelOnly(errorRate, aliasMethod, strDimLabel, [0 0.05], 0.01, 'Error Rate', '')
+barPlotModelOnly(mnlp, aliasMethod, strDimLabel, [0 0.16], 0.04, 'NLP', '')
 
 [baseNames, b_nlp, b_error] =  getBaselines(0); 
 barPlotModelOnly(b_error, baseNames, '', [0 0.05], 'Error Rate', 'Baseline')
@@ -50,7 +50,7 @@ end
  
 
 %%
-function barPlotModelOnly(errorMeasure, methodName, strTrueDim, ylimi, strYlabel, strFname)
+function barPlotModelOnly(errorMeasure, methodName, strTrueDim, ylimi, ystep, strYlabel, strFname)
 global TRGFIGDIR;
 global SAVEPLOTS;
 
@@ -66,7 +66,6 @@ if (~isempty(strTrueDim))
 end
 set(gca, 'FontSize', FONT_SIZE);
 ylim(ylimi);
-ystep = ylimi(2)/5;
 set(gca, 'YTick', 0 : ystep : ylimi(2)); 
 set(gca, 'Xtick', x_model);
 set(gca, 'XTickLabel', methodName);
@@ -113,16 +112,16 @@ end
 % figure; bar(mnlp);
 % bar(errorRate);
 singleBarPlot(errorRate, b_error, aliasMethod, baseName, ...
-            strDimLabel, [0 0.05], 'Error Rate');
+            strDimLabel, [0 0.05], 0.01, 'Error Rate');
 
 singleBarPlot(mnlp, b_nlp, aliasMethod, baseName, ...
-            strDimLabel, [0 0.25], 'NLP');
+            strDimLabel, [0 0.16], 0.04, 'NLP');
 end
 
 
 %% 
 function singleBarPlot(errorMeasure, baseMeasure, methodName, ...
-                        baseName, strTrueDim, ylimi, strYlabel)
+                        baseName, strTrueDim, ylimi, ystep, strYlabel)
 global TRGFIGDIR;
 global SAVEPLOTS;
 
@@ -145,7 +144,6 @@ plot([x_line, x_line], [0, max([errorMeasure(:); baseMeasure(:)])], ...
 set(gca, 'FontSize', FONT_SIZE);
 
 ylim(ylimi);
-ystep = ylimi(2)/5;
 set(gca, 'YTick', 0 : ystep : ylimi(2)); 
 set(gca, 'Xtick', [x_model, x_tick_base]);
 set(gca, 'XTickLabel', [strTrueDim, baseName]);
