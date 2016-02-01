@@ -1,11 +1,13 @@
-function mteugpTestMNISTBinary( str_idxMethod, str_D, str_boolSample, str_writeLog )
+function mteugpTestMNISTBinary( idxMethod, D, boolSample, writeLog )
 %mteugpTestMNISTBinary Run MTEUGP on MNIST BInary data
 %   Detailed explanation goes here
 DATASET       = 'mnistBinaryData';
 RESULTS_DIR   = 'results';
 linearMethod  = {'Taylor', 'Unscented'};
 
-[idxMethod, D, boolSample, writeLog] = parseInput(str_idxMethod, str_D, str_boolSample, str_writeLog);
+if (ischar(idxMethod))
+    [idxMethod, D, boolSample, writeLog] = parseInput(idxMethod,  D, boolSample, writeLog);
+end
 
 runSingle(RESULTS_DIR, DATASET, linearMethod{idxMethod}, D, boolSample, writeLog);
 

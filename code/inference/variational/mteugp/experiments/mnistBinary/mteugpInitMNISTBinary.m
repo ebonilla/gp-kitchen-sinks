@@ -43,3 +43,4 @@ fprintf('Initial sigma2w = %.4f\n', model.sigma2w);
 end
 
  
+ 
