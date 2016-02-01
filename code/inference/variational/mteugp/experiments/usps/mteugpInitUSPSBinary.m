@@ -15,8 +15,8 @@ if(~exitCode) % Default initialization
     model.sigma2w   = 1*ones(model.Q,1);  % hyper-parameters (of prior on w)
     model.Phi       = feval(model.featFunc, model.X, model.Z, model.featParam); 
     model.D         = size(model.Phi,2); % actual number of features    
-    model.M         = 0.01*randn(model.D,model.Q);
-    %model.M         = zeros(model.D,model.Q);
+    %model.M         = 0.01*randn(model.D,model.Q);
+    model.M         = zeros(model.D,model.Q);
     
     % The UGP needs the covariances 
     if ( strcmp(model.linearMethod, 'Unscented') )

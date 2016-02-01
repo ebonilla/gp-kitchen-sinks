@@ -27,7 +27,7 @@ model.nSamples     = 1000; % Number of samples for approximating predictive dist
 model.predMethod   = 'mc'; % {'mc', 'Taylor'}
 
 % global optimization configuration
-optConf.iter     = 50;    % maximum global iterations
+optConf.iter     = 10;    % maximum global iterations   
 optConf.ftol     = 1e-5;
 model.globalConf = optConf;
 

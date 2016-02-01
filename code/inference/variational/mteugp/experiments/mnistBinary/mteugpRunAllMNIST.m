@@ -1,4 +1,4 @@
-function  mteugpRunAllMNIST(  )
+function  mteugpRunAllMNIST( )
 %MTEUGPRUNALLUSPS Summary of this function goes here
 %   Detailed explanation goes here
 for d = [500 1000]

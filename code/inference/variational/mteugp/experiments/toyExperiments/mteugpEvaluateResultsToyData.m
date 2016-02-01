@@ -1,4 +1,14 @@
+
 function mteugpEvaluateResultsToyData()
+% Evaluates results on Toy Data
+global SRCDIR;      % where the predictions are stored
+global TRGFIGDIR;   % Where the figures are saved
+global TRGTEXDIR; % where the latex table will be stored
+
+SRCDIR = 'results/cluster-20160201'; 
+TRGFIGDIR = 'tex/icml2016/figures';
+TRGTEXDIR = 'tex/icml2016';
+
 try % delete file with unexectuted runs
     system('rm runs-left.txt'); 
 catch ME
@@ -7,18 +17,21 @@ end
 % Exports table for D=100
 % evaluateResultsToyData(100, 1);
 
-evaluateResultsAllD();
+saveFigs = 1;
+
+evaluateResultsAllD(saveFigs);
 
 
 end
 
-function evaluateResultsAllD()
+function evaluateResultsAllD(saveFigs)
 close all;
 boolExport = 1; % export results to latex Table?
 linearMethod = {'EKS', 'UKS', 'GP'};
 benchmark    = upper({'linear', 'poly3', 'exp', 'sin', 'tanh'});
 % strDim       = {'10', '20', '50', '100'};
 strDim       = {'20', '50', '100'};
+strDimLabel  = {'D=40', 'D=100', 'D=200'}; % label for the plots (2xD) due to [sin cos] fetures
 v_d          = cellfun(@str2double, strDim);
 L = length(v_d);
 modelStat = cell(1,L);
@@ -32,15 +45,15 @@ for idxMethod = 1 : 2
     strMethod = linearMethod{idxMethod};
     % SMSE (f*)
     [meanVal, stdVal] = getMatrixForBarPlot(modelStat, 'smseF', idxMethod);
-    drawBarPlot(meanVal, stdVal, strDim, benchmark, 'SMSE-f*',strMethod, 0);
+    drawBarPlot(meanVal, stdVal, strDimLabel, benchmark, 'SMSE-f*',strMethod, 0, saveFigs);
 
     % NLPD (f*)
     [meanVal, stdVal] = getMatrixForBarPlot(modelStat, 'nlpdF', idxMethod);
-    drawBarPlot(meanVal, stdVal, strDim, benchmark, 'NLPD-f*', strMethod, baseValue(idxMethod) );
+    drawBarPlot(meanVal, stdVal, strDimLabel, benchmark, 'NLPD-f*', strMethod, baseValue(idxMethod), saveFigs );
 
     % SMSE (g*) 
     [meanVal, stdVal] = getMatrixForBarPlot(modelStat, 'smseG', idxMethod);
-    drawBarPlot(meanVal, stdVal, strDim, benchmark, 'SMSE-g*', strMethod, 0);
+    drawBarPlot(meanVal, stdVal, strDimLabel, benchmark, 'SMSE-g*', strMethod, 0, saveFigs);
 
 end
 
@@ -48,10 +61,11 @@ end
 end
 
 
-
-function drawBarPlot(meanVal, stdVal, strDim, benchmark, strYlabel, strMethod, baseValue)
+%% 
+function drawBarPlot(meanVal, stdVal, strDim, benchmark, strYlabel, strMethod, baseValue, saveFigs)
 FONT_SIZE = 18;
 BAR_WIDTH = 1;
+global TRGFIGDIR;
 
 %figure('PaperPositionMode','auto');
 figure; 
@@ -59,7 +73,7 @@ figure;
 [hb, he] = mybarweb(meanVal, stdVal, strDim, benchmark, BAR_WIDTH, parula, baseValue);
 set(gca, 'FontSize', FONT_SIZE);
 h_legend = findobj(gcf,'Tag','legend');
-set(h_legend, 'FontSize', FONT_SIZE, 'location', 'NorthWest', 'Orientation', 'vertical');
+set(h_legend, 'FontSize', FONT_SIZE, 'location', 'NorthWest', 'Orientation', 'vertical', 'Box', 'On');
 ylabel(strYlabel);
 box off;
 
@@ -72,16 +86,17 @@ box off;
 %     'Units', 'normalized', ...
 %     'FontSize', FONT_SIZE);
 % legend boxon;
-fname = ['tex/icml2016/figures/', ...
+if (saveFigs)
+    fname = [TRGFIGDIR, '/', ...
             'toyData-', strMethod, '-', strrep(strYlabel, '*', 'star'), '.eps'];
-% print('-depsc2', fname);        
-%
-saveas(gcf, fname, 'epsc' );
-system(['epstopdf ', fname]);
-%
-%export_fig(fname);
+    % print('-depsc2', fname);        
+    %
+    saveas(gcf, fname, 'epsc' );
+    system(['epstopdf ', fname]);
+    %
+    %export_fig(fname);
 end
-
+end
 
 function [meanVal, stdVal]= getMatrixForBarPlot(cellStat, field, idxMethod)
 % cellStat: cell of perf structures
@@ -106,15 +121,15 @@ end
 end
 
 function [basePerf, modelPerf, baseStat, modelStat] = evaluateResultsToyData(D, boolExport)
+global SRCDIR;
 
 % Evaluates results on toy data
-RESULTS_DIR = 'results/cluster';
 DATASET = 'toyData';
 benchmark = {'lineardata', 'poly3data', 'expdata', 'sindata', 'tanhdata'};
 linearMethod = {'Taylor', 'Unscented', 'GP'};
 nFolds = 5;
 basePerf = getPerformance([], DATASET, benchmark, linearMethod, nFolds, D, 'baseline');
-modelPerf = getPerformance(RESULTS_DIR, DATASET, benchmark, linearMethod, nFolds, D, 'mteugp' );
+modelPerf = getPerformance(SRCDIR, DATASET, benchmark, linearMethod, nFolds, D, 'mteugp' );
 
 baseStat  = getPerfStats(basePerf);
 modelStat = getPerfStats(modelPerf);
@@ -132,6 +147,8 @@ end
 function exportResults(baseStat, modelStat, benchmark, linearMethod)
 % base: baseline performance
 % perf: performance of the model
+global TRGTEXDIR;
+
 [B, M] = size(baseStat.smseF.mean); % # benchmarks, # linearization method, 
 
 % Replaces the names of the benchmark
@@ -146,7 +163,7 @@ end
 
 
 
-fname = 'tex/icml2016/table-toy.tex';
+fname = [TRGTEXDIR, '/', 'table-toy.tex'];
 fid = fopen(fname, 'wt');
 %fprintf(fid, '\\begin{table*}\n');
 %fprintf(fid, '\\centering\n');
@@ -227,7 +244,7 @@ end
 
 
 % base = getBaseline(DATASET, benchmark, linearMethod, nFolds)
-function perf = getPerformance(RESULTS_DIR, DATASET, benchmark, linearMethod, nFolds, D, model )
+function perf = getPerformance(SRCDIR, DATASET, benchmark, linearMethod, nFolds, D, model )
 switch model,
     case 'baseline',
         perfFunc = @getBaselineSingle;
@@ -244,7 +261,7 @@ fid = fopen('runs-left.txt', 'at');
 for i = 1 : B
     for j = 1 : M
         for k = 1 : nFolds 
-            [smseF, nlpdF, smseG] = perfFunc(RESULTS_DIR, DATASET, benchmark{i}, linearMethod{j}, k, D);
+            [smseF, nlpdF, smseG] = perfFunc(SRCDIR, DATASET, benchmark{i}, linearMethod{j}, k, D);
             
             % prints unexecuted runs
             if (isnan(smseF) && (strcmp(model,'mteugp')) && (~strcmp(linearMethod{j}, 'GP')))
@@ -261,7 +278,7 @@ fclose(fid);
 end
 
 
-function  [smseF, nlpdF, smseG] = getModelSingle(RESULTS_DIR, DATASET, benchmark, linearMethod, fold, D )
+function  [smseF, nlpdF, smseG] = getModelSingle(SRCDIR, DATASET, benchmark, linearMethod, fold, D )
 smseF = NaN;
 nlpdF = NaN;
 smseG = NaN;
@@ -271,8 +288,8 @@ if (strcmp(linearMethod, 'GP'))
     return;
 end
 
-RESULTS_DIR = [RESULTS_DIR, '/', DATASET, '/', 'D', num2str(D), '/', linearMethod];
-fname = [RESULTS_DIR, '/', benchmark, '_k', num2str(fold), '.mat'];
+SRCDIR = [SRCDIR, '/', DATASET, '/', 'D', num2str(D), '/', linearMethod];
+fname = [SRCDIR, '/', benchmark, '_k', num2str(fold), '.mat'];
 try
     load(fname, 'pred');
 catch ME
@@ -290,7 +307,7 @@ end
 
 
 % Performance of Steiberg and Bonilla (2014)'s 
-function [smseF, nlpdF, smseG] = getBaselineSingle(RESULTS_DIR, DATASET, benchmark, linearMethod, fold, D )
+function [smseF, nlpdF, smseG] = getBaselineSingle(SRCDIR, DATASET, benchmark, linearMethod, fold, D )
 smseF = NaN;
 nlpdF = NaN;
 smseG = NaN;
