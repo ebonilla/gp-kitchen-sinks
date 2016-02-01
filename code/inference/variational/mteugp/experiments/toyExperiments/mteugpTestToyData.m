@@ -8,11 +8,9 @@ function   mteugpTestToyData( str_idxBench, str_idxMethod, str_idxFold, ...
 % idxFold: 1:5
 % D: Dimensionality of feature space
 if (nargin == 0) % Support for cluster
-    str_idxBench    = getenv('idxBench');
-    str_idxMethod   = getenv('idxMethod');
-    str_idxFold     = getenv('idxFold');
-    str_D           = getenv('d');
-    str_writeLog    = getenv('writeLog');
+    pbs_idx = getenv('PBS_ARRAY_INDEX'); 
+    fprintf('pbs_idx = %dn', pbs_idx);
+    return;
 end
 [idxBench, idxMethod, idxFold, D, writeLog] = ...
                     parseInput(str_idxBench, str_idxMethod, str_idxFold, str_D, str_writeLog);
