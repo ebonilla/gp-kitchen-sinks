@@ -1,7 +1,6 @@
 function model  = mteugpInitUSPSBinary( model )
 %MTEUGPINITUSPS Summary of this function goes here
 %   Detailed explanation goes here
-
 exitCode = 0;
 
 % We try to init from a previous run

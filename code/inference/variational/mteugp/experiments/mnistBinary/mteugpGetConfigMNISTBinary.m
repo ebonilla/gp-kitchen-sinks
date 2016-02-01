@@ -29,7 +29,7 @@ model.predMethod   = 'mc'; % {'mc', 'Taylor'}
 % global optimization configuration
 optConf.iter     = 10;    % maximum global iterations
 optConf.ftol     = 1e-3;
-model.globalConf = optConf;
+model.globalConf = optConf;  
 
 % variational parameter optimization configuration
 optConf.optimizer   = 'nlopt'; % 
