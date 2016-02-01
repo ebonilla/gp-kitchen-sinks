@@ -1,18 +1,22 @@
-function  mteugpTestMNIST( str_idxMethod, str_D, str_boolSample, str_writeLog )
+function  mteugpTestMNIST(idxMethod,  D, boolSample, writeLog)
 %mteugpTestMNIST Run MTEUGP on MNIST data
 %   Detailed explanation goes here
 DATASET       = 'mnistData';
 RESULTS_DIR   = 'results';
 linearMethod  = {'Taylor', 'Unscented'};
 
-[idxMethod, D, boolSample, writeLog] = parseInput(str_idxMethod, str_D, str_boolSample, str_writeLog);
+if (ischar(idxMethod))
+    [idxMethod, D, boolSample, writeLog] = parseInput(idxMethod,  D, boolSample, writeLog);
+end 
+
+[idxMethod, D, boolSample, writeLog] = parseInput(idxMethod, D, boolSample, writeLog);
 
 runSingle(RESULTS_DIR, DATASET, linearMethod{idxMethod}, D, boolSample, writeLog);
 
 
 
 end
-
+ 
 
 function runSingle(RESULTS_DIR, DATASET, linearMethod, D, boolSample, writeLog)
 RESULTS_DIR = [RESULTS_DIR, '/', DATASET, '/', 'D', num2str(D), '/', linearMethod];
