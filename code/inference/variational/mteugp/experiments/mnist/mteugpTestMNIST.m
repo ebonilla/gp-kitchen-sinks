@@ -7,12 +7,9 @@ linearMethod  = {'Taylor', 'Unscented'};
 
 if (ischar(idxMethod))
     [idxMethod, D, boolSample, writeLog] = parseInput(idxMethod,  D, boolSample, writeLog);
-end 
-
-[idxMethod, D, boolSample, writeLog] = parseInput(idxMethod, D, boolSample, writeLog);
+end
 
 runSingle(RESULTS_DIR, DATASET, linearMethod{idxMethod}, D, boolSample, writeLog);
-
 
 
 end

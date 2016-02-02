@@ -1,11 +1,11 @@
-
 function mteugpEvaluateResultsToyData()
 % Evaluates results on Toy Data
 global SRCDIR;      % where the predictions are stored
 global TRGFIGDIR;   % Where the figures are saved
 global TRGTEXDIR; % where the latex table will be stored
 
-SRCDIR = 'results/cluster-20160201'; 
+%SRCDIR = 'results/cluster-20160201'; 
+SRCDIR  = 'results';
 TRGFIGDIR = 'tex/icml2016/figures';
 TRGTEXDIR = 'tex/icml2016';
 
@@ -30,8 +30,8 @@ boolExport = 1; % export results to latex Table?
 linearMethod = {'EKS', 'UKS', 'GP'};
 benchmark    = upper({'linear', 'poly3', 'exp', 'sin', 'tanh'});
 % strDim       = {'10', '20', '50', '100'};
-strDim       = {'20', '50', '100'};
-strDimLabel  = {'D=40', 'D=100', 'D=200'}; % label for the plots (2xD) due to [sin cos] fetures
+strDim       = {'25', '50', '100'};
+strDimLabel  = {'D=50', 'D=100', 'D=200'}; % label for the plots (2xD) due to [sin cos] fetures
 v_d          = cellfun(@str2double, strDim);
 L = length(v_d);
 modelStat = cell(1,L);
