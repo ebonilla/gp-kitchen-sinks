@@ -4,7 +4,7 @@ function [mnlp, errorRate] = mteugpEvaluateResultsMNISTBinary(  )
 global SRCDIR;      % where the predictions are stored
 global TRGFIGDIR;   % Where the figures are saved
 global TRGTEXDIR; % where the latex table will be stored
-SRCDIR = 'results/cluster-20160201'; 
+SRCDIR = 'results/cluster-directly-20160202'; 
 TRGFIGDIR = 'tex/icml2016/figures';
 TRGTEXDIR = 'tex/icml2016';
 dataName = 'mnistBinaryData';
