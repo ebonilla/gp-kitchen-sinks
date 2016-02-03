@@ -58,15 +58,13 @@ model.lambdayTransform  = 'exp'; % Precisions are exponential of parameter
 model.lambdawTransform  = 'exp'; % precisions are exponential of parameter
 
 % lower and upper bounds on hyperparameters
-model.hyperLB.sigma2y   = 1e-3*ones(model.P,1);
-model.hyperUB.sigma2w    = 1*ones(model.Q,1); % used to avoid numerical problems
+%model.hyperLB.sigma2y   = 1e-3*ones(model.P,1);
+%model.hyperUB.sigma2w    = 1*ones(model.Q,1); % used to avoid numerical problems
  
 % initialization Function
-model.initFunc    = @mteugpInitMNIST;
+model.initFunc    = @(x) mteugpInitSeismic(x,data.doffsets, data.voffsets);
 
-% Performance function
-model.perfFunc = @mteugpGetPerformanceMultiClass;
-
+ 
 
 model.initFromFile = 0;
 end

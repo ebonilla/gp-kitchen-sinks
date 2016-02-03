@@ -1,21 +1,29 @@
-function mteugpTestSeismic( boolRealData )
+function mteugpTestSeismic( idxMethod, D, boolRealData )
 %MTEUGPTESTSEISMIC Summary of this function goes here
 %   Detailed explanation goes here
 data  = mteugpLoadDataSeismic( boolRealData );
+linearMethod  = {'Taylor', 'Unscented'};
 
+
+
+runModel(data, linearMethod{idxMethod}, D);
 % [dopt, vopt, gpred] = runMAPBenchmark(data, boolRealData);
-
-model = mteugpGetConfigSeismic(data, 'Taylor', 10);
-
-
-testJacobian(model);
+ 
 
 end
 
 
 
+%% 
+function runModel(data, LinearMethod, D)
+model = mteugpGetConfigSeismic(data, LinearMethod, D);
+model.X  = normalise(model.X);
+model = mteugpLearn( model);
+
+end
 
 
+%% Test Jacobian of fwd model
 function testJacobian(model)
 fobj = @(theta) fwdWrapper(theta, model);
 for i = 1 : 10
@@ -28,7 +36,7 @@ end
 end
 
 
-
+%% 
 function G = fwdWrapper(theta, model)
 n_layers = size(theta,2)/2;
 d        = theta(:,1:n_layers);
