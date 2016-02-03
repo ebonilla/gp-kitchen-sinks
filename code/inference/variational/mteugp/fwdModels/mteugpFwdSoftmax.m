@@ -2,7 +2,7 @@ function [g, dg]  = mteugpFwdSoftmax( f )
 %MTEUGPFWDSOFTMAX Summary of this function goes here
 %   Detailed explanation goes here
 % [N, C] = size(f)
-% [P Q] = size(dg)
+% [P Q] = size(dg) % only done fo a single n :-( 
 g = softmax(f);
 
 
@@ -23,3 +23,4 @@ a = max(f,[], 2);
 g = exp(bsxfun(@minus, f, a)); % avoiding overflow
 g = bsxfun(@rdivide, g, sum(g,2));
 end
+
