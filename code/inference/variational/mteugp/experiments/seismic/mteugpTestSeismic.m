@@ -2,8 +2,13 @@ function mteugpTestSeismic( boolRealData )
 %MTEUGPTESTSEISMIC Summary of this function goes here
 %   Detailed explanation goes here
 data  = mteugpLoadDataSeismic( boolRealData );
-runMAPBenchmark(data, boolRealData)
 
+% [dopt, vopt, gpred] = runMAPBenchmark(data, boolRealData);
+
+model = mteugpGetConfigSeismic(data, 'Taylor', 10);
+
+
+testJacobian(model);
 
 end
 
@@ -11,10 +16,31 @@ end
 
 
 
+function testJacobian(model)
+fobj = @(theta) fwdWrapper(theta, model);
+for i = 1 : 10
+    f    = 100*rand(1, model.Q);
+    gradNum = jacobianest(fobj, f);
+    [Gval, grad] = model.fwdFunc(f);
+    delta = abs(gradNum(:) - grad(:));
+    max(delta)
+end
+end
 
+
+
+function G = fwdWrapper(theta, model)
+n_layers = size(theta,2)/2;
+d        = theta(:,1:n_layers);
+v        = theta(:,n_layers+1:end);
+Depth    = reshape(d, 1, n_layers);
+V        = reshape(v, 1, n_layers);
+F        = [Depth, V];
+G        = model.fwdFunc(F);
+end
 
 %% 
-function [dopt, vopt] = runMAPBenchmark(data, realdata)
+function [dopt, vopt, gpred] = runMAPBenchmark(data, realdata)
 plotTravelTimes(data.xtrain, data.ytrain, data.n_layers);
 [dopt, vopt] = fsseRegSolution(data.ytrain', data.n_x, data.n_layers, data.doffsets, data.voffsets, realdata);
 dopt = dopt';
@@ -31,7 +57,7 @@ end
 function Gpred = getFwdPredictions(dpred, vpred)
 % dpred [n_x x n_layers]
 F       = mteugpWrapSeismicParameters( dpred, vpred );
-Gpred   = mteugpFwdSeismic(F);
+Gpred   = mteugpFwdSeismic(F, 0, 0);
 
 end
 
@@ -175,7 +201,7 @@ depth   = reshape(theta(1:L), n_layers, n_x);
 vel       = reshape(theta(L+1:end), n_layers, n_x);
 
 F       = mteugpWrapSeismicParameters( depth', vel' );
-y_sim   = mteugpFwdSeismic(F)';
+y_sim   = mteugpFwdSeismic(F, 0, 0)';
 
 % Data fit
 sse     = sum(sum( (y - y_sim).^2 ));

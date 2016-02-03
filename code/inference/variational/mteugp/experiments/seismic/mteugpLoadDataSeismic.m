@@ -10,12 +10,12 @@ if (~realData)
     data.d        = f'; % tue depths    
     data.v        = v'; % true velocities
 else
-    [x, doffsets, voffsets, y] = loaddata(2);
+    [x, doffsets, voffsets, y] = loaddata(4);
     data.xtrain   = x;
     data.ytrain   = y'; 
     data.doffsets =  doffsets;
     data.voffsets = voffsets;
-    data.d        = [];    
+    data.d        = [];     
     data.v        = [];
 end
   
@@ -67,14 +67,14 @@ v   = vel_model(voffsets, velgrads, x);
 % generate observations,
 % Simulate some noisy y's by adding Gaussian observation noise:
 F = mteugpWrapSeismicParameters(f', v');
-g = mteugpFwdSeismic(F)'; 
+g = mteugpFwdSeismic(F, 0, 0)'; 
 y = zeros(n_layers, n_x);
 for layer = 1 : n_layers
     y(layer, :) = g(layer, :) + randn(1, n_x)*layer_noise(layer);
 end
 
 end
-
+ 
 %% Compute the layer heights / depths
 function f = geom_model(sx, sy, x, doffsets)
 n_layers = size(sy, 1);
