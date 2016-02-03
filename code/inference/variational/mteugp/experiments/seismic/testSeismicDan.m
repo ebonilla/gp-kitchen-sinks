@@ -12,7 +12,7 @@
 %%  
 function testSeismicDan()
     % Choose whether to run simulation or operate on real data
-    realdata = false;
+    realdata = true;
     
     if ~realdata    
         [x, doffsets, voffsets, y, v, f] = simulateworld();
