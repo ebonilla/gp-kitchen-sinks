@@ -3,9 +3,11 @@ function mteugpTestSeismic( idxMethod, D, boolRealData, writeLog )
 %   Detailed explanation goes here
 global RESULTSDIR;
 global DATASET;
+global LOADFROMFILE;
 
 RESULTSDIR = 'results';
 DATASET = 'seismicData';
+LOADFROMFILE = 1;
 
 data  = mteugpLoadDataSeismic( boolRealData );
 linearMethod  = {'Taylor', 'Unscented'};
@@ -24,21 +26,33 @@ end
 function runModel(data, linearMethod, D, writeLog)
 global RESULTSDIR;
 global DATASET;
+global LOADFROMFILE;
+
 RESULTSDIR = [RESULTSDIR, '/', DATASET, '/', 'D', num2str(D), '/', linearMethod];
-system(['mkdir -p ', RESULTSDIR]);
-if (writeLog)
-    str = datestr(now, 30);
-    diary([RESULTSDIR,  '/', str, '.log']);
+fname  = [RESULTSDIR, '/', DATASET, '.mat'];
+if (LOADFROMFILE)
+    load(fname);
+else
+    system(['mkdir -p ', RESULTSDIR]);
+    if (writeLog)
+        str = datestr(now, 30);
+        diary([RESULTSDIR,  '/', str, '.log']);
+    end
+    model             = mteugpGetConfigSeismic(data, linearMethod, D);
+    model.resultsFname = fname;
+    
+    model.X  = normalise(model.X);
+
+    % learning modell parameters
+    model           = mteugpLearn( model); 
+
+    save(fname, 'model');
+    diary off;
 end
-
-model    = mteugpGetConfigSeismic(data, linearMethod, D);
-%model.X  = normalise(model.X);
-
+ 
 % testJacobian(model);
 
 
-% learning modell parameters
-model           = mteugpLearn( model); 
 [ meanF, varF ] = mteugpGetPredictive( model, model.X);
 [depth, vel, std_d, std_v ] = mteugpUnwrapSeismicParameters(model, meanF, varF );
 mteugpPlotWorldSeismic(data, depth, vel); 
@@ -46,10 +60,7 @@ mteugpPlotWorldSeismic(data, depth, vel);
 Gpred = mteugpGetFwdPredictionsSeismic(depth, vel);
 mteugpPlotPredictionsSeismic(Gpred, model.Y, data.n_layers);
  
-fname = [RESULTSDIR, '/', DATASET, '.mat'];
-save(fname, 'model');
- 
-diary off;
+
  
 end
 

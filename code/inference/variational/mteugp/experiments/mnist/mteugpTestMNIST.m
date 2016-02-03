@@ -24,7 +24,7 @@ if (writeLog)
     diary([RESULTS_DIR,  '/', str, '.log']);
 end
 fname = [RESULTS_DIR, '/', DATASET, '.mat'];
-data           = loadDataMNIST(DATASET, boolSample);
+data           = mteugpLoadDataMNIST(DATASET, boolSample);
 
 % Learning Model
 model              = mteugpGetConfigMNIST( data.xtrain, data.ytrain,linearMethod, D );
@@ -43,33 +43,7 @@ end
 
 
 %
-function dd  = loadDataMNIST(DATASET, boolSample)
-data = [];
-load(['data/', DATASET, '/mnist_data.mat']);
 
-dd.xtrain = data{1}.train_X;
-dd.ytrain = data{1}.train_Y;
-dd.xtest  = data{1}.test_X;
-dd.ytest  = data{1}.test_Y;
-
-clear data;
-
-if (boolSample)
-    dd = subSampleData(dd);
-end 
-end
-
-
-% Just for testing
-function data = subSampleData(data)
-N = 20;
-v = randperm(size(data.xtrain,1));
-idx = v(1:N);
-data.xtrain = data.xtrain(idx,:);
-data.ytrain = data.ytrain(idx,:);
-
-
-end
 
 %
 function [idxMethod, D, boolSample, writeLog] = parseInput(str_idxMethod, str_D, str_boolSample, str_writeLog);

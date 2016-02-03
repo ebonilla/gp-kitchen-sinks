@@ -33,9 +33,9 @@ optConf.ftol     = 1e-3;
 model.globalConf = optConf;
 
 % variational parameter optimization configuration
-optConf.optimizer   = 'nlopt'; % 
+optConf.optimizer   = 'fminunc'; % 
 model.useNewton     = 0; % use own Newton optimizer for var param
-optConf.iter        = 10;  % maximum iterations on variational parameters
+optConf.iter        = 100;  % maximum iterations on variational parameters
 optConf.eval        = 100;
 optConf.ftol        = 1e-5;
 optConf.xtol        = 1e-8; % tolerance for Newton iterations
@@ -44,8 +44,8 @@ optConf.verbose     = 0;
 model.varConf       = optConf;
  
 % Hyperparameter optimization configuration
-optConf.optimizer   = 'nlopt'; % for hyper-parameters
-optConf.iter        = 10;  % maximum iterations for hyper parametes (minfunc parameter)
+optConf.optimizer   = 'fminunc'; % for hyper-parameters
+optConf.iter        = 100;  % maximum iterations for hyper parametes (minfunc parameter)
 optConf.eval        = 100;  % Maxium evals for hyper paramters func (minFunc parameter)
 optConf.ftol        = 1e-3; % Tolerance in f
 optConf.xtol        = 1e-3; % Tolerance in x
