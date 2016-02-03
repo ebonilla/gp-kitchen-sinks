@@ -1,4 +1,4 @@
-function   mteugpTestToyData( idxBench, idxMethod, idxFold, ...
+    function   mteugpTestToyData( idxBench, idxMethod, idxFold, ...
                             D, writeLog  )
 %MTEUGPTESTTOYDATA Tests MTEUGP on a series of toy data examples 
 %   Data generated and evaluated using the model of Steinberg and Bonilla
@@ -12,7 +12,7 @@ if ( ischar(idxBench) )
                         parseInput(idxBench, idxMethod, idxFold, D, writeLog);
 end 
                 
-RESULTS_DIR = 'results';  % 
+RESULTS_DIR = 'tmp2/results';  % 
 
 
 DATASET     = 'toyData';

@@ -33,7 +33,7 @@ M             = reshape(theta, model.D, model.Q);
 diagSigmayinv  = 1./model.sigma2y; % Px1 
 diagSigmawinv = 1./model.sigma2w;  % Qx1  
 gradM  = zeros(size(M));
-
+ 
 switch (model.linearMethod)
     case 'Taylor',
         MuF = model.Phi*M;
