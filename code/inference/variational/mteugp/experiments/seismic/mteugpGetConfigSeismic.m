@@ -69,6 +69,6 @@ model.initFunc    = @(x) mteugpInitSeismic(x,data.doffsets, data.voffsets);
 model.initFromFile = 0;
 end
 
-
+  
 
 

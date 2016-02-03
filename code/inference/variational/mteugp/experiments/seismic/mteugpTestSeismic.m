@@ -1,12 +1,18 @@
-function mteugpTestSeismic( idxMethod, D, boolRealData )
+function mteugpTestSeismic( idxMethod, D, boolRealData, writeLog )
 %MTEUGPTESTSEISMIC Summary of this function goes here
 %   Detailed explanation goes here
+global RESULTSDIR;
+global DATASET;
+
+RESULTSDIR = 'results';
+DATASET = 'seismicData';
+
 data  = mteugpLoadDataSeismic( boolRealData );
 linearMethod  = {'Taylor', 'Unscented'};
 
 
 
-runModel(data, linearMethod{idxMethod}, D);
+runModel(data, linearMethod{idxMethod}, D, writeLog);
 % [dopt, vopt, gpred] = runMAPBenchmark(data, boolRealData);
  
 
@@ -15,11 +21,30 @@ end
 
 
 %% 
-function runModel(data, LinearMethod, D)
-model = mteugpGetConfigSeismic(data, LinearMethod, D);
-model.X  = normalise(model.X);
-model = mteugpLearn( model);
+function runModel(data, linearMethod, D, writeLog)
+global RESULTSDIR;
+global DATASET;
+RESULTSDIR = [RESULTSDIR, '/', DATASET, '/', 'D', num2str(D), '/', linearMethod];
+system(['mkdir -p ', RESULTSDIR]);
+if (writeLog)
+    str = datestr(now, 30);
+    diary([RESULTSDIR,  '/', str, '.log']);
+end
 
+model    = mteugpGetConfigSeismic(data, linearMethod, D);
+model.X  = normalise(model.X);
+model    = mteugpLearn( model); 
+
+%% OK  I AM HERE
+[ meanF, CovF ] = mteugpGetP( model, model.Q, model.Phi );
+[depth, vel, std_d, std_v ] = mteugpUnwrapSeismicParameters( meanF, CovF );
+plotWorldModel(data, depth, vel);
+
+fname = [RESULTSDIR, '/', DATASET, '.mat'];
+save(fname, 'model');
+ 
+diary off;
+ 
 end
 
 

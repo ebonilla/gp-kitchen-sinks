@@ -13,17 +13,9 @@ function  [model, fval, exitCode]  = mteugpOptimizeMeansMap(model)
 if (model.varConf.verbose)
     fprintf('Optimizing Means Starting...\n');
 end
-
-optConf             = model.varConf;
-opt.verbose         = optConf.verbose;
-opt.algorithm       = NLOPT_LD_LBFGS; % numerical opt.
-opt.min_objective   = @(xx) mapObjective(xx, model);
-opt.maxeval         = optConf.eval;
-opt.ftol_rel        = optConf.ftol; % relative tolerance in f
-opt.xtol_rel        = optConf.xtol;
-
-theta0 = model.M(:);
-[theta, fval, exitCode] = nlopt_optimize(opt, theta0);
+optConf = model.varConf;
+theta0  = model.M(:);
+[theta,fval, exitCode]   = mteugpOptimize( @mapObjective, theta0, optConf, [], [], 1, model );
 model.M =  reshape(theta, model.D, model.Q); 
 
 % Updates linearization parametes
