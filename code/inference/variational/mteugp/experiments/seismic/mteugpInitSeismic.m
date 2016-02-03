@@ -12,9 +12,8 @@ model.D         = size(model.Phi,2); % actual number of features
 model.sigma2y =  ones(model.P,1);
 
 % hyper-parameters (of prior on w)
-model.sigma2w = ones(model.Q,1); 
-
-
+model.sigma2w = 1e8*ones(model.Q,1);  
+ 
 % means, lineariz. and covariances
 %model.M = randn(model.D,model.Q);
 %model.M  = 0.01*ones(model.D,model.Q);

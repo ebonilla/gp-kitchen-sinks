@@ -16,13 +16,13 @@ model.Y             = data.ytrain;
 model.X             = data.xtrain;
 
 model.linearMethod = linearMethod; % 'Taylor' or 'Unscented'
-priorDepth         = data.doffsets;
-priorVel           = zeros(size(data.voffsets));
-model.fwdFunc      = @(F) mteugpFwdSeismic(F,priorDepth, priorVel);   
+model.priorDepth   = data.doffsets;
+model.priorVel     = zeros(size(data.voffsets)); 
+model.fwdFunc      = @(F) mteugpFwdSeismic(F,model.priorDepth, model.priorVel);   
 model.jacobian     = 1;  % 1/0 if jacobian is provided
 model.diaghess     = 1;  % 1/0 if diag hessian is provided [not used]
 model.kappa        = 1/2; % parameter of Unscented linearization
-
+ 
 % prediction settings
 model.nSamples     = 1000; % Number of samples for approximating predictive dist.
 model.predMethod   = 'mc'; % {'mc', 'Taylor'}
@@ -35,7 +35,7 @@ model.globalConf = optConf;
 % variational parameter optimization configuration
 optConf.optimizer   = 'nlopt'; % 
 model.useNewton     = 0; % use own Newton optimizer for var param
-optConf.iter        = 100;  % maximum iterations on variational parameters
+optConf.iter        = 10;  % maximum iterations on variational parameters
 optConf.eval        = 100;
 optConf.ftol        = 1e-5;
 optConf.xtol        = 1e-8; % tolerance for Newton iterations
@@ -45,7 +45,7 @@ model.varConf       = optConf;
  
 % Hyperparameter optimization configuration
 optConf.optimizer   = 'nlopt'; % for hyper-parameters
-optConf.iter        = [];  % maximum iterations for hyper parametes (minfunc parameter)
+optConf.iter        = 10;  % maximum iterations for hyper parametes (minfunc parameter)
 optConf.eval        = 100;  % Maxium evals for hyper paramters func (minFunc parameter)
 optConf.ftol        = 1e-3; % Tolerance in f
 optConf.xtol        = 1e-3; % Tolerance in x

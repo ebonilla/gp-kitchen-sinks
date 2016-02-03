@@ -13,7 +13,7 @@ linearMethod  = {'Taylor', 'Unscented'};
 
 
 runModel(data, linearMethod{idxMethod}, D, writeLog);
-% [dopt, vopt, gpred] = runMAPBenchmark(data, boolRealData);
+%[dopt, vopt, gpred] = runMAPBenchmark(data, boolRealData);
  
 
 end
@@ -32,14 +32,20 @@ if (writeLog)
 end
 
 model    = mteugpGetConfigSeismic(data, linearMethod, D);
-model.X  = normalise(model.X);
-model    = mteugpLearn( model); 
+%model.X  = normalise(model.X);
 
-%% OK  I AM HERE
-[ meanF, CovF ] = mteugpGetP( model, model.Q, model.Phi );
-[depth, vel, std_d, std_v ] = mteugpUnwrapSeismicParameters( meanF, CovF );
-plotWorldModel(data, depth, vel);
+% testJacobian(model);
 
+
+% learning modell parameters
+model           = mteugpLearn( model); 
+[ meanF, varF ] = mteugpGetPredictive( model, model.X);
+[depth, vel, std_d, std_v ] = mteugpUnwrapSeismicParameters(model, meanF, varF );
+mteugpPlotWorldSeismic(data, depth, vel); 
+
+Gpred = mteugpGetFwdPredictionsSeismic(depth, vel);
+mteugpPlotPredictionsSeismic(Gpred, model.Y, data.n_layers);
+ 
 fname = [RESULTSDIR, '/', DATASET, '.mat'];
 save(fname, 'model');
  
@@ -78,90 +84,15 @@ plotTravelTimes(data.xtrain, data.ytrain, data.n_layers);
 [dopt, vopt] = fsseRegSolution(data.ytrain', data.n_x, data.n_layers, data.doffsets, data.voffsets, realdata);
 dopt = dopt';
 vopt = vopt';
-gpred = getFwdPredictions(dopt, vopt);
+gpred = mteugpGetFwdPredictionsSeismic(dopt, vopt);
 
-plotWorldModel(data, dopt, vopt);
-plotPredictions(gpred, data.ytrain, data.n_layers);
-
-end
-
-
-%%
-function Gpred = getFwdPredictions(dpred, vpred)
-% dpred [n_x x n_layers]
-F       = mteugpWrapSeismicParameters( dpred, vpred );
-Gpred   = mteugpFwdSeismic(F, 0, 0);
+mteugpPlotWorldSeismic(data, dopt, vopt);
+mteugpPlotPredictionsSeismic(gpred, data.ytrain, data.n_layers);
 
 end
 
 
 
-%%
-function plotPredictions(Gpred, Y, n_layers)
-% plot forward predictions vs real observations
-figure;
-
-layercolor = 'rbgm';
-hold on;
-for layer = 1 : n_layers
-    scatter(Y(:, layer), Gpred(:, layer), 10, layercolor(layer));
-end
-title('Real observations vs predicted observations')
-ylabel('y')
-xlabel('ysim')
-end
-
-
-    
-function plotWorldModel(data, depth, vel)
-% plot world model -- Depth
-% depth (n_x x n_layers)
-% vel   [nx x n_layers)
-
-PlotWorldModelAlistair(data.xtrain', depth', vel', data.n_layers, data.d', data.v');
-
-end
-
-%%
-function PlotWorldModelAlistair(x, fopt, vopt, n_layers, f, v)
-figure;
-plot([x(1), x(end)], [0, 0], 'k', 'linewidth', 3);
-hold on;
-for layer = 1 : n_layers
-    plot(x, -fopt(layer, :), 'b', 'linewidth', 3);
-    if (~isempty(f))
-        plot(x, -f(layer, :), 'r--', 'linewidth', 3);
-    end
-end
-title('Depth of boundaries')
-xlabel('Sensor location (m)')
-ylabel('Height (m)')
-leg = {'Ground', 'Predicted boundaries'};
-if ( ~isempty(v) )
-    leg{end+1} = 'True Boundaies';
-end
-legend(leg);
-    
-    
-% plot world model -- Velocity
-figure;
-hold on;
-for layer = 1 : n_layers
-    plot(x, vopt(layer, :), 'b', 'linewidth', 3);
-    if ( ~isempty(v) )
-    plot(x, v(layer, :), 'r--', 'linewidth', 3);
-    end
-end
-title('Velocity of layers')
-xlabel('Sensor location (m)')
-ylabel('Velocity (m/s)')
-leg = {'Predicted velocities'};
-if ( ~isempty(v) )
-    leg{end+1} = 'True velocities';
-end
-legend(leg);
-
-end
 
 function plotTravelTimes(x, y, n_layers)
 % plot travel times

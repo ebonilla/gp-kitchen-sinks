@@ -10,10 +10,10 @@ function [Gval, dG] = mteugpFwdSeismic(F, doffsets, voffsets)
 n_layers = size(F,2)/2;
 Depth    = F(:,1:n_layers);
 Vel      = F(:,n_layers+1:end);
-
-% accouting for offsets here 
+  
+% accouting for prior offsets here 
 Depth  = bsxfun(@plus, Depth, doffsets);
-Vel    = bsxfun(@plus, Vel, voffsets);
+Vel    = bsxfun(@plus, Vel, voffsets); 
 
 Gval    = G2(Depth, Vel); % EVB's function
 %Gval   = G(Depth', Vel')'; % AR's function
