@@ -1,0 +1,27 @@
+\subsection{Seismic Inversion}
+
+Seismic data from the Otway basin (Pretty Hill formation) is used in this
+experiment. We wish to infer the geometry and layer velocity based on seismic
+reflection data, and a prior on the \emph{mean depth} of the layers (constant
+mean function in a GP). There are four layers in this dataset, which means $P =
+4$ (travel times) and $Q = 8$ (depth of layer boundaries, layer velocities).
+Will we also need a (non-zero) prior on velocities since we have more latent
+tasks than output tasks??
+
+This can be the experimental setup;
+\begin{itemize}
+    \item We can validate our algorithm on 1D slices of this data (about
+        100--300 interpolated seismic travel times).
+    \item We will use a 1D MCMC result as `ground truth' for this problem.
+    \item We need to validate on 1D because MCMC cannot optimise too many knot
+        points for the splines it uses to model the geometry (dimensionality is
+        too high).
+    \item We can also potentially compare to the simple optimisation method
+        (non-probabilistic), especially if we also need to get the gradient of
+        the forward model.
+    \item We can then demonstrate the \eks and \uks on the whole 2D problem,
+        which is inferring a $500\times300$ grid (O(100,000) points) \emph{per
+            task}. We will need an SGD/SVI implementation for this.
+\end{itemize}
+
+
