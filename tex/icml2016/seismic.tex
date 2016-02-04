@@ -7,11 +7,11 @@ within each layer from noisy (interpreted) surface observations of sound
 reflection times, \Outs. We use two datasets for this experiment; a simulated
 world with two randomly generated splines representing geological layers (so we
 have ground-truth), and a real seismic line from Otway basin (Pretty Hill
-formation) which has four geological layers. Each dataset has 50 and 113
-observations per layer respectively.
+formation) which has four geological layers \fix{credit}. Each dataset has 50
+and 113 observations per layer respectively.
 
-In this experiment the inputs, $\Ins$, are the surface locations (metres) of
-the seismic sensors, and we use the following forward model,
+The inputs, $\Ins$, are the surface locations (metres) of the seismic sensors,
+and we use the following forward model,
 \begin{equation}
     \nonlinf_p^\text{time} =
     \begin{cases}
