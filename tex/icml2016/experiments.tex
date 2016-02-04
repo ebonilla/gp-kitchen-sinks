@@ -1,11 +1,17 @@
 \section{Experiments}
-
+%
 \subsection{Synthetic Inversion Problem}
 %
-\begin{table*}
+Table \ref{tab:toyinversions}
+Figure \ref{fig:toyinversions}
+%
+\begin{table*}[h]
 \caption{Performance of the \eks and \uks methods compared to their GP counterparts (\egp and \ugp) on a range of synthetic benchmarks. 
 \gp is the corresponds to the GP analytical solution in the linear case.
+\todo{PUT GP baseline}
+\label{tab:toyinversions}
 }
+
 \begin{center}
 \input{table-toy}
 \end{center}
@@ -21,26 +27,36 @@
 \includegraphics[width=0.31\linewidth]{toyData-UKS-NLPD-fstar} &
 \includegraphics[width=0.31\linewidth]{toyData-UKS-SMSE-gstar} \\
 \end{tabular}
-\caption{The performance of the \eks (top) and \uks (bottom) as a function of the number of features used. }
+\caption{The performance of the \eks (top) and \uks (bottom) as a function of the number of features used. 
+\label{fig:toyinversions}
+}
 \end{figure*}
 %
+%%%%%%%
 \subsection{Binary Handwritten Digit Classification}
-\begin{figure*}
+Figure \ref{fig:usps}
+
+\begin{figure*}[h]
 \centering
 \begin{tabular}{c c}
 \includegraphics[width=0.45\linewidth]{uspsData-NLP}  &
 \includegraphics[width=0.45\linewidth]{uspsData-ERROR-RATE}  
 \end{tabular}
 \caption{The performance of the \eks and \uks (bottom) on the binary classification problem for the \usps dataset as a function of 
-the number of  basis used. \egp and \ugp are the original (full) \gp models.}
+the number of  basis used. \egp and \ugp are the original (full) \gp models.
+\label{fig:usps}
+}
 \end{figure*}
 %
-%
+%%%%%%%%%
 \subsection{Large Scale Classification}
+Table \ref{fig:mnistBinary}
 Here we show the results on \mnist dataset.
-\begin{table}
+\begin{table}[h]
 \caption{The performance of the models on the \mnist dataset for the 
-task of classifying the even digits vs the odd digits.}
+task of classifying the even digits vs the odd digits.
+\label{fig:mnistBinary}
+}
 \begin{tabular}{c c c c c}
 \toprule
 & \multicolumn{2}{c}{NLP} & \multicolumn{2}{c}{Error Rate} \\
