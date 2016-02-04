@@ -7,7 +7,12 @@ global LOADFROMFILE;
 
 RESULTSDIR = 'results';
 DATASET = 'seismicData';
-LOADFROMFILE = 1;
+LOADFROMFILE = 0;
+ 
+
+if (~boolRealData)
+    DATASET = [DATASET, 'Toy'];
+end
 
 data  = mteugpLoadDataSeismic( boolRealData );
 linearMethod  = {'Taylor', 'Unscented'};
@@ -16,10 +21,10 @@ linearMethod  = {'Taylor', 'Unscented'};
 
 runModel(data, linearMethod{idxMethod}, D, writeLog);
 %[dopt, vopt, gpred] = runMAPBenchmark(data, boolRealData);
- 
+  
 
 end
-
+ 
 
 
 %% 
@@ -41,8 +46,8 @@ else
     model             = mteugpGetConfigSeismic(data, linearMethod, D);
     model.resultsFname = fname;
     
-    model.X  = normalise(model.X);
-
+    % model.X  = normalise(model.X); 
+ 
     % learning modell parameters
     model           = mteugpLearn( model); 
 
@@ -52,9 +57,11 @@ end
  
 % testJacobian(model);
 
+mteugpPlotTravelTimesSeismic(data.xtrain, data.ytrain, data.n_layers);
+
 
 [ meanF, varF ] = mteugpGetPredictive( model, model.X);
-[depth, vel, std_d, std_v ] = mteugpUnwrapSeismicParameters(model, meanF, varF );
+[depth, vel, std_d, std_v ] = mteugpUnwrapSeismicParameters(meanF, varF );
 mteugpPlotWorldSeismic(data, depth, vel); 
 
 Gpred = mteugpGetFwdPredictionsSeismic(depth, vel);
@@ -91,7 +98,7 @@ end
 
 %% 
 function [dopt, vopt, gpred] = runMAPBenchmark(data, realdata)
-plotTravelTimes(data.xtrain, data.ytrain, data.n_layers);
+mteugpPlotTravelTimesSeismic(data.xtrain, data.ytrain, data.n_layers);
 [dopt, vopt] = fsseRegSolution(data.ytrain', data.n_x, data.n_layers, data.doffsets, data.voffsets, realdata);
 dopt = dopt';
 vopt = vopt';
@@ -103,22 +110,9 @@ mteugpPlotPredictionsSeismic(gpred, data.ytrain, data.n_layers);
 end
 
 
+ 
 
 
-function plotTravelTimes(x, y, n_layers)
-% plot travel times
-% x: (n_x x 1)
-% y: (n_x x n_layers)
-clf;
-hold on;
-for layer = 1 : n_layers
-    plot(x, y(:, layer), 'g', 'linewidth', 3);
-end
-set(gca,'YDir','reverse');
-title('Travel times');
-xlabel('Sensor location (m)');
-ylabel('Time (s)');
-end
 
 
 
@@ -176,7 +170,7 @@ depth   = reshape(theta(1:L), n_layers, n_x);
 vel       = reshape(theta(L+1:end), n_layers, n_x);
 
 F       = mteugpWrapSeismicParameters( depth', vel' );
-y_sim   = mteugpFwdSeismic(F, 0, 0)';
+y_sim   = mteugpFwdSeismic(F)';
 
 % Data fit
 sse     = sum(sum( (y - y_sim).^2 ));

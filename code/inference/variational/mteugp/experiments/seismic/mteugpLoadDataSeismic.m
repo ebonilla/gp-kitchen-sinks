@@ -67,7 +67,7 @@ v   = vel_model(voffsets, velgrads, x);
 % generate observations,
 % Simulate some noisy y's by adding Gaussian observation noise:
 F = mteugpWrapSeismicParameters(f', v');
-g = mteugpFwdSeismic(F, 0, 0)'; 
+g = mteugpFwdSeismic(F)'; 
 y = zeros(n_layers, n_x);
 for layer = 1 : n_layers
     y(layer, :) = g(layer, :) + randn(1, n_x)*layer_noise(layer);

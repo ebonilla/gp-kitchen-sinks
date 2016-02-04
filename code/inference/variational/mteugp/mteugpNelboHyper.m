@@ -9,6 +9,8 @@ function nelbo  = mteugpNelboHyper( theta, model )
 % Although  sigma2w is a D-dimensional here we consider an isotropic 
 % parameterization sigma2w = exp(theta_w)*ones(D,1)
 %
+global bestNelbo;
+
 global best_M; % to share with mteugpOptimizeHyper
 
 model = mteugpUpdateHyper( model, theta );
@@ -22,7 +24,11 @@ nelbo =  getNelboHyper(model);
 % fprintf('nelbo2 = %.4f\n', nelbo2);
 % fprintf('diff = %.4f\n', (nelbo - nelbo2)')
 
-best_M = model.M; 
+if (nelbo < bestNelbo)
+    best_M = model.M; 
+    bestNelbo = nelbo;
+end
+
 
 end
 
@@ -48,11 +54,12 @@ elbo = sum(sum(bsxfun(@times,G, diagSigmaInv').*G)); % quad term
 
 % remaining terms coming from KL and likelihood after cancelation of traces at optimal M,C
 elbo = elbo +  N*( P*log(2*pi) + sum(log(sigma2y)) );
+M_off      = model.M - model.priorMean;
 for q = 1 : Q
     sigma2w = model.sigma2w(q);
     C       = model.C(:,:,q); % posterior covariance
     cholC   = getCholSafe(C);
-    m       = model.M(:,q); % posterior mean
+    m       = M_off(:,q); % posterior mean
     elbo   = elbo +  (1/sigma2w)*(m'*m)  ...
                   - getLogDetChol(cholC) ...
                   + D*log(sigma2w);
