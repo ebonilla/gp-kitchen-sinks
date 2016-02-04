@@ -64,18 +64,19 @@ computational cost would be $N^3M^3$ in time,
 which renders their approach impractical to large datasets.  
 
 In this paper we propose a scalable multiple-output generalization  
-of the the method of \citet{steinberg-bonilla-nips-2014}.
+of the method of \citet{steinberg-bonilla-nips-2014}.
 We deal with multiple-output problems  by using 
 affine transformations of the latent functions and 
 achieve scalability by introducing random feature approximations 
- of the covariance function of the Gaussian processes, in the style of  \citet{rahimi-recht-nips-2007}, 
+ of the covariance function of the Gaussian processes, in the style of 
+  \citet{rahimi-recht-nips-2007}, 
  all embedded into a variational inference framework. Since 
 \citet{rahimi-recht-nips-2007} refer to their approach as 
 Random Kitchen Sinks,  we will refer to our methods 
 as extended and unscented kitchen sinks, when using 
 the Taylor series approximation or the Unscented Transform approximation 
 in the conditional likelihood respectively. 
- 
+
 Our approach naturally avoids the cubic scalability of the 
 original \egp and \ugp methods \citep{steinberg-bonilla-nips-2014} as a function of the number 
 of training points, with the complexity dominated by 
@@ -101,12 +102,11 @@ geological structure and rock properties (seismic velocities) on simulated and r
 \fix{Discuss that people haven't actually evaluated the full posterior estimation using \rks approaches }
 
 \fix{cite Andrew Wilson}
+ 
 
 
 
-
-
-
+ 
 
 
 

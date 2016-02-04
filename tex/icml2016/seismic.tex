@@ -1,27 +1,49 @@
 \subsection{Seismic Inversion}
 
-Seismic data from the Otway basin (Pretty Hill formation) is used in this
-experiment. We wish to infer the geometry and layer velocity based on seismic
-reflection data, and a prior on the \emph{mean depth} of the layers (constant
-mean function in a GP). There are four layers in this dataset, which means $P =
-4$ (travel times) and $Q = 8$ (depth of layer boundaries, layer velocities).
-Will we also need a (non-zero) prior on velocities since we have more latent
-tasks than output tasks??
+In this experiment we demonstrate the \eks and \uks performing a
+one-dimensional seismic inversion. The goal is to infer the geometry of
+different subsurface geological layers and the seismic propagation velocity
+within each layer from (interpreted) surface observations of sound reflection
+times. We use two datasets for this experiment; a simulated world with two
+randomly generated splines representing geological layers (so we have
+ground-truth), and a real seismic line from Otway basin (Pretty Hill formation)
+which has four geological layers. Each dataset has 50 and 113 observations per
+layer respectively.
 
-This can be the experimental setup;
+In this experiment the inputs, $\Ins$, are the surface locations (metres) of
+the seismic sensors, and we use the following forward model,
+\begin{equation}
+    \nonlinf_p^\text{time} =
+    \begin{cases}
+        2\frac{\latents_p^\text{depth} - \latents_{p-1}^\text{depth}}
+        {\latents_p^\text{vel}} + \nonlinf_{p-1}^\text{time},
+        & \text{if } p > 0 \\
+        2\frac{\latents_0^\text{depth}}{\latents_0^\text{vel}},
+        & \text{if } p = 0
+    \end{cases}
+\end{equation}
+Where there are $p$ output tasks (reflection times from each layer),
+$\nonlinf_p^\text{time}$, and there are two types of latent input tasks;
 \begin{itemize}
-    \item We can validate our algorithm on 1D slices of this data (about
-        100--300 interpolated seismic travel times).
-    \item We will use a 1D MCMC result as `ground truth' for this problem.
-    \item We need to validate on 1D because MCMC cannot optimise too many knot
-        points for the splines it uses to model the geometry (dimensionality is
-        too high).
-    \item We can also potentially compare to the simple optimisation method
-        (non-probabilistic), especially if we also need to get the gradient of
-        the forward model.
-    \item We can then demonstrate the \eks and \uks on the whole 2D problem,
-        which is inferring a $500\times300$ grid (O(100,000) points) \emph{per
-            task}. We will need an SGD/SVI implementation for this.
+    \item $\latents_p^\text{depth}\!\brac{\Ins}$, the geological depth of layer $p$
+        corresponding to each surface location,
+    \item $\latents_p^\text{vel}\!\brac{\Ins}$, the velocity of layer $p$ 
+        corresponding to each surface location.
 \end{itemize}
+Naturally then $\ltdim = 2\otdim$, and the problem is under-constrained since
+there is an infinite set of layer depths and velocities that can generate the
+reflection times. To help constrain our models, we put a prior on the average
+depth of each layer.
 
+We compare against two baseline methods, the first baseline model is a
+(gradient free) maximum a-posteriori approach that optimises the latent task
+points directly \fix{details below/supp material}. The second is a
+probabilistic approach which parameterises the latent tasks as splines (to keep
+dimensionality low) and learns the locations of the knot points using MCMC
+\fix{cite stateline, see below/supp material for details.}
 
+\fix{TODO}:
+\begin{itemize}
+    \item NLPD and MSE on the simulation data
+    \item Plot of the Otway data
+\end{itemize}
