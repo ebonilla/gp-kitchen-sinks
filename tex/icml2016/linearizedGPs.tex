@@ -7,8 +7,9 @@ While the former problem  is the standard multi-task supervised learning setting
 to the latter  as a probabilistic joint inversion problem, as we are given a forward mapping from 
 latent functions to noiseless outputs but not the reverse. 
 
-A fairly flexible modeling approach places independent zero-mean Gaussian process (GP) priors over 
-the latent functions $\{ f_q \}$ with covariance functions $\kernel_q(\cdot, \cdot)$ and assumes iid observations given these latent functions. When these function are realized at the training data,
+A  flexible modeling approach places independent zero-mean Gaussian process (GP) priors over 
+the latent functions $\{ f_q \}$ with covariance functions $\kernel_q(\cdot, \cdot)$ and assumes
+ \iid observations given these latent functions. When these function are realized at the training data,
 we obtain the following prior and likelihood models:
 \begin{align}
 	\label{eq:gp-model-1}
@@ -27,7 +28,7 @@ $p(\latents | \Ins, \Outs)$. Unfortunately, this posterior distribution is, in g
 intractable due to the non-linearities in $\nonlinf$, and one must resort to approximations.
 %
 \subsection{Variational Inference in Linearized GP Models}
-\citet{steinberg-bonilla-nips-2014} have recently proposed a variational inference algorithm that
+\citet{steinberg-bonilla-nips-2014} have recently proposed a variational  algorithm that
 addresses the above inference problem for single output observations ($Q=1$).  
 Such an algorithm relies upon the linearization of the forward model around the posterior 
 mean, allowing for an analytic approximation of the evidence lower bound, which in turns 
@@ -35,7 +36,7 @@ enables the optimization of the variational parameters and hyperparameters withi
 but effective optimization procedure.  
 
 To build such linearizations they use a Taylor series approximation and the unscented transform 
-and, consequently, they refer to their methods to as the Extended Gaussian Process (\egp) and 
+and, consequently, they refer to their methods  as the Extended Gaussian Process (\egp) and 
 the Unscented Gaussian Process (\ugp). 
 The main advantage of their algorithms is that the linear
 approximation is local and adaptive, as it is constructed around the posterior mean for a

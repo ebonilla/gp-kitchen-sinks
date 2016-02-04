@@ -1,8 +1,10 @@
 \subsection{Posterior Approximation}
- Let's now make the simplifying assumption that posterior factorises and has the
+ Let us now make the simplifying assumption that posterior factorizes over 
+ latent functions and has the
 form,
 \begin{equation}
-    \qrob{\Weights} = \prod^Q_{q=1} \gausC{\weights_q}{\pweights_q, \pocov_q},
+	\label{eq:posteriorW}
+    \qrob{\Weights} = \prod^Q_{q=1} \gausC{\weights_q}{\pweights_q, \pocov_q}.
 \end{equation}
 We can use variation inference to learn this posterior approximation, and
 thereby allowing us to infer the posterior latent tasks,
@@ -13,7 +15,16 @@ thereby allowing us to infer the posterior latent tasks,
 %$\covariance [\latents_q] \approx \Feats \pweights_q  \Feats^T$.
 \end{equation}
 \todo{FIX clash in notation: q for posterior approx and for indexing}
+%
+%
 \subsection{Evidence Lower Bound}
+%
+With the prior specified in Equation \eqref{eq:prior}; the likelihood 
+specified in Equation \eqref{eq:likelihood}; and the approximate 
+posterior defined in Equation \eqref{eq:posteriorW}, we are now ready 
+to write down the variational lower bound that we aim to maximize 
+in order to learn the parameters of our model.
+%
 The variational evidence lower bound is,
 \begin{equation}
     \Fengy = \expec{q\Weights}{\log \probC{\Outs}{\Weights, \Ins}}
@@ -108,4 +119,11 @@ approximate posterior covariance,
         + \sum^N_{n=1} \feats_n\Linvec_{nq}\transpose\Lcov\inv
         \Linvec_{nq}\feats_n\transpose}\inv.
 \end{equation}
+\fix{TODO: talk about MAP objective here}
+
+
+
+
+
+
  

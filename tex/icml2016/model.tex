@@ -4,7 +4,7 @@ Our starting point to scale up linearized GP models builds upon the work of
 \citeauthor{rahimi-recht-nips-2007} \citeyearpar{rahimi-recht-nips-2007,rahimi-recht-nips-2008},  
 who used Bochner's theorem regarding the relationship between 
 a kernel (a positive definite function) and the Fourier transform of a non-negative measure. In particular, 
-when such a non-negative measure exists, one obtains  Wiener-Khintchine's theorem, which establishes the 
+when such a non-negative measure exists, one obtains  Wiener-Khintchine's theorem, which establishes  
  the Fourier duality of the covariance function of a stationary  process and its spectral density:
 \begin{align}
 	\label{eq:fourier}
@@ -25,7 +25,7 @@ $\singlefeatfunc{\x}{i}$ corresponds to the $i\mth$ component of that map.
 An example of a feature vector construction in the above approximation is:
 \begin{align}
 	[\singlefeatfunc{\x}{i} ,\singlefeatfunc{\x}{i+1} ] &= \frac{1}{\sqrt{D}} [ \cos(2 \pi \ffourier_i^T \x) , \sin(2 \pi \ffourier_i^T \ins) ] \text{,}\\
-		\ffourier_i & \sim \gausC{\ffourier_i}{\vec{0}, \varfeat \ident{d}} 
+		\ffourier_i & \sim \gausC{\ffourier_i}{\vec{0}, \varfeat \ident{d}} \text{,}
 \end{align}
 for $i=1, \ldots, D-1$,  which in fact is a mapping into a $2 D-$dimensional feature space. 
 \citet{rahimi-recht-nips-2007} used the above feature map to approximate the commonly used 
@@ -80,7 +80,7 @@ scalability problem in GP models. However, we note that the likelihood model
 in Equation  \eqref{eq:likelihood}, still involves a non linear transformation 
 of the corresponding latent functions, which yields, as before, intractable posteriors. 
 In order to address this problem, we will build upon the work of 
-\cite{steinberg-bonilla-nips-2014}, and develop a variational inference procedure 
+\citet{steinberg-bonilla-nips-2014}, and develop a variational inference procedure 
 that exploits linearization methods around the posterior mean.
 
 

@@ -1,9 +1,9 @@
 \subsection{Hyperparameter Learning}
 Once we have found the optimum $\pWeights$ and $\pocov_q$'s, we can optimise
-$\Fengy$ with respect to the parameters $\Lcov$ and $\khypers$ assuming the
+$\Fengy$ with respect to the parameters $\Lcov$, $\{ \prvar_q \}$ and $\khypers$, assuming the
 features are parameterized $\feats_n = \featfunc{\ins_n, \khypers}$. Once we
-have found optimum $\Lcov$ and $\khypers$, we then re-optimise for the
-posterior parameters etc.\ in a generalized  variational-EM like procedure.
+have found the optimum $\Lcov$, $\{ \prvar_q \}$, $\khypers$, we then re-optimize for the
+posterior parameters  in a generalized  variational-EM like procedure.
 
 Once we have determined the optimum posterior parameters, the trace term in
 Equation \eqref{eq:KL} cancels out with the only term in Equation \eqref{eq:ell_approx} 
@@ -23,7 +23,7 @@ to give,
         - \log\deter{\pocov_q} + D \log \prvar_q}.
     \label{eq:modeF}
 \end{multline}
-Unfortunately, $\pWeights\opt$ is an implicit function of both $\Lcov$ and
+Unfortunately, the optimum mean ($\pWeights\opt$) is an implicit function of both $\Lcov$ and
 $\khypers$, and so in the case of the EGP, we would require second and higher
 derivatives of $\nonlinf$ in order to calculate partial derivatives of
 \eqref{eq:modeF} with respect to these parameters. 
@@ -32,6 +32,9 @@ derivatives of $\nonlinf$ in order to calculate partial derivatives of
 %    use repeated applications of statistical linearization to approximate the
 %    derivatives.}. 
     However, if we assume \bigo{10} tasks, P, and a lightly
-parameterised feature function, $\featfunc{\cdot}$, then we can use numerical 
-optimisation methods such as COBYLA and BOBYQA.
+parameterized feature function, $\featfunc{\cdot}$, then we can use numerical 
+optimization methods such as COBYLA and BOBYQA. 
 
+
+
+ 

@@ -1,7 +1,7 @@
 \section{Linearization Methods}
 So far we have assumed that we are given the linearization parameters $\{\Linmat_n, \intcpt_n\}$ that allow us to 
 approximate locally the nonlinear forward model given in Equation   \eqref{eq:linapprox}. As 
-$\nonlin{\cdot}$  is a function of our latent functions approximation ${\Weights_n\feats_n}$,  
+$\nonlin{\cdot}$  is a function of our latent functions approximation ${\Weights \feats_n}$,  
 it makes sense to linearize around our current posterior estimates of these latent functions, 
 $\hatlatentsn =\pWeights \feats_n$. In this section we describe two methods for linearizing 
 the  forward model around these posterior estimates within our variational 
@@ -76,7 +76,7 @@ $\{ \Sfunc_{i,n},  \Sobs_{i,n}, \Sw_{i} \}$ yields the solution:
 \newcommand{\ybar}{\bar\outs_n}
 \newcommand{ \Cross}{\mat{\Gamma}_n}
 \begin{align}
-	 \intcpt_n & = \ybar - \Linmat_n \pWeights \feats_n \\
+	 \intcpt_n & = \ybar - \Linmat_n \pWeights \feats_n \text{,} \\
 	\Linmat_n &= \Cross \covfn\inv \text{,}
 \end{align}
 where  $\covfn$ is the diagonal matrix given in Equation \eqref{eq:covqf}, and 
