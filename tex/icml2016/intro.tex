@@ -1,34 +1,104 @@
 \section{Introduction}
 % 
+In this paper we are interested in inference in models with Gaussian process (\gp)
+priors and  general (non-linear) likelihoods. These models can be used as   
+nonparametric probabilistic approaches to standard machine learning settings such as 
+regression and classification \cite{rasmussen-williams-book}. In such settings 
+one places a  \gp prior over  latent functions, which are passed through the 
+likelihood in order to model the \emph{observable} targets.  Therefore, in these 
+situations, the latent functions are nuisance parameters and are important only 
+as a means to have greater flexibility than their parametric counterparts.
 
-IDEAS TO DEVELOP IN THE INTRO:
+In other applications, such as in the natural and Earth sciences, the latent functions 
+are quantities of interest,  which are passed through a domain-specific \emph{forward model}
+in order to generate the observations.  As there is knowledge of the forward mapping of 
+how the latent functions relate to the observations but not the converse mapping, these
+applications are usually referred to as \emph{inversion} problems.
+For example, in a geophysical inversion one might be interested in inferring rock properties (such as wave velocities) 
+and the structural geometry of the  region   (such as boundaries between 
+different types of formations) from geophysical data (such as wave travel times). 
+There are strong constraints on how the latent functions (e.g.~rock properties) related
+ to the given observations, and these constraints are implemented in the forward model. 
+ Clearly, in these types of applications, the goal is not only making good probabilistic predictions of the 
+ observables but also having good estimates of the posterior over  the latent functions.
 
-\citet{steinberg-bonilla-nips-2014}
+Both applications mentioned above,  standard machine learning tasks and inversion problems, 
+present three key modeling and inference challenges when having Gaussian process (\gp) priors. 
+The first challenge is scalability, as \gp{s} are notorious for the poor scalability as a function 
+of the number of training points. The second challenge is multi-output and multi-task task learning, 
+as required by problems such as multi-output regression, multi-class classification 
+or inversion over a multi-layer geological structure (where each layer is a task). 
+The  third challenge is that of dealing with non-linear likelihoods as the posterior 
+over the latent functions is analytically intractable.  
+
+% MOVE TO RELATED WORK
+%Most previous work in the \gp community has focused on addressing these challenges in 
+%isolation. For example, with regards to scalability, the seminar work of \citet{quinonero2005unifying} allowed the 
+%community to understand most sparse approximations in \gp models from a probabilistic perspective, 
+% and the   framework of \citet{titsias2009variational} has become the  underpinning  machinery
+% of most modern scalable approaches to \gp regression and classification. 
+% With regards to multi-output and multi-task learning,  one of the most notable approaches has 
+% been developed by  \citet{alvarez-lawrence-nips-08} using the convolution formalism. 
+% Finally, concerning non-linear likelihoods, \citet{opper-arch-nc-2009} presented 
+% the seemingly surprising (but powerful) result of estimating a full Gaussian posterior 
+%efficiently for general \iid  likelihoods.
+
+Our starting point to address these challenges is the model proposed by 
+\citet{steinberg-bonilla-nips-2014} who showed that it is possible to obtain
+good posterior estimates using  approximations of the non-linear likelihood 
+via a Taylor series expansion or the Unscented Transform \citep{Julier2004}. 
+They refer to the two different flavors of their approach as the 
+extended Gaussian process (\egp) and the unscented Gaussian process (\ugp).
+One of the fundamental reasons why such linearizations are effective is 
+because of their locality and adaptivity, as they are 
+constructed around the current posterior estimate, 
+which is iteratively updated within a variational inference procedure.
+
+While the method of \citet{steinberg-bonilla-nips-2014} is a surprisingly simple and 
+effective way to tackle nonlinearities in the likelihoods, their approach  
+does not deal with the other two challenges mentioned above, namely multi-task learning 
+and scalability. Indeed their method is specific to single-output problems and 
+inherits the cubic scalability of original \gp models as a function of the number of 
+training points. This scalability problem is exacerbated when formulating  multi-task 
+our multiple-output settings, as  naively with $N$ data points and $M$ tasks their
+computational cost would be $N^3M^3$ in time, 
+which renders their approach impractical to large datasets.  
+
+In this paper we propose a scalable multiple-output generalization  
+of the the method of $\citet{steinberg-bonilla-nips-2014}$.
+We deal with multiple-output problems  by using 
+affine transformations of the latent functions and 
+achieve scalability by using random feature approximations 
+to the covariance function of the Gaussian processes in the style 
+of  \citet{rahimi-recht-nips-2007}. Since 
+\citet{rahimi-recht-nips-2007} refer to their approach as 
+Random Kitchen Sinks,  we will refer to our methods 
+as extended and unscented kitchen sinks, when using 
+theTaylor series  or the Unscented Transform approximations 
+to the conditional likelihood respectively. 
+
+Our approach naturally avoids the cubic scalability of the 
+original \egp and \ugp methods as a function of the number 
+of training points, with the complexity dominated by 
+the inverse of the feature covariance of size $D$, 
+$\bigO(D^3)$. Our experiments show that 
 
 
-- We are interested in inference in GP models with non-linear likelihoods
-not only to make probabilistic predictions of the observables but also in having
-good estimates of the posterior of the latent function
-
-- the model proposed by S\&B \citep{steinberg-bonilla-nips-2014}
-  is good. their main insight is that we can perform 
-local approximations of the non-linear likelihood by using either Taylor series 
-approximations  or the Unsctened transform. The nice thing is that such approximations
-are local and adaptive in that their are constructed around the current posterior 
-mean, which is updated within a variational inference procedure 
-
-- Unfortunately the model of S\&B is  is single-task and non-scalable. 
-Scaling such a model naively with N data points and M tasks would be $N^3M^3$,
-which is completely unfeasible
-
-- We propose a multi-task scalable approximation of  the inference method of S\&B 
-* multi-task is achieved by linear combination of latent function
-* scalability is achieved through RKS  projections 
-* as in the original model, nonlinearity is dealt trough local linearization during 
-variational inference
 * say about the complexity of the new model 
 
-\todo{Discuss that people haven't actually evaluated the full posterior estimation using \rks approaches }
+\fix{TODO: need a couple more citations in the intro}
+\fix{Discuss that people haven't actually evaluated the full posterior estimation using \rks approaches }
+
+\fix{cite Andrew Wilson}
+
+
+
+
+
+
+
+
+
 
 
 
