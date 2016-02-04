@@ -22,15 +22,18 @@ the seismic sensors, and we use the following forward model,
         & \text{if } p = 0
     \end{cases}
 \end{equation}
-Where there are $p$ output tasks (reflection times), $\nonlinf_p^\text{time}$,
-and there are two types of latent input tasks;
-$\latents_p^\text{depth}\!\brac{\Ins}$ -- the geological depth of layer $p$
-corresponding to each surface location, $\latents_p^\text{vel}\!\brac{\Ins}$ --
-the velocity of layer $p$ corresponding to each surface location. Naturally
-then $\ltdim = 2\otdim$, and the problem is under-constrained since there is
-an infinite set of layer depths and velocities that can generate the reflection
-times. To help constrain our models, we put a prior on the average depth of
-each layer.
+Where there are $p$ output tasks (reflection times from each layer),
+$\nonlinf_p^\text{time}$, and there are two types of latent input tasks;
+\begin{itemize}
+    \item $\latents_p^\text{depth}\!\brac{\Ins}$, the geological depth of layer $p$
+        corresponding to each surface location,
+    \item $\latents_p^\text{vel}\!\brac{\Ins}$, the velocity of layer $p$ 
+        corresponding to each surface location.
+\end{itemize}
+Naturally then $\ltdim = 2\otdim$, and the problem is under-constrained since
+there is an infinite set of layer depths and velocities that can generate the
+reflection times. To help constrain our models, we put a prior on the average
+depth of each layer.
 
 We compare against two baseline methods, the first baseline model is a
 (gradient free) maximum a-posteriori approach that optimises the latent task
