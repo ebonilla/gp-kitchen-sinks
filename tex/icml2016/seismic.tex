@@ -3,12 +3,12 @@
 In this experiment we demonstrate the \eks and \uks performing a
 one-dimensional seismic inversion. The goal is to infer the geometry of
 different subsurface geological layers and the seismic propagation velocity
-within each layer from (interpreted) surface observations of sound reflection
-times. We use two datasets for this experiment; a simulated world with two
-randomly generated splines representing geological layers (so we have
-ground-truth), and a real seismic line from Otway basin (Pretty Hill formation)
-which has four geological layers. Each dataset has 50 and 113 observations per
-layer respectively.
+within each layer from noisy (interpreted) surface observations of sound
+reflection times, \Outs. We use two datasets for this experiment; a simulated
+world with two randomly generated splines representing geological layers (so we
+have ground-truth), and a real seismic line from Otway basin (Pretty Hill
+formation) which has four geological layers. Each dataset has 50 and 113
+observations per layer respectively.
 
 In this experiment the inputs, $\Ins$, are the surface locations (metres) of
 the seismic sensors, and we use the following forward model,
@@ -22,18 +22,19 @@ the seismic sensors, and we use the following forward model,
         & \text{if } p = 0
     \end{cases}
 \end{equation}
-Where there are $p$ output tasks (reflection times from each layer),
+Where there are $\otdim$ output tasks -- reflection times from each layer,
 $\nonlinf_p^\text{time}$, and there are two types of latent input tasks;
 \begin{itemize}
-    \item $\latents_p^\text{depth}\!\brac{\Ins}$, the geological depth of layer $p$
-        corresponding to each surface location,
+    \item $\latents_p^\text{depth}\!\brac{\Ins}$, the geological depth of layer
+        $p$ corresponding to each surface location,
     \item $\latents_p^\text{vel}\!\brac{\Ins}$, the velocity of layer $p$ 
         corresponding to each surface location.
 \end{itemize}
-Naturally then $\ltdim = 2\otdim$, and the problem is under-constrained since
-there is an infinite set of layer depths and velocities that can generate the
-reflection times. To help constrain our models, we put a prior on the average
-depth of each layer.
+Each of these input tasks corresponds to an output task, so we have also
+indexed by $p$ instead of $q$. Naturally then $\ltdim = 2\otdim$, and the
+problem is under-constrained since there is an infinite set of layer depths and
+velocities that can generate the reflection times. To help constrain our
+models, we put a prior on the average depth of each layer.
 
 We compare against two baseline methods, the first baseline model is a
 (gradient free) maximum a-posteriori approach that optimises the latent task
