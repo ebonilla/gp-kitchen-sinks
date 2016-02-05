@@ -60,17 +60,19 @@ observation noise variance parameter was introduced for each of the four
 observed taks. Independent Gaussian priors are placed on the basis weights, and 
 a Gamma prior on each of the per-task observation variances.
 
-The EKS and UKS methods were applied to the same problem. We adapted the MCMC 
-prior by projecting our learned basis weights into the space of the radial 
-basis functions, and used the same prior on per-task observation variances. 
+The EKS and UKS methods were applied to the same problem, using an equivalent 
+prior to the MCMC approach.
+%We adapted the MCMC 
+%prior by projecting our learned basis weights into the space of the radial 
+%basis functions, and used the same prior on per-task observation variances. 
 The results of both the EKS and UKS methods were very similar. Figure 
 \ref{fig:seismic_result} shows the results from the EKS method inferring the 
 distribution over layer boundary depths (top) and seismic transmission 
 velocities (bottom). Draws from the above MCMC baseline are overlaid. Clearly
 the MCMC draws are in agreement with the structure of the layer velocities and 
-depths. However, we do note that the MCMC draws are smoother - this is 
-because the limited number of radial basis functions used in the MCMC is 
-restricting the ability of the baseline MCMC to infer high frequency details.
+depths. However, we do note that the MCMC draws are smoother. This may be 
+because the limited number of radial basis functions used in the MCMC has 
+restricted the ability of the baseline MCMC to infer high frequency details.
 
 \begin{figure}
 \includegraphics[width=0.4\textwidth]{seismicData-depth-Taylor-1000} \\
