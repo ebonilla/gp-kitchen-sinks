@@ -11,7 +11,7 @@ TRGFIGDIR = 'tex/icml2016/figures';
  
 RESULTSDIR = 'results';
 DATASET = 'seismicData';
-LOADFROMFILE = 0;
+LOADFROMFILE = 1;
 SAVEPLOTS = 1;
 
 if (~boolRealData)

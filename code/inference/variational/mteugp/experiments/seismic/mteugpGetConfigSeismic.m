@@ -39,7 +39,7 @@ varDepth       =  bsxfun(@plus, zeros(data.n_layers, model.N) , data.h_std.^2)';
 varVel         =  bsxfun(@plus, zeros(data.n_layers, model.N) , data.v_std.^2)';
 F              = [varDepth, varVel]; % N X Q
 val            = sum(model.Phi.*model.Phi,2); % (Nx1)
-model.priorVar = mean(bsxfun(@rdivide, F, val),1)';
+model.priorVar = mean(bsxfun(@rdivide, F, val),1)'; 
  
    
 % prior noise
