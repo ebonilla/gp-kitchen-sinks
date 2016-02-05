@@ -1,7 +1,17 @@
 \begin{abstract}
-The Abstract paragraph should be indented 0.25 inch (1.5 picas) on
-  both left and right-hand margins. Use 10~point type, with a vertical
-  spacing of 11~points. The {\bf Abstract} heading must be centered,
-  bold, and in point size 12. Two line spaces precede the
-  Abstract. The Abstract must be limited to one paragraph.
+
+    In this paper we propose a scalable multiple-output generalization of
+    unscented and extended Gaussian processes. These algorithms have been
+    designed to incorporate general nonlinear transformations in their
+    likelihood functions by linearizing them using a Taylor series or the
+    Unscented Transform in a variational inference framework, in which we also
+    optimise all model parameters and hyperparameters. We achieve scalability
+    by using random feature approximations of Gaussian process covariance
+    functions, such as Random Kitchen Sink kernel approximations. We compare
+    the new generalized algorithms on the same datasets as the original
+    single-task algorithms. We also demonstrate the new algorithms classifying
+    MNIST digits -- a task too large for the original algorithms, and
+    performing a seismic inversion to infer the subsurface geological
+    structures -- which is inherently a multi-task problem.
+
 \end{abstract}
