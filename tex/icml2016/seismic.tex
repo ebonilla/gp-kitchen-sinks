@@ -6,11 +6,13 @@ geometry of the interfaces between subsurface geological layers and the
 seismic propagation velocity within each layer from noisy surface observations
 of the sound reflection times, \Outs. 
 % We use two datasets for this experiment; a simulated
-%world with two randomly generated splines representing geological layers (providing a ground-truth), 
-Our dataset is part of a real interpreted (specifying reflection time
-estimates rather than raw sound waves) seismic survey from the Otway basin in
-South Australia.  It contains a line of 113 sites over the Pretty Hill region,
-providing reflection times for the four shallowest layer formations.
+%world with two randomly generated splines representing geological layers
+%(providing a ground-truth), 
+Our dataset is part of a real seismic survey of the Otway basin 
+region in Victoria, Australia. The survey is interpreted, specifying reflection time
+estimates rather than raw amplitudes. Our transect contains 113 sites with 
+four interface reflections per site. 
+% providing reflection times for the four shallowest layer formations.
 % Each dataset has 50 and 113 observations per layer respectively.
 
 The inputs, $\Ins$, are the surface locations (metres) of the seismic sensors,
@@ -35,12 +37,11 @@ $\latents_p^\text{depth} = \max\{\latents_p^\text{depth, input},
 \latents_{p-1}^\text{depth}\}~\forall p$, to create geologically valid depth
 layers.
 
-Naturally, we wish to infer both the depth and velocity of four layers below
-each survey site. We can see that $\ltdim = 2\otdim$, and the problem is
-under-constrained since there is an infinite set of layer depths and
-velocities that can generate the reflection times. To help constrain our
-models, we center the latent function priors on average depths and velocities
-of each layer.
+We wish to infer both the depth and velocity of each of the four layers.  We
+can see that $\ltdim = 2\otdim$, and the problem is under-constrained since
+there is an infinite set of layer depths and velocities that can generate the
+reflection times. To help constrain our models, we center the latent function
+priors on average depths and velocities of each layer.
 
 %We compare against two baseline methods. The first baseline applies
 %gradient-free optimisation to identify the maximum a-posteriori latent tasks.
