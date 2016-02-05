@@ -16,8 +16,9 @@ model.sigma2y =  ones(model.P,1);
 %model.sigma2w = 1e8*ones(model.Q,1);  
 % THIS IS GOOD
 % model.sigma2w = [1e8*ones(model.Q/2,1); 1e8*ones(model.Q/2,1)];  
-totalVar      = mean(mean(model.Phi*model.Phi'))';
-model.sigma2w =[1e8*ones(model.Q/2,1); 1e8*ones(model.Q/2,1)]/totalVar;
+%totalVar      = mean(mean(model.Phi*model.Phi'))';
+%model.sigma2w =[1e8*ones(model.Q/2,1); 1e8*ones(model.Q/2,1)]/totalVar;
+model.sigma2w = 1e27*ones(model.Q,1);  
 
 % means, lineariz. and covariances
 %model.M = randn(model.D,model.Q);

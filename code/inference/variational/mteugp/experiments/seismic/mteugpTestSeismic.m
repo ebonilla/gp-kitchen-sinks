@@ -8,7 +8,7 @@ global LOADFROMFILE;
 RESULTSDIR = 'results';
 DATASET = 'seismicData';
 LOADFROMFILE = 0;
- 
+  
 
 if (~boolRealData)
     DATASET = [DATASET, 'Toy'];
@@ -121,9 +121,13 @@ end
 function [dopt, vopt] = fsseRegSolution(y, n_x, n_layers, doffsets, voffsets, realdata)
 
 if (~realdata)
-    l_off = 1e-8;
+    l_off = 0;
     l_v = 0;
-    l_d = 1e-7;
+    l_d = 0;
+% TODO: [EVB] Uncomment me below    
+%    l_off = 1e-8;
+%    l_v = 0;
+%    l_d = 1e-7;
 else
     l_off = 0;
     l_v = 1e-5;
