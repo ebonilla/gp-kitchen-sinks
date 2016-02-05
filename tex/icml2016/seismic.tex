@@ -15,10 +15,8 @@ providing reflection times for the four shallowest layer formations.
 
 The inputs, $\Ins$, are the surface locations (metres) of the seismic sensors,
 and we use the following forward model,
-\begin{align}
-    \latents_p^\text{depth} &= \max\cbrac{\latents_p^\text{depth, input},
-        \latents_{p-1}^\text{depth}} \quad \forall p, \label{eq:clip} \\
-    \nonlinf_p^\text{time} &=
+\begin{equation}
+    \nonlinf_p^\text{time} =
     \begin{cases}
         2\frac{\latents_p^\text{depth} - \latents_{p-1}^\text{depth}}
         {\latents_p^\text{vel}} + \nonlinf_{p-1}^\text{time},
@@ -26,14 +24,16 @@ and we use the following forward model,
         2\frac{\latents_0^\text{depth}}{\latents_0^\text{vel}},
         & \text{if } p = 0
     \end{cases}
-\end{align}
-Where there are $\otdim$ output tasks -- reflection times from each layer,
+\end{equation}
+where there are $\otdim$ output tasks -- reflection times from each layer,
 $\nonlinf_p^\text{time}$, and there are two types of latent input tasks;
 $\latents_p^\text{depth}\!\brac{\Ins}$, the geological depth of layer $p$
 corresponding to each surface location, and
 $\latents_p^\text{vel}\!\brac{\Ins}$, the velocity of layer $p$ below each
-surface input location. Equation \eqref{eq:clip} clips overlapping estimated
-(input) layers to create valid depth layers.
+surface input location. We also clip overlapping input layers,
+$\latents_p^\text{depth} = \max\{\latents_p^\text{depth, input},
+\latents_{p-1}^\text{depth}\}~\forall p$, to create geologically valid depth
+layers.
 
 Naturally, we wish to infer both the depth and velocity of four layers below
 each survey site. We can see that $\ltdim = 2\otdim$, and the problem is
@@ -71,7 +71,7 @@ depths. However, we do note that the MCMC draws are smoother. This may be
 because the limited number of radial basis functions used in the MCMC has 
 restricted the ability of the baseline MCMC to infer high frequency details.
 
-\begin{figure}
+\begin{figure}[htb]
 \includegraphics[width=0.4\textwidth]{seismicData-depth-Taylor-1000} \\
 \includegraphics[width=0.4\textwidth]{seismicData-vel-Taylor-1000}
 \caption{Results of the \eks on the seismic inversion problem. The inferred 
