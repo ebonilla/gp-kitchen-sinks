@@ -1,14 +1,14 @@
 \subsection{Seismic Inversion}
 
 In this experiment we demonstrate the \eks and \uks performing a
-one-dimensional seismic inversion. The goal is to infer the geometry of
-different subsurface geological layers and the seismic propagation velocity
-within each layer from noisy (interpreted) surface observations of sound
+one-dimensional seismic inversion. The goal is to infer both the geometry of
+the interfaces between subsurface geological layers and the seismic propagation velocity
+within each layer from noisy, interpreted surface observations of sound
 reflection times, \Outs. We use two datasets for this experiment; a simulated
-world with two randomly generated splines representing geological layers (so we
-have ground-truth), and a real seismic line from Otway basin (Pretty Hill
-formation) which has four geological layers \fix{credit}. Each dataset has 50
-and 113 observations per layer respectively.
+world with two randomly generated splines representing geological layers (providing a ground-truth), 
+and a real seismic line from the Otway basin in South Australia (Pretty Hill
+formation) providing reflection times for the four main layer formations.
+Each dataset has 50 and 113 observations per layer respectively.
 
 The inputs, $\Ins$, are the surface locations (metres) of the seismic sensors,
 and we use the following forward model,
@@ -34,18 +34,26 @@ $\nonlinf_p^\text{time}$, and there are two types of latent input tasks;
     \item $\latents_p^\text{vel}\!\brac{\Ins}$, the velocity of layer $p$ 
         corresponding to each surface location.
 \end{itemize}
+
 Each of these input tasks corresponds to an output task, so we have also
 indexed by $p$ instead of $q$. Naturally then $\ltdim = 2\otdim$, and the
 problem is under-constrained since there is an infinite set of layer depths and
 velocities that can generate the reflection times. To help constrain our
 models, we put a prior on the average depth of each layer.
 
-We compare against two baseline methods, the first baseline model is a
-(gradient free) maximum a-posteriori approach that optimises the latent task
-points directly \fix{details below/supp material}. The second is a
-probabilistic approach which parameterises the latent tasks as splines (to keep
-dimensionality low) and learns the locations of the knot points using MCMC
-\fix{cite stateline, see below/supp material for details.}
+We compare against two baseline methods. The first baseline applies
+gradient-free optimisation to identify the maximum a-posteriori latent tasks.
+A GMRF prior is used to model the deviation of each layer from a flat mean
+function.
+
+The second baseline is a probabilistic approach using MCMC to sample from
+the posterior distribution. For this implementation, the dimensionality of the 
+inference problem has been reduced by parameterising the latent tasks as 
+truncated cosine basis functions located on a regular grid, such that the MCMC
+learns the distribution of their weights. We have used 20 parameters per
+latent task, plus one observation noise variance parameter for each of the four 
+observed taks. Independent Gaussian priors are placed on the basis weights, and 
+a Gamma prior on each of the per-task observation variances.
 
 \begin{figure}
 \includegraphics[width=0.4\textwidth]{seismicData-depth-Taylor-1000} \\
