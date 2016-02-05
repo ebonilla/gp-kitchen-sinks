@@ -1,6 +1,22 @@
 \section{Experiments}
 %
+In this section we describe the experiments carried out in order to assess 
+the performance and the behavior of our extended kitchen sinks (\eks) and 
+unscented kitchen sinks (\uks) methods. We first look at experiments on 
+small-scale synthetic inversion problems and a binary classification task on 
+the \usps dataset. As these experiments were also carried out by 
+\citet{steinberg-bonilla-nips-2014} to evaluate the \egp and the \ugp, 
+our first goal  is to investigate how well 
+random kitchen sinks basis can approximate the original \egp and \ugp.
+Additionally, we are interested in determining whether the complexity 
+of the algorithms  can be reduced significantly by having a smaller number 
+of basis functions than the number of training points.
+%
 \subsection{Synthetic Inversion Problem}
+In this experiment we generate latent function values ($\latents$) from a Gaussian 
+process with isotropic squared exponential covariance function 
+having a signal variance  $\sigma^2_s = 0.8^2$ and a length-scale $\ell = 0.6$.
+The inputs  $\ins \in \real{}$ are uniformly spaced between $[-2\pi, 2\pi]$ 
 %
 Table \ref{tab:toyinversions}
 Figure \ref{fig:toyinversions}
