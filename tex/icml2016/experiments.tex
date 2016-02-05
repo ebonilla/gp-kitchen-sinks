@@ -73,7 +73,26 @@ on the synthetic inversion problems as a function of the number of features used
 %
 %%%%%%%
 \subsection{Binary Handwritten Digit Classification}
-Figure \ref{fig:usps}
+In this experiment we re-create the second experiment from
+\citet{steinberg-bonilla-nips-2014}, which is a binary classification task to
+classify between images of the handwritten digits `3' and `5' in the USPS
+digits datasets \cite{rasmussen-williams-book}. There are 767 images in the
+training set, and 773 images in the test set. We use a logistic sigmoid as a
+forward model in this task \todo{and the same settings as in the original
+    experiments for covariance functions and observation variance}. The main
+aim of this experiment, again, is to benchmark the performance of the \eks and
+\uks against the \egp and \ugp for varying numbers of basis functions, as shown
+in Figure \ref{fig:usps}. 
+
+Unlike the last experiment, the \eks and \uks do not perform as well as the
+\egp and \ugp, even with a large number of basis function. This is to be
+expected since the input image features have a dimension of $d = 256$, and so
+the exact covariance would be harder to represent with a low number of random
+basis functions \todo{does this jibe with you Edwin?}. The performance of the
+\eks and \uks approaches that of the \ugp and \egp with 800 basis functions,
+and so the computational complexity of these algorithms is similar on this
+dataset, though this would not be so if there was more training data, which is
+the scenario in the next experiment.
 
 \begin{figure*}[h]
 \centering
