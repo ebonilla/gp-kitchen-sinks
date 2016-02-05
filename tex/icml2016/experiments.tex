@@ -25,7 +25,8 @@ training, 800 testing) in Table \ref{tab:toyinversions}, and we also experiment
 with the number of basis functions for the \eks and \uks in
 Figure \ref{fig:toyinversions}. As in \citet{steinberg-bonilla-nips-2014} we
 use standardized mean square error (SMSE) and negative log probability density
-(NLPD) as the performance metrics.
+(NLPD) as the performance metrics. \todo{how many basis functions are used in
+    table?}
 %
 \begin{table}[h]
 \caption{Performance of the \eks and \uks methods compared to their GP counterparts (\egp and \ugp) on a range of synthetic benchmarks. 
@@ -40,7 +41,20 @@ use standardized mean square error (SMSE) and negative log probability density
 \end{scriptsize}
 \end{center}
 \end{table}
-%
+
+In general, the \eks and \uks perform similarly or better than the \egp and
+\ugp algorithms, except for a few anomalies (e.g. \egp with the exponential
+forward model) that have associated high standard deviations, suggesting the
+algorithms converged suboptimally in one or more of the folds. Interestingly,
+this suggests that on these simple problems, the \eks and \uks can perform at
+least as well as the \egp and \uks algorithms, but with significantly less
+computational cost since $D < N$. The \eks appears to have more robust
+performance than the \uks w.r.t.\ the number of basis functions used. Apart
+from the \uks with 50 basis functions, the performance of these algorithms does
+not seem to be a strong function of the number of bases. Since the input
+dimension is low ($\Ins$ are 1-dimensional), and the latent functions and
+forward models are fairly smooth, this is unsurprising.
+
 \begin{figure*}
 \centering
 \begin{tabular}{c c c}
