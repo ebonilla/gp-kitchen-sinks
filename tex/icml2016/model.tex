@@ -3,7 +3,8 @@
 Our starting point to scale up linearized GP models builds upon the work of 
 \citeauthor{rahimi-recht-nips-2007} \citeyearpar{rahimi-recht-nips-2007,rahimi-recht-nips-2008},  
 who used Bochner's theorem regarding the relationship between 
-a kernel (a positive definite function) and the Fourier transform of a non-negative measure. In particular, 
+a kernel %(a positive definite function) 
+and the Fourier transform of a non-negative measure. In particular, 
 when such a non-negative measure exists, one obtains  Wiener-Khintchine's theorem, which establishes  
  the Fourier duality of the covariance function of a stationary  process and its spectral density:
 \begin{align}
@@ -33,17 +34,18 @@ for $i=1, \ldots, D-1$,  which in fact is a mapping into a $2 D-$dimensional fea
 converges in expectation 
 to the true kernel. They refer to algorithms that use such randomized feature expansions 
 as \emph{random kitchen sinks} (\rks).  
-
+%
 If we use \rks bases  such that
 $\kfunc{\ins_i}{\ins_j} = 
 \expectation[\featfunc{\ins_i}\transpose\featfunc{\ins_j}]$, we can
-approximate Gaussian processes that involve nonlinear likelihoods 
+approximate \gp models that involve nonlinear likelihoods 
 with simple linear-in-the-parameters models. 
 For our purposes, we are 
 interested in using such random feature approximations within a variational inference 
 framework in order to estimate the posterior distributions of models of the form given
-in Equations \eqref{eq:gp-model-1} and \eqref{eq:gp-model-2}, rather than
-approximating a specific covariance function.
+in Equations \eqref{eq:gp-model-1} and \eqref{eq:gp-model-2}.
+% rather than
+%approximating a specific covariance function.
  %
 %
 \section{Multi-task GP Models}

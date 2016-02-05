@@ -91,7 +91,7 @@ the approximate posterior parameters for each task,
         \brac{\nabla_{\pweights_q} \nabla_{\pweights_q} \Fengy}\inv
         \nabla_{\pweights_q} \Fengy ~ \Big|_{\pweights_q = \pweights_{q}^{(k)}}.
         \label{eq:newt}
-\end{equation}
+\end{equation} 
 Here $\step_k \in (0, 1]$ is a step length, and the gradients of the 
 variational lower bound with respect to the posterior mean are:
 \begin{equation}
@@ -118,7 +118,7 @@ approximate posterior covariance,
         + \sum^N_{n=1} \feats_n\Linvec_{nq}\transpose\Lcov\inv
         \Linvec_{nq}\feats_n\transpose}\inv.
 \end{equation}
-Following \citet{steinberg-bonilla-nips-2014}, to asses convergence of
-$\pweights_q\opt$ we linearize the forward models in the lower bound, \Fengy,
-using a Taylor series approximation (see Section \ref{sub:taylor}). This is
-equivalent to optimizing the \emph{maximum a-posteriori} objective.
+%Following \citet{steinberg-bonilla-nips-2014}, to asses convergence of
+%$\pweights_q\opt$ we linearize the forward models in the lower bound, \Fengy,
+%using a Taylor series approximation (see Section \ref{sub:taylor}). This is
+%equivalent to optimizing the \emph{maximum a-posteriori} objective.

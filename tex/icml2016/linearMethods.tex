@@ -4,11 +4,10 @@ approximate locally the nonlinear forward model given in Equation   \eqref{eq:li
 $\nonlin{\cdot}$  is a function of our latent functions approximation ${\Weights \feats_n}$,  
 it makes sense to linearize around our current posterior estimates of these latent functions, 
 $\hatlatentsn =\pWeights \feats_n$. In this section we describe two methods for linearizing 
-the  forward model around these posterior estimates within our variational 
-inference framework. The first method uses a Taylor series approximation and the second 
+the  forward model around these posterior estimates. The first method uses a Taylor series approximation and the second 
 method uses a statistical linearization \citep{Geist2010} based on the unscented transform \citep{Julier2004}. 
 Because of the relation of our algorithms to the Extended Gaussian Process (\egp) and 
-the  Unscented Gaussian Process (\ugp) of \citet{steinberg-bonilla-nips-2014},   we refer to 
+the  Unscented Gaussian Process (\ugp),   we refer to 
 the proposed inference methods as  the Extended Kitchen Sinks (\eks) and the 
 Unscented Kitchen Sinks (\uks), respectively.
 %
