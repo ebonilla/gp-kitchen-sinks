@@ -29,17 +29,14 @@ and we use the following forward model,
 \end{align}
 Where there are $\otdim$ output tasks -- reflection times from each layer,
 $\nonlinf_p^\text{time}$, and there are two types of latent input tasks;
-\begin{itemize}
-    \item $\latents_p^\text{depth}\!\brac{\Ins}$, the geological depth of layer
-        $p$ corresponding to each surface location. Equation \eqref{eq:clip} 
-        clips overlapping estimated (input) layers to create these valid
-        layers.
-    \item $\latents_p^\text{vel}\!\brac{\Ins}$, the velocity of layer $p$ 
-        below each surface input location.
-\end{itemize}
+$\latents_p^\text{depth}\!\brac{\Ins}$, the geological depth of layer $p$
+corresponding to each surface location, and
+$\latents_p^\text{vel}\!\brac{\Ins}$, the velocity of layer $p$ below each
+surface input location. Equation \eqref{eq:clip} clips overlapping estimated
+(input) layers to create valid depth layers.
 
 Naturally, we wish to infer both the depth and velocity of four layers below
-each survey site. Likewise $\ltdim = 2\otdim$, and the problem is
+each survey site. We can see that $\ltdim = 2\otdim$, and the problem is
 under-constrained since there is an infinite set of layer depths and
 velocities that can generate the reflection times. To help constrain our
 models, we center the latent function priors on average depths and velocities
@@ -50,32 +47,32 @@ of each layer.
 %A GMRF prior is used to model the deviation of each layer from a flat mean
 %function.
 
-A baseline probabilistic approach using MCMC has been implemented to sample from
-the posterior distribution. To make the problem more managable for the sampling-based baseline method, 
-the dimensionality of the 
-MCMC problem has been reduced by parameterising each latent task with $20$ 
-regularly spaced radial basis functions (truncated cosine), such that the MCMC
-learns the distribution of their weights. In addition to the weights, an 
-observation noise variance parameter was introduced for each of the four 
-observed taks. Independent Gaussian priors are placed on the basis weights, and 
-a Gamma prior on each of the per-task observation variances.
+A baseline probabilistic approach using MCMC has been implemented to sample
+from the posterior distribution. To make the problem more manageable for the
+sampling-based baseline method, the dimensionality of the MCMC problem has been
+reduced by parameterizing each latent task with $20$ regularly spaced radial
+basis functions (truncated cosine), such that the MCMC learns the distribution
+of their weights. In addition to the weights, an observation noise variance
+parameter was introduced for each of the four observed tasks. Independent
+Gaussian priors are placed on the basis weights, and a Gamma prior on each of
+the per-task observation variances.
 
-The EKS and UKS methods were applied to the same problem. We adapted the MCMC 
-prior by projecting our learned basis weights into the space of the radial 
-basis functions, and used the same prior on per-task observation variances. 
-The results of both the EKS and UKS methods were very similar. Figure 
-\ref{fig:seismic_result} shows the results from the EKS method inferring the 
-distribution over layer boundary depths (top) and seismic transmission 
+To apply the \eks and \uks methods to the same problem we adapted the MCMC
+prior by projecting our learned basis weights into the space of the radial
+basis functions, and used the same prior on per-task observation variances.
+The results of both the \eks and \uks methods were very similar. Figure
+\ref{fig:seismic_result} shows the results from the \eks method inferring the
+distribution over layer boundary depths (top) and seismic transmission
 velocities (bottom). Draws from the above MCMC baseline are overlaid. Clearly
-the MCMC draws are in agreement with the structure of the layer velocities and 
-depths. However, we do note that the MCMC draws are smoother - this is 
-because the limited number of radial basis functions used in the MCMC is 
-restricting the ability of the baseline MCMC to infer high frequency details.
+the MCMC draws are in agreement with the structure of the layer velocities and
+depths. However, we do note that the MCMC draws are smoother - this is because
+the limited number of radial basis functions used in the MCMC is restricting
+the ability of the baseline MCMC to infer high frequency details.
 
 \begin{figure}
 \includegraphics[width=0.4\textwidth]{seismicData-depth-Taylor-1000} \\
 \includegraphics[width=0.4\textwidth]{seismicData-vel-Taylor-1000}
-\caption{Results of the EKS on the seismic inversion problem. The inferred 
+\caption{Results of the \eks on the seismic inversion problem. The inferred 
     layer boundaries (top) and seismic velocities (bottom) are shown in blue, 
     indicating the predictive means and 3 standard deviation envelopes. Draws
     from the MCMC inversion are overlaid in dotted black.}
