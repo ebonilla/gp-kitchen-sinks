@@ -6,7 +6,7 @@ form,
 	\label{eq:posteriorW}
     \qrob{\Weights} = \prod^Q_{q=1} \gausC{\weights_q}{\pweights_q, \pocov_q}.
 \end{equation}
-We can use variation inference to learn this posterior approximation, and
+We can use variational inference to learn this posterior approximation, and
 thereby allowing us to infer the posterior latent tasks,
 \begin{equation}
 \label{eq:posteriorF}
@@ -14,7 +14,6 @@ thereby allowing us to infer the posterior latent tasks,
 %$\expectation[\latents_q] \approx \Feats\pweights_q$ and 
 %$\covariance [\latents_q] \approx \Feats \pweights_q  \Feats^T$.
 \end{equation}
-\todo{FIX clash in notation: q for posterior approx and for indexing}
 %
 %
 \subsection{Evidence Lower Bound}
@@ -27,7 +26,7 @@ in order to learn the parameters of our model.
 %
 The variational evidence lower bound is,
 \begin{equation}
-    \Fengy = \expec{q\Weights}{\log \probC{\Outs}{\Weights, \Ins}}
+    \Fengy = \expec{\qrobsym\Weights}{\log \probC{\Outs}{\Weights, \Ins}}
         - \KL{\qrob{\Weights}}{\prob{\Weights}}.
 \end{equation}
 Here we can straight-forwardly arrive at the KL term,
@@ -44,10 +43,10 @@ Here we can straight-forwardly arrive at the KL term,
 %
 The expected log-likelihood term is less straight forward,
 \begin{multline}
-    \expec{q\Weights}{\log \probC{\Outs}{\Weights, \Ins}}  = 
+    \expec{\qrobsym\Weights}{\log \probC{\Outs}{\Weights, \Ins}}  = 
     - \frac{N}{2}
     \sbrac{\log{2\pi} + \log\deter{\Lcov}}  \\
-     - \frac{1}{2} \sum^N_{n=1} \expec{q\Weights}{
+    - \frac{1}{2} \sum^N_{n=1} \expec{\qrobsym\Weights}{
         \brac{\outs_n - \nonlin{\Weights\feats_n}}\transpose\Lcov\inv
         \brac{\outs_n - \nonlin{\Weights\feats_n}}},
     \label{eq:ell_exact}
@@ -63,7 +62,7 @@ that we will define later, and $\intcpt_n \in \real{\otdim}$ is an intercept
 term that we will also define later. Now we can evaluate the expectation in 
 \eqref{eq:ell_exact} as approximately,
 \begin{multline}
-    \expec{q\Weights}{\log \probC{\Outs}{\Weights, \Ins}} \approx
+    \expec{\qrobsym\Weights}{\log \probC{\Outs}{\Weights, \Ins}} \approx
     - \frac{N}{2}\sbrac{P\log{2\pi} + \log\deter{\Lcov}} \\
     - \frac{1}{2} \sum^N_{n=1} 
     \sbrac{
@@ -77,16 +76,16 @@ term that we will also define later. Now we can evaluate the expectation in
 Where we have defined $\errorn \defeq  \outs_n - (\Linmat_n\pWeights\feats_n + \intcpt_n) $; 
  used $\Linmat_n\Weights = \sum_q \Linvec_{nq}
 \weights_q\transpose$ defining
-$\Linvec_{nq} \in \real{P}$ and $\Linmat_n = \sbrac{\Linvec_n1, \ldots,
-    \Linvec_nQ}$. Here we can see that this objective easily factorizes over the
+$\Linvec_{nq} \in \real{P}$ and $\Linmat_n = \sbrac{\Linvec_{n1}, \ldots,
+    \Linvec_{nQ}}$. Here we can see that this objective easily factorizes over the
 data, and so it should be straight forward to apply parallel or stochastic
 gradient descent algorithms to learn the posterior parameters.
 
 
 \subsection{Learning the Variational Parameters}
 
-As before, we can use Newton's method to learn the approximate posterior
-parameters for each task,
+As in \citet{steinberg-bonilla-nips-2014}, we can use Newton's method to learn
+the approximate posterior parameters for each task,
 \begin{equation}
     \pweights_{q}^{(k+1)} = \pweights_{q}^{(k)} - \step_k
         \brac{\nabla_{\pweights_q} \nabla_{\pweights_q} \Fengy}\inv
@@ -119,11 +118,7 @@ approximate posterior covariance,
         + \sum^N_{n=1} \feats_n\Linvec_{nq}\transpose\Lcov\inv
         \Linvec_{nq}\feats_n\transpose}\inv.
 \end{equation}
-\fix{TODO: talk about MAP objective here}
-
-
-
-
-
-
- 
+Following \citet{steinberg-bonilla-nips-2014}, to asses convergence of
+$\pweights_q\opt$ we linearize the forward models in the lower bound, \Fengy,
+using a Taylor series approximation (see Section \ref{sub:taylor}). This is
+equivalent to optimizing the \emph{maximum a-posteriori} objective.

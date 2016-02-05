@@ -1,11 +1,13 @@
 \subsection{Hyperparameter Learning}
 Once we have found the optimum $\pWeights$ and $\pocov_q$'s, we can optimise
-$\Fengy$ with respect to the parameters $\Lcov$, $\{ \prvar_q \}$ and $\khypers$, assuming the
-features are parameterized $\feats_n = \featfunc{\ins_n, \khypers}$. Once we
-have found the optimum $\Lcov$, $\{ \prvar_q \}$, $\khypers$, we then re-optimize for the
-posterior parameters  in a generalized  variational-EM like procedure.
+the linearized $\Fengy$ (which becomes an approximation to the lower bound)
+with respect to the parameters $\Lcov$, $\{ \prvar_q \}$ and $\khypers$,
+assuming the features are parameterized $\feats_n = \featfunc{\ins_n,
+    \khypers}$. Once we have found the optimum $\Lcov$, $\{ \prvar_q \}$,
+$\khypers$, we then re-optimize for the posterior parameters  in a generalized
+variational-EM like procedure.
 
-Once we have determined the optimum posterior parameters, the trace term in
+When we have determined the optimum posterior parameters, the trace term in
 Equation \eqref{eq:KL} cancels out with the only term in Equation \eqref{eq:ell_approx} 
 involving $\pocov_q$, i.e.\ $QD -
 \sum_q\trace{\pocov_q}/\prvar_q = 
@@ -31,7 +33,7 @@ derivatives of $\nonlinf$ in order to calculate partial derivatives of
 %of the UGP, derivatives of $\nonlinf$ may not exist\footnote{Perhaps we could
 %    use repeated applications of statistical linearization to approximate the
 %    derivatives.}. 
-    However, if we assume \bigo{10} tasks, P, and a lightly
+However, if we assume \bigo{10} tasks, \otdim, and a lightly
 parameterized feature function, $\featfunc{\cdot}$, then we can use numerical 
 optimization methods such as COBYLA and BOBYQA. 
 

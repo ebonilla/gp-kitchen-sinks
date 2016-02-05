@@ -13,25 +13,33 @@ of the algorithms  can be reduced significantly by having a smaller number
 of basis functions than the number of training points.
 %
 \subsection{Synthetic Inversion Problem}
-In this experiment we generate latent function values ($\latents$) from a Gaussian 
-process with isotropic squared exponential covariance function 
-having a signal variance  $\sigma^2_s = 0.8^2$ and a length-scale $\ell = 0.6$.
-The inputs  $\ins \in \real{}$ are uniformly spaced between $[-2\pi, 2\pi]$ 
+In this experiment we generate latent function values ($\latents$) from a
+Gaussian process with isotropic squared exponential covariance function (having
+a signal variance  $\sigma^2_s = 0.8^2$ and a length-scale $\ell = 0.6$) at
+1000 input points, $\ins \in \real{}$, which are uniformly spaced between
+$[-2\pi, 2\pi]$. We test our algorithms and the baselines (\ugp, \egp) with
+five simple forward models; an identity function (linear), a 3rd order
+polynomial with no cross terms (poly3), an exponential function, a sinusoid,
+and a tangent function. We present the results of 5-fold cross validation (200
+training, 800 testing) in Table \ref{tab:toyinversions}, and we also experiment
+with the number of basis functions for the \eks and \uks in
+Figure \ref{fig:toyinversions}. As in \citet{steinberg-bonilla-nips-2014} we
+use standardized mean square error (SMSE) and negative log probability density
+(NLPD) as the performance metrics.
 %
-Table \ref{tab:toyinversions}
-Figure \ref{fig:toyinversions}
-%
-\begin{table*}[h]
+\begin{table}[h]
 \caption{Performance of the \eks and \uks methods compared to their GP counterparts (\egp and \ugp) on a range of synthetic benchmarks. 
-\gp is the corresponds to the GP analytical solution in the linear case.
+\gp the corresponds to the GP analytical solution in the linear case.
 \todo{PUT GP baseline}
 \label{tab:toyinversions}
 }
 
 \begin{center}
+\begin{scriptsize}
 \input{table-toy}
+\end{scriptsize}
 \end{center}
-\end{table*}
+\end{table}
 %
 \begin{figure*}
 \centering
