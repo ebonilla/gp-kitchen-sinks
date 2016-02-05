@@ -30,8 +30,8 @@ while (( i < optConf.iter) && (tol > optConf.ftol) )
         mteugpSavePerformance(i, model, xtest, ytest);
     end
     
-    %model = mteugpOptimizeFeatures(model);    
-    model  = mteugpOptimizeHyper(model);
+    model = mteugpOptimizeFeatures(model);    
+    %model  = mteugpOptimizeHyper(model);
 
     tol = abs( model.nelbo(i) - model.nelbo(i-1) );
     % tol = abs( (model.nelbo(i) - model.nelbo(i-1))/model.nelbo(i)   );

@@ -10,15 +10,17 @@ model.D         = size(model.Phi,2); % actual number of features
 
 % likelihood variances
 %model.sigma2y = 0.01*var(model.Y, 0, 1)';
-model.sigma2y =  ones(model.P,1);
-
+%model.sigma2y =  ones(model.P,1);
+model.sigma2y  = model.priorNoise;
 % hyper-parameters (of prior on w)
 %model.sigma2w = 1e8*ones(model.Q,1);  
 % THIS IS GOOD
 % model.sigma2w = [1e8*ones(model.Q/2,1); 1e8*ones(model.Q/2,1)];  
 %totalVar      = mean(mean(model.Phi*model.Phi'))';
 %model.sigma2w =[1e8*ones(model.Q/2,1); 1e8*ones(model.Q/2,1)]/totalVar;
-model.sigma2w = 1e27*ones(model.Q,1);  
+%model.sigma2w = 1e27*ones(model.Q,1);  
+model.sigma2w  = model.priorVar; 
+
 
 % means, lineariz. and covariances
 %model.M = randn(model.D,model.Q);

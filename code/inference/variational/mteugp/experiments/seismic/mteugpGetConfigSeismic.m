@@ -23,17 +23,27 @@ model.diaghess     = 1;  % 1/0 if diag hessian is provided [not used]
 model.kappa        = 1/2; % parameter of Unscented linearization
  
 % here we include a prior mean
-priorDepth   = data.doffsets;
-priorVel     = zeros(size(data.voffsets)); 
-height0 = bsxfun(@plus, zeros(data.n_layers, model.N) , priorDepth');
-vel0    = bsxfun(@plus, zeros(data.n_layers, model.N) , priorVel');
-F       = [height0', vel0'];
+priorDepth   = data.h_mu;
+priorVel     = data.v_mu; 
+height0 = bsxfun(@plus, zeros(data.n_layers, model.N) , priorDepth)';
+vel0    = bsxfun(@plus, zeros(data.n_layers, model.N) , priorVel)';
+F       = [height0, vel0];
 sigmaf          = 1;
 model.featParam = model.initFeatFunc(sigmaf);
 model.Phi       = model.featFunc(model.X, model.Z, model.featParam); 
 jit             = 1e-7*eye(size(model.Phi,2));
 model.priorMean = (model.Phi'*model.Phi + jit)\(model.Phi'*F);
 
+% here we include a prior variance
+varDepth       =  bsxfun(@plus, zeros(data.n_layers, model.N) , data.h_std.^2)';
+varVel         =  bsxfun(@plus, zeros(data.n_layers, model.N) , data.v_std.^2)';
+F              = [varDepth, varVel]; % N X Q
+val            = sum(model.Phi.*model.Phi,2); % (Nx1)
+model.priorVar = mean(bsxfun(@rdivide, F, val),1)';
+ 
+   
+% prior noise
+model.priorNoise = data.noise';
 
 % prediction settings
 model.nSamples     = 1000; % Number of samples for approximating predictive dist.
@@ -48,22 +58,22 @@ model.globalConf = optConf;
 optConf.optimizer   = 'nlopt'; %  
 model.useNewton     = 0; % use own Newton optimizer for var param
 optConf.iter        = 100;  % maximum iterations on variational parameters
-optConf.eval        = 10^7; %1000000;  
+optConf.eval        = 10^10; %1000000;  
 optConf.ftol        = 1e-5;
 optConf.xtol        = 1e-8; % tolerance for Newton iterations
 optConf.alpha       = 0.9;  % learning rate for Newton iterations
 optConf.verbose     = 0;
 model.varConf       = optConf;
- 
+  
 % Hyperparameter optimization configuration 
 optConf.optimizer   = 'nlopt'; % for hyper-parameters
 optConf.iter        = 100;  % maximum iterations for hyper parametes (minfunc parameter)
-optConf.eval        = 1;  % Maxium evals for hyper paramters func (minFunc parameter)
+optConf.eval        = 1;    % Maxium evals for hyper paramters func (minFunc parameter)
 optConf.ftol        = 1e-3; % Tolerance in f
 optConf.xtol        = 1e-3; % Tolerance in x
 optConf.verbose     = 1; % 0: none, 1: full
 model.hyperConf     = optConf;      
-
+ 
 % transforms on hyperparameters for unconstrained optimization [not used]
 model.featTransform     = 'linear'; % Note this is control by feature function
 model.lambdayTransform  = 'exp'; % Precisions are exponential of parameter

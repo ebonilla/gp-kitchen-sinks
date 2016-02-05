@@ -4,11 +4,15 @@ function mteugpTestSeismic( idxMethod, D, boolRealData, writeLog )
 global RESULTSDIR;
 global DATASET;
 global LOADFROMFILE;
+global TRGFIGDIR;
+global SAVEPLOTS;
 
+TRGFIGDIR = 'tex/icml2016/figures';
+ 
 RESULTSDIR = 'results';
 DATASET = 'seismicData';
 LOADFROMFILE = 0;
-  
+SAVEPLOTS = 1;
 
 if (~boolRealData)
     DATASET = [DATASET, 'Toy'];
@@ -32,6 +36,8 @@ function runModel(data, linearMethod, D, writeLog)
 global RESULTSDIR;
 global DATASET;
 global LOADFROMFILE;
+global TRGFIGDIR;
+global SAVEPLOTS;
 
 RESULTSDIR = [RESULTSDIR, '/', DATASET, '/', 'D', num2str(D), '/', linearMethod];
 fname  = [RESULTSDIR, '/', DATASET, '.mat'];
@@ -57,20 +63,50 @@ end
  
 % testJacobian(model);
 
-mteugpPlotTravelTimesSeismic(data.xtrain, data.ytrain, data.n_layers);
-
-
 [ meanF, varF ] = mteugpGetPredictive( model, model.X);
 [depth, vel, std_d, std_v ] = mteugpUnwrapSeismicParameters(meanF, varF );
-mteugpPlotWorldSeismic(data, depth, vel); 
-
 Gpred = mteugpGetFwdPredictionsSeismic(depth, vel);
-mteugpPlotPredictionsSeismic(Gpred, model.Y, data.n_layers);
- 
+save(fname, 'model', 'meanF', 'varF', 'depth', 'vel', 'std_d', 'std_v', 'Gpred');
+
+% loading MCMC result 
+load('results/seismicData/mcmcSamples.mat', 'draws_f', 'draws_v');
+mcmc.meanH = reshape(mean(draws_f, 1)', data.n_x, data.n_layers)';
+mcmc.meanV = reshape(mean(draws_v, 1)', data.n_x, data.n_layers)';
+mcmc.stdH = reshape(std(draws_f, 0, 1)', data.n_x, data.n_layers)';
+mcmc.stdV = reshape(std(draws_v, 0, 1)', data.n_x, data.n_layers)';
+
+
+t_handle = mteugpPlotTravelTimesSeismic(data.xtrain, data.ytrain, data.n_layers);
+[d_handle, v_handle] =  mteugpPlotWorldSeismic(data, depth, vel, std_d, std_v, mcmc ); 
+pred_handle = mteugpPlotPredictionsSeismic(Gpred, model.Y, data.n_layers);
+
+
 
  
+
+
+if (SAVEPLOTS)
+    fname = [TRGFIGDIR, '/', DATASET, '-travel-times', '-', num2str(D), '.eps'];
+    saveSinglePlot(t_handle, fname);
+    %
+    fname = [TRGFIGDIR, '/', DATASET, '-depth-', linearMethod, '-', num2str(D), '.eps'];
+    saveSinglePlot(d_handle, fname);    
+    %
+    fname = [TRGFIGDIR, '/', DATASET, '-vel-', linearMethod, '-', num2str(D), '.eps'];
+    saveSinglePlot(v_handle, fname);        
+    %
+    fname = [TRGFIGDIR, '/', DATASET, '-pred-', linearMethod, '-', num2str(D), '.eps'];
+    saveSinglePlot(pred_handle, fname);       
 end
 
+end
+
+
+function saveSinglePlot(fig_handle, fname)
+fname = strrep(fname, ' ', '-');
+saveas(fig_handle, fname, 'epsc' );
+system(['epstopdf ', fname]);
+end
 
 %% Test Jacobian of fwd model
 function testJacobian(model)
