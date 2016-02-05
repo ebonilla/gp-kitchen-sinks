@@ -106,30 +106,7 @@ the number of  basis used. \egp and \ugp are the original (full) \gp models.
 }
 \end{figure*}
 %
-%%%%%%%%%
-\subsection{Large Scale Classification}
-Table \ref{fig:mnistBinary}
-Here we show the results on \mnist dataset.
-\begin{table}[h]
-\caption{The performance of the models on the \mnist dataset for the 
-task of classifying the even digits vs the odd digits.
-\label{fig:mnistBinary}
-}
-\begin{tabular}{c c c c c}
-\toprule
-& \multicolumn{2}{c}{NLP} & \multicolumn{2}{c}{Error Rate} \\
-& D = 1000 & D = 2000 & D = 1000 & D = 2000 \\
-\midrule
-\eks &  0.129 & 0.088 & 0.043 & 0.026 \\
-\uks &  0.129 & 0.088 & 0.043 & 0.026 \\
-\hmg &      \multicolumn{2}{c}{0.069}    &            \multicolumn{2}{c}{0.022}   \\
-\dnb   &      \multicolumn{2}{c}{0.068}    &            \multicolumn{2}{c}{0.022}\\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\hmg refers to \citet{hensman-et-al-aistats-2015} 
-\dnb refers to \citet{dezfouli-bonilla-nips-2015}
+\input{mnistBinary}
 
 \input{seismic}
 
