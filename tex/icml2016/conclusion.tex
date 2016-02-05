@@ -1,4 +1,20 @@
 \section{Conclusion}
 
-\todo{American English spelling everywhere.}
+We have presented multi-task and scalable generalizations of the \egp and \ugp
+algorithms introduced by \citet{steinberg-bonilla-nips-2014}, which we refer to
+as \eks and \uks respectively. The \uks, like the \ugp is a `black-box' method
+in that it requires no gradients of the nonlinearity in the likelihood
+function in order to learn parameters/hyperparameters and perform inversions.
 
+We have shown in our experiments that we can achieve similar prediction
+performance to the original algorithms, even though we use a \rks-based
+Gaussian process approximation to drastically reduce computational complexity
+and increase scalability. Furthermore, we demonstrate the \eks and \uks
+successfully performing a multi-task, Bayesian seismic inversion -- which is
+an ideal use case for these algorithms as a fast and scalable alternative to
+MCMC.
+
+As future work we would like to use a stochastic gradient optimiser for
+learning all model (hyper)parameters, and also we would like to extend the
+posterior representation to a mixture of Gaussians, in a similar fashion as
+\cite{nguyen-bonilla-uai-2014, gershman-et-al-icml-12}.
