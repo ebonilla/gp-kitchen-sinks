@@ -6,13 +6,14 @@ global DATASET;
 global LOADFROMFILE;
 global TRGFIGDIR;
 global SAVEPLOTS;
+global SAVERESULTS;
 
-TRGFIGDIR = 'tex/icml2016/figures';
- 
-RESULTSDIR = 'results';
-DATASET = 'seismicData';
-LOADFROMFILE = 1;
-SAVEPLOTS = 1;
+TRGFIGDIR       = 'tex/icml2016/figures';
+RESULTSDIR      = 'results';
+DATASET         = 'seismicData';
+LOADFROMFILE    = 1;
+SAVEPLOTS       = 1;
+SAVERESULTS     = 0;
 
 if (~boolRealData)
     DATASET = [DATASET, 'Toy'];
@@ -38,6 +39,8 @@ global DATASET;
 global LOADFROMFILE;
 global TRGFIGDIR;
 global SAVEPLOTS;
+global SAVERESULTS;
+
 
 RESULTSDIR = [RESULTSDIR, '/', DATASET, '/', 'D', num2str(D), '/', linearMethod];
 fname  = [RESULTSDIR, '/', DATASET, '.mat'];
@@ -57,7 +60,9 @@ else
     % learning modell parameters
     model           = mteugpLearn( model); 
 
-    save(fname, 'model');
+    if (SAVERESULTS)
+        save(fname, 'model');
+    end
     diary off;
 end
  
@@ -69,7 +74,7 @@ Gpred = mteugpGetFwdPredictionsSeismic(depth, vel);
 save(fname, 'model', 'meanF', 'varF', 'depth', 'vel', 'std_d', 'std_v', 'Gpred');
 
 % loading MCMC result 
-load('results/seismicData/mcmcSamples.mat', 'draws_f', 'draws_v');
+load('results/seismicData/mcmcSamples_new.mat', 'draws_f', 'draws_v');
 mcmc.meanH = reshape(mean(draws_f, 1)', data.n_x, data.n_layers)';
 mcmc.meanV = reshape(mean(draws_v, 1)', data.n_x, data.n_layers)';
 mcmc.stdH = reshape(std(draws_f, 0, 1)', data.n_x, data.n_layers)';
@@ -81,7 +86,11 @@ t_handle = mteugpPlotTravelTimesSeismic(data.xtrain, data.ytrain, data.n_layers)
 pred_handle = mteugpPlotPredictionsSeismic(Gpred, model.Y, data.n_layers);
 
 
-
+% differences in variance: variational vs MCMC
+% err_std = (std_d - mcmc.stdH')./mcmc.meanH';
+% figure; hist(err_std);
+% min(err_std(:))
+% max(err_std(:))
  
 
 
@@ -223,3 +232,25 @@ obj     = sse + l_off*regoff + l_d*regdvar + l_v*regvvar;
 fprintf('Objective: %f\n', obj);
     %fflush(stdout); 
 end
+
+
+
+function  val = smll(muTrue, varTrue, muPred, varPred )
+%MYSMLL Standardised mean log loss
+%   ean Negative log likelihood aussuming gaussianity
+%   and standardised by using a gaussian with the training data stats
+
+ll_model = - logOfGaussUnivariate( ytest, muPred, varPred );
+ll_naive = - logOfGaussUnivariate( ytest, muTrue, varTrue );
+
+val = mean(ll_model - ll_naive,1);
+
+end
+
+
+
+
+
+
+
+
