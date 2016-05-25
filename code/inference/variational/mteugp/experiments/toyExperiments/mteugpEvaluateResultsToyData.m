@@ -63,7 +63,7 @@ end
 
 %% 
 function drawBarPlot(meanVal, stdVal, strDim, benchmark, strYlabel, strMethod, baseValue, saveFigs)
-FONT_SIZE = 18;
+FONT_SIZE = 24;
 BAR_WIDTH = 1;
 global TRGFIGDIR;
 

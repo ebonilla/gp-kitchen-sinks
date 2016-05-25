@@ -127,7 +127,7 @@ global SAVEPLOTS;
 
 figure;                    
 strYlabel = upper(strYlabel);
-FONT_SIZE = 18;
+FONT_SIZE = 24;
 L = size(errorMeasure,1);
 x_model = 1 : L;
 x_line  = L + 0.5;
@@ -136,7 +136,7 @@ x_tick_base = L + 0.8 : 0.5 :  L + length(baseName) - 0.5;
 x_all  = [x_model, x_base];
 bar(x_model, errorMeasure); colormap(summer);
 hold on;
-legend(methodName, 'Location', 'NorthWest');
+legend(methodName, 'Location', 'Best');
 baseError = [NaN*ones(size(errorMeasure)); baseMeasure];
 bar(x_all, baseError, 'FaceColor', [0.9 0.9 0.9]);
 plot([x_line, x_line], [0, max([errorMeasure(:); baseMeasure(:)])], ...
@@ -144,6 +144,7 @@ plot([x_line, x_line], [0, max([errorMeasure(:); baseMeasure(:)])], ...
 set(gca, 'FontSize', FONT_SIZE);
 
 ylim(ylimi);
+xlim([0.5, 5]);
 set(gca, 'YTick', 0 : ystep : ylimi(2)); 
 set(gca, 'Xtick', [x_model, x_tick_base]);
 set(gca, 'XTickLabel', [strTrueDim, baseName]);
@@ -207,8 +208,8 @@ if (nargin == 0)
 end
 
 baseNames = { ...
-    'EGP', ...    
-    'UGP' ...
+    '', ...    
+    'EGP/UGP' ...
      'LAP', ... % Laplace
      'EP', ... % 
      'VB', ...
