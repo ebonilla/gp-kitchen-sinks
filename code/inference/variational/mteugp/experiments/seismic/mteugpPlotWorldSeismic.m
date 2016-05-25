@@ -13,7 +13,7 @@ function [d_handle, v_handle] = PlotWorldModelAlistair(x, fopt, vopt, std_f, std
 FONTSIZE = 24;
 
 d_handle = figure;
-plot([x(1), x(end)], [0, 0], 'k', 'linewidth', 3);
+%plot([x(1), x(end)], [0, 0], 'k', 'linewidth', 1);
 hold on;
 for layer = 1 : n_layers
     if (isempty(std_f))
@@ -52,6 +52,7 @@ for layer = 1 : n_layers
     plot(x, v(layer, :), 'r--', 'linewidth', 3);
     end
 end
+%box on;
 title('Velocity of layers')
 xlabel('Sensor location (m)')
 ylabel('Velocity (m/s)')
