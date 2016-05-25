@@ -10,7 +10,7 @@ end
 
 %%
 function [d_handle, v_handle] = PlotWorldModelAlistair(x, fopt, vopt, std_f, std_v, n_layers, f, v, mcmc)
-FONTSIZE = 18;
+FONTSIZE = 24;
 
 d_handle = figure;
 plot([x(1), x(end)], [0, 0], 'k', 'linewidth', 3);
