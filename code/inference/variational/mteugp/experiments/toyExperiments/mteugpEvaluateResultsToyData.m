@@ -63,7 +63,7 @@ end
 
 %% 
 function drawBarPlot(meanVal, stdVal, strDim, benchmark, strYlabel, strMethod, baseValue, saveFigs)
-FONT_SIZE = 24;
+FONT_SIZE = 18;
 BAR_WIDTH = 1;
 global TRGFIGDIR;
 
@@ -88,7 +88,8 @@ box off;
 % legend boxon;
 if (saveFigs)
     fname = [TRGFIGDIR, '/', ...
-            'toyData-', strMethod, '-', strrep(strYlabel, '*', 'star'), '.eps'];
+            'toyData-', strMethod, '-', strrep(strYlabel, '*', 'star'), '-Font-',  ...
+                num2str(FONT_SIZE), '.eps'];
     % print('-depsc2', fname);        
     %
     saveas(gcf, fname, 'epsc' );
