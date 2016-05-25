@@ -69,8 +69,15 @@ end
 % testJacobian(model);
 
 [ meanF, varF ] = mteugpGetPredictive( model, model.X);
+
 [depth, vel, std_d, std_v ] = mteugpUnwrapSeismicParameters(meanF, varF );
 Gpred = mteugpGetFwdPredictionsSeismic(depth, vel);
+
+predModel.meanH = depth';
+predModel.meanV = vel';
+predModel.stdH  = std_d';
+predModel.stdV  = std_v';
+
 save(fname, 'model', 'meanF', 'varF', 'depth', 'vel', 'std_d', 'std_v', 'Gpred');
 
 % loading MCMC result 
@@ -80,6 +87,7 @@ mcmc.meanV = reshape(mean(draws_v, 1)', data.n_x, data.n_layers)';
 mcmc.stdH = reshape(std(draws_f, 0, 1)', data.n_x, data.n_layers)';
 mcmc.stdV = reshape(std(draws_v, 0, 1)', data.n_x, data.n_layers)';
 
+save('all_results_seismic.mat', 'predModel', 'mcmc', 'data', 'depth', 'vel', 'data'); 
 
 t_handle = mteugpPlotTravelTimesSeismic(data.xtrain, data.ytrain, data.n_layers);
 [d_handle, v_handle] =  mteugpPlotWorldSeismic(data, depth, vel, std_d, std_v, mcmc ); 
