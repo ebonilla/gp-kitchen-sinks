@@ -103,16 +103,16 @@ pred_handle = mteugpPlotPredictionsSeismic(Gpred, model.Y, data.n_layers);
 
 
 if (SAVEPLOTS)
-    fname = [TRGFIGDIR, '/', DATASET, '-travel-times', '-', num2str(D), '.eps'];
+    fname = [TRGFIGDIR, '/', DATASET, '-travel-times', '-', num2str(D)];
     saveSinglePlot(t_handle, fname);
     %
-    fname = [TRGFIGDIR, '/', DATASET, '-depth-', linearMethod, '-', num2str(D), '.eps'];
+    fname = [TRGFIGDIR, '/', DATASET, '-depth-', linearMethod, '-', num2str(D)];
     saveSinglePlot(d_handle, fname);    
     %
-    fname = [TRGFIGDIR, '/', DATASET, '-vel-', linearMethod, '-', num2str(D), '.eps'];
+    fname = [TRGFIGDIR, '/', DATASET, '-vel-', linearMethod, '-', num2str(D)];
     saveSinglePlot(v_handle, fname);        
     %
-    fname = [TRGFIGDIR, '/', DATASET, '-pred-', linearMethod, '-', num2str(D), '.eps'];
+    fname = [TRGFIGDIR, '/', DATASET, '-pred-', linearMethod, '-', num2str(D)];
     saveSinglePlot(pred_handle, fname);       
 end
 
@@ -121,8 +121,9 @@ end
 
 function saveSinglePlot(fig_handle, fname)
 fname = strrep(fname, ' ', '-');
-saveas(fig_handle, fname, 'epsc' );
-system(['epstopdf ', fname]);
+saveas(fig_handle, [fname, '.eps'], 'epsc' );
+saveas(fig_handle, [fname, '.png'], 'png' );
+system(['epstopdf ', fname, '.eps']);
 end
 
 %% Test Jacobian of fwd model

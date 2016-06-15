@@ -36,7 +36,8 @@ if ( ~isempty(v) )
 end
 %legend(leg, 'Location', 'North', 'Orientation', 'Vertical');
 set(gca, 'FontSize', FONTSIZE);    
-    
+set(gca,'color','none');
+
 % plot world model -- Velocity
 v_handle = figure;
 hold on;
@@ -63,7 +64,8 @@ if ( ~isempty(v) )
 end
 %legend(leg, 'Location', 'North', 'Orientation', 'Vertical');
 set(gca, 'FontSize', FONTSIZE);  
- 
+set(gca,'color','none');
+
 end
 
 function plotSingleConfidenceIntrerval(xstar, mu, se, m0, s0)
