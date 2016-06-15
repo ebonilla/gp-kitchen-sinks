@@ -96,7 +96,7 @@ pred_handle = mteugpPlotPredictionsSeismic(Gpred, model.Y, data.n_layers);
 
 % differences in variance: variational vs MCMC
 % err_std = (std_d - mcmc.stdH')./mcmc.meanH';
-% figure; hist(err_std);
+% figure; hist(err_std(:));
 % min(err_std(:))
 % max(err_std(:))
  
