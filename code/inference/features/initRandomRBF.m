@@ -1,8 +1,12 @@
-function  theta  = initRandomRBF(  )
+function  theta  = initRandomRBF(sigmaf )
 %INITRANDOMRBF Initializes parameters of random RBF
 %   Detailed explanation goes here
+ 
+if(nargin == 0) 
+    sigmaf = 1;
+end
 
-sigma_z = getOptimalSigmaz(1);
+sigma_z = getOptimalSigmaz(sigmaf);
 %sigma_z = rand;
 % DELETE ME
 % sigma_z = 10;

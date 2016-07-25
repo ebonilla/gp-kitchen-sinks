@@ -2,16 +2,18 @@ function [ nelbo, grad ] = mteugNelboFeat( theta, model)
 %MTEUGNELBOFEAT Summary of this function goes here
 %   Detailed explanation goes here
 % Nelbo and gradients for learning parameteres of features 
+global bestNelbo;
 
-    
+global best_M; % to share with mteugpOptimizeFeat
+
 if (nargout == 1) % no grads required
-    model.Phi   = feval(model.featFunc, model.X, theta); 
+    model.Phi   = model.featFunc(model.X, model.Z, theta); 
     
     % DELETE ME?
     model = mteugpOptimizeMeans(model);
     model = mteugpOptimizeCovariances(model);
 
-    nelbo = getNelboFeat( model );
+    nelbo = getNelboHyper( model );
 else
     [model.Phi, GradPhi] = feval(model.featFunc, model.X, theta); 
     
@@ -19,10 +21,54 @@ else
     model = mteugpOptimizeMeans(model);
     model = mteugpOptimizeCovariances(model);
 
-    [nelbo, grad] = getNelboFeat(model, GradPhi);    
-end
+    [nelbo, grad] = getNelboHyper(model, GradPhi);    
 end
 
+if (nelbo < bestNelbo)
+    best_M = model.M; 
+    bestNelbo = nelbo;
+end
+
+ 
+end
+
+function nelbo =  getNelboHyper(model)
+sigma2y      = model.sigma2y;
+diagSigmaInv = 1./(sigma2y);
+P            = model.P;
+N            = model.N;
+Q            = model.Q;
+D            = model.D;
+
+PhiM    = model.Phi*model.M; % N*Q
+%[N P Q] = siz(model.A);
+G = zeros(N, P);
+for p = 1 : P
+    Ap     = squeeze(model.A(:,p,:));
+    G(:,p) = sum(Ap.*PhiM,2);
+end
+G        = model.Y - G - model.B;
+elbo = sum(sum(bsxfun(@times,G, diagSigmaInv').*G)); % quad term
+
+% remaining terms coming from KL and likelihood after cancelation of traces at optimal M,C
+elbo = elbo +  N*( P*log(2*pi) + sum(log(sigma2y)) );
+M_off      = model.M - model.priorMean;
+for q = 1 : Q
+    sigma2w = model.sigma2w(q);
+    C       = model.C(:,:,q); % posterior covariance
+    cholC   = getCholSafe(C);
+    m       = M_off(:,q); % posterior mean
+    elbo   = elbo +  (1/sigma2w)*(m'*m)  ...
+                  - getLogDetChol(cholC) ...
+                  + D*log(sigma2w);
+end
+
+elbo  = -0.5*elbo;
+
+nelbo = -elbo;
+
+
+end
 
 % Assumes feature function retuns a gradient NxDxL, where D 
 % is the number of features and L is the number of parameters

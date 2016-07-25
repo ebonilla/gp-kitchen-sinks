@@ -4,7 +4,7 @@
 % want to also learn vel (though we may need a prior/regulariser).
 % need to incorporate offset here
 % dG: (P x Q)
-function [Gval, dG] = mteugpFwdSeismic(F, doffsets, voffsets)
+function [Gval, dG] = mteugpFwdSeismic(F)
 % D: [N X Q] 
 % [1,.... Q] = [depth_layer_1, ..., depth_layer_nlayer, vel_layer_1, vel_layer_n_layer] 
 n_layers = size(F,2)/2;
@@ -12,26 +12,27 @@ Depth    = F(:,1:n_layers);
 Vel      = F(:,n_layers+1:end);
   
 % accouting for prior offsets here 
-Depth  = bsxfun(@plus, Depth, doffsets);
-Vel    = bsxfun(@plus, Vel, voffsets); 
+% Depth  = bsxfun(@plus, Depth, doffsets);
+% Vel    = bsxfun(@plus, Vel, voffsets); 
 
 Gval    = G2(Depth, Vel); % EVB's function
 %Gval   = G(Depth', Vel')'; % AR's function
 
 if (nargout == 2) % gradients required
-    dH = zeros(n_layers, n_layers); % wrt depth
-    dV = zeros(n_layers, n_layers); % wrt vel
-    
-    % optimize?
     h   = [0, Depth(:,1:n_layers-1)];
-    for k = 1 : n_layers
-        for l = 1 : n_layers
-            for i = 1 : l
-                dH(l,k) = dH(l,k) + 2*( (i==k) - ((i-1) == k) )/Vel(:,i); % Vel here is 1 x n_layers
-                dV(l,k) = dV(l,k) - 2*( (i==k)/Vel(:,i) ) * ( Depth(:,i) - h(:,i) )/Vel(:,i); 
-            end
-        end
-    end
+    % optimize?
+%     dH = zeros(n_layers, n_layers); % wrt depth
+%     dV = zeros(n_layers, n_layers); % wrt vel
+%     for k = 1 : n_layers
+%         for l = 1 : n_layers
+%             for i = 1 : l
+%                 dH(l,k) = dH(l,k) + 2*( (i==k) - ((i-1) == k) )/Vel(:,i); % Vel here is 1 x n_layers
+%                 dV(l,k) = dV(l,k) - 2*( (i==k)/Vel(:,i) ) * ( Depth(:,i) - h(:,i) )/Vel(:,i); 
+%             end
+%         end
+%     end
+    [dH, dV] = mexSeismicJacob(h, Depth, Vel);
+    
     dG = [dH, dV];    
 end
 

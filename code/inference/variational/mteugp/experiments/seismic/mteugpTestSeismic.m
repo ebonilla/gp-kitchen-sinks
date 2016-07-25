@@ -4,10 +4,20 @@ function mteugpTestSeismic( idxMethod, D, boolRealData, writeLog )
 global RESULTSDIR;
 global DATASET;
 global LOADFROMFILE;
+global TRGFIGDIR;
+global SAVEPLOTS;
+global SAVERESULTS;
 
-RESULTSDIR = 'results';
-DATASET = 'seismicData';
-LOADFROMFILE = 1;
+TRGFIGDIR       = 'tex/icml2016/figures';
+RESULTSDIR      = 'results';
+DATASET         = 'seismicData';
+LOADFROMFILE    = 1;
+SAVEPLOTS       = 1;
+SAVERESULTS     = 0;
+
+if (~boolRealData)
+    DATASET = [DATASET, 'Toy'];
+end
 
 data  = mteugpLoadDataSeismic( boolRealData );
 linearMethod  = {'Taylor', 'Unscented'};
@@ -16,10 +26,10 @@ linearMethod  = {'Taylor', 'Unscented'};
 
 runModel(data, linearMethod{idxMethod}, D, writeLog);
 %[dopt, vopt, gpred] = runMAPBenchmark(data, boolRealData);
- 
+  
 
 end
-
+ 
 
 
 %% 
@@ -27,6 +37,10 @@ function runModel(data, linearMethod, D, writeLog)
 global RESULTSDIR;
 global DATASET;
 global LOADFROMFILE;
+global TRGFIGDIR;
+global SAVEPLOTS;
+global SAVERESULTS;
+
 
 RESULTSDIR = [RESULTSDIR, '/', DATASET, '/', 'D', num2str(D), '/', linearMethod];
 fname  = [RESULTSDIR, '/', DATASET, '.mat'];
@@ -41,29 +55,76 @@ else
     model             = mteugpGetConfigSeismic(data, linearMethod, D);
     model.resultsFname = fname;
     
-    model.X  = normalise(model.X);
-
+    % model.X  = normalise(model.X); 
+ 
     % learning modell parameters
     model           = mteugpLearn( model); 
 
-    save(fname, 'model');
+    if (SAVERESULTS)
+        save(fname, 'model');
+    end
     diary off;
 end
  
 % testJacobian(model);
 
-
 [ meanF, varF ] = mteugpGetPredictive( model, model.X);
-[depth, vel, std_d, std_v ] = mteugpUnwrapSeismicParameters(model, meanF, varF );
-mteugpPlotWorldSeismic(data, depth, vel); 
 
+[depth, vel, std_d, std_v ] = mteugpUnwrapSeismicParameters(meanF, varF );
 Gpred = mteugpGetFwdPredictionsSeismic(depth, vel);
-mteugpPlotPredictionsSeismic(Gpred, model.Y, data.n_layers);
+
+predModel.meanH = depth';
+predModel.meanV = vel';
+predModel.stdH  = std_d';
+predModel.stdV  = std_v';
+
+save(fname, 'model', 'meanF', 'varF', 'depth', 'vel', 'std_d', 'std_v', 'Gpred');
+
+% loading MCMC result 
+load('results/seismicData/mcmcSamples_new.mat', 'draws_f', 'draws_v');
+mcmc.meanH = reshape(mean(draws_f, 1)', data.n_x, data.n_layers)';
+mcmc.meanV = reshape(mean(draws_v, 1)', data.n_x, data.n_layers)';
+mcmc.stdH = reshape(std(draws_f, 0, 1)', data.n_x, data.n_layers)';
+mcmc.stdV = reshape(std(draws_v, 0, 1)', data.n_x, data.n_layers)';
+
+save('all_results_seismic.mat', 'predModel', 'mcmc', 'data', 'depth', 'vel', 'data'); 
+
+t_handle = mteugpPlotTravelTimesSeismic(data.xtrain, data.ytrain, data.n_layers);
+[d_handle, v_handle] =  mteugpPlotWorldSeismic(data, depth, vel, std_d, std_v, mcmc ); 
+pred_handle = mteugpPlotPredictionsSeismic(Gpred, model.Y, data.n_layers);
+
+
+% differences in variance: variational vs MCMC
+% err_std = (std_d - mcmc.stdH')./mcmc.meanH';
+% figure; hist(err_std(:));
+% min(err_std(:))
+% max(err_std(:))
  
 
- 
+
+if (SAVEPLOTS)
+    fname = [TRGFIGDIR, '/', DATASET, '-travel-times', '-', num2str(D)];
+    saveSinglePlot(t_handle, fname);
+    %
+    fname = [TRGFIGDIR, '/', DATASET, '-depth-', linearMethod, '-', num2str(D)];
+    saveSinglePlot(d_handle, fname);    
+    %
+    fname = [TRGFIGDIR, '/', DATASET, '-vel-', linearMethod, '-', num2str(D)];
+    saveSinglePlot(v_handle, fname);        
+    %
+    fname = [TRGFIGDIR, '/', DATASET, '-pred-', linearMethod, '-', num2str(D)];
+    saveSinglePlot(pred_handle, fname);       
 end
 
+end
+
+
+function saveSinglePlot(fig_handle, fname)
+fname = strrep(fname, ' ', '-');
+saveas(fig_handle, [fname, '.eps'], 'epsc' );
+saveas(fig_handle, [fname, '.png'], 'png' );
+system(['epstopdf ', fname, '.eps']);
+end
 
 %% Test Jacobian of fwd model
 function testJacobian(model)
@@ -91,7 +152,7 @@ end
 
 %% 
 function [dopt, vopt, gpred] = runMAPBenchmark(data, realdata)
-plotTravelTimes(data.xtrain, data.ytrain, data.n_layers);
+mteugpPlotTravelTimesSeismic(data.xtrain, data.ytrain, data.n_layers);
 [dopt, vopt] = fsseRegSolution(data.ytrain', data.n_x, data.n_layers, data.doffsets, data.voffsets, realdata);
 dopt = dopt';
 vopt = vopt';
@@ -103,22 +164,9 @@ mteugpPlotPredictionsSeismic(gpred, data.ytrain, data.n_layers);
 end
 
 
+ 
 
 
-function plotTravelTimes(x, y, n_layers)
-% plot travel times
-% x: (n_x x 1)
-% y: (n_x x n_layers)
-clf;
-hold on;
-for layer = 1 : n_layers
-    plot(x, y(:, layer), 'g', 'linewidth', 3);
-end
-set(gca,'YDir','reverse');
-title('Travel times');
-xlabel('Sensor location (m)');
-ylabel('Time (s)');
-end
 
 
 
@@ -127,9 +175,13 @@ end
 function [dopt, vopt] = fsseRegSolution(y, n_x, n_layers, doffsets, voffsets, realdata)
 
 if (~realdata)
-    l_off = 1e-8;
+    l_off = 0;
     l_v = 0;
-    l_d = 1e-7;
+    l_d = 0;
+% TODO: [EVB] Uncomment me below    
+%    l_off = 1e-8;
+%    l_v = 0;
+%    l_d = 1e-7;
 else
     l_off = 0;
     l_v = 1e-5;
@@ -176,7 +228,7 @@ depth   = reshape(theta(1:L), n_layers, n_x);
 vel       = reshape(theta(L+1:end), n_layers, n_x);
 
 F       = mteugpWrapSeismicParameters( depth', vel' );
-y_sim   = mteugpFwdSeismic(F, 0, 0)';
+y_sim   = mteugpFwdSeismic(F)';
 
 % Data fit
 sse     = sum(sum( (y - y_sim).^2 ));
@@ -189,3 +241,25 @@ obj     = sse + l_off*regoff + l_d*regdvar + l_v*regvvar;
 fprintf('Objective: %f\n', obj);
     %fflush(stdout); 
 end
+
+
+
+function  val = smll(muTrue, varTrue, muPred, varPred )
+%MYSMLL Standardised mean log loss
+%   ean Negative log likelihood aussuming gaussianity
+%   and standardised by using a gaussian with the training data stats
+
+ll_model = - logOfGaussUnivariate( ytest, muPred, varPred );
+ll_naive = - logOfGaussUnivariate( ytest, muTrue, varTrue );
+
+val = mean(ll_model - ll_naive,1);
+
+end
+
+
+
+
+
+
+
+

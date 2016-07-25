@@ -4,6 +4,9 @@ function model  = mteugpOptimizeHyper(model )
 % theta = [featureParam; likelihoodParam; PriorParam]
 %       = [featureParam; theta_y; theta_w]
 %
+global bestNelbo;
+
+bestNelbo = min(model.nelbo(model.nelbo~=0));
 global best_M; % to share with mteugpNelboHyper;
 best_M = model.M;
 

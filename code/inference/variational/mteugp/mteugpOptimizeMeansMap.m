@@ -41,8 +41,10 @@ switch (model.linearMethod)
         Ytilde    = model.Y - Gval;
         Ys        = bsxfun(@times, Ytilde, diagSigmayinv'); % NxP
         lmap      = sum(sum(Ys.*Ytilde));
-         Ms        = bsxfun(@times, M, diagSigmawinv'); % DxQ
-        lmap      = 0.5*(lmap +  sum(sum(Ms.*M)));
+        
+        M_off      = M - model.priorMean;
+        Ms        = bsxfun(@times, M_off, diagSigmawinv'); % DxQ
+        lmap      = 0.5*(lmap +  sum(sum(Ms.*M_off)));
         
         for q = 1 : model.Q
             Jq         = J(:,:,q); % N x P
@@ -59,8 +61,10 @@ switch (model.linearMethod)
         Ytilde = model.Y - Gval;
         Ys     = bsxfun(@times, Ytilde, diagSigmayinv'); % NxP
         lmap   = sum(sum(Ys.*Ytilde));
-         Ms    = bsxfun(@times, M, diagSigmawinv'); % DxQ
-        lmap   = 0.5*(lmap +  sum(sum(Ms.*M)));
+        
+         M_off      = M - model.priorMean;
+         Ms    = bsxfun(@times, M_off, diagSigmawinv'); % DxQ
+        lmap   = 0.5*(lmap +  sum(sum(Ms.*M_off)));
         
         for q = 1 : model.Q
             Jq         = J(:,:,q); % N x P
@@ -79,7 +83,7 @@ end
 
 
 
-
+ 
 
 
 

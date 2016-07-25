@@ -1,6 +1,10 @@
 function data  = mteugpLoadDataSeismic( realData )
 %MTEUGPLOADDATASEISMIC Summary of this function goes here
 %   Detailed explanation goes here
+% loading the prior 
+load('data/seismicData/priorRealData', 'h_mu','h_std', 'v_mu', 'v_std', 'bases', ...
+                            'gamma_alpha', 'gamma_beta');
+    
 if (~realData)
     [x, doffsets, voffsets, y, v, f] = simulateworld();
     data.xtrain   = x';
@@ -8,7 +12,7 @@ if (~realData)
     data.doffsets =  doffsets;
     data.voffsets = voffsets;    
     data.d        = f'; % tue depths    
-    data.v        = v'; % true velocities
+    data.v        = v'; % true velocities    
 else
     [x, doffsets, voffsets, y] = loaddata(4);
     data.xtrain   = x;
@@ -17,6 +21,14 @@ else
     data.voffsets = voffsets;
     data.d        = [];     
     data.v        = [];
+    
+    data.h_mu     = double(h_mu); % mean prior depth
+    data.h_std    = double(h_std);
+    data.v_mu     = double(v_mu);
+    data.v_std    = double(v_std);
+    data.n_bases  = size(bases,1); % number of features used in MCMC simulation for comparison
+    data.noise    =   (gamma_alpha-1)./gamma_beta; % prior noise is the mode
+    
 end
   
 data.n_layers = length(voffsets);
@@ -67,7 +79,7 @@ v   = vel_model(voffsets, velgrads, x);
 % generate observations,
 % Simulate some noisy y's by adding Gaussian observation noise:
 F = mteugpWrapSeismicParameters(f', v');
-g = mteugpFwdSeismic(F, 0, 0)'; 
+g = mteugpFwdSeismic(F)'; 
 y = zeros(n_layers, n_x);
 for layer = 1 : n_layers
     y(layer, :) = g(layer, :) + randn(1, n_x)*layer_noise(layer);
