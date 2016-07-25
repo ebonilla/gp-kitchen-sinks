@@ -3,6 +3,9 @@ function [ A, B ] = mteugpUpdateLinearization( model)
 %   Detailed explanation goes here
 % Updates parameters of linearization
 % N = model.N;
+% Edwin V. Bonilla (http://ebonilla.github.io/)
+
+
 N = size(model.Phi, 1); % more general to handle test data (phi = phi_*)
 P = model.P;
 Q = model.Q;

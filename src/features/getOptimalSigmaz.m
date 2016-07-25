@@ -6,6 +6,9 @@ function sigma_z = getOptimalSigmaz(ell)
 %
 % both settings actually work with the corresponding definition
 % of features
+% Edwin V. Bonilla (http://ebonilla.github.io/)
+
+
 sigma_z = 1/(2*pi*ell); % exact setting from Fourier transfrom
 %sigma_z = 1/ell; % exact setting from Fourier transfrom
 

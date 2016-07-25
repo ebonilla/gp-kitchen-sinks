@@ -1,10 +1,9 @@
 function [MeanF, VarF ] = mteugpGetPredictive( model, xstar )
-%MTEUGPPREDICT Summary of this function goes here
-%   Detailed explanation goes here
-% Gets predictive distribution for all latent functions and all test points
+%MTEUGPPREDICT Gets predictive distribution for all latent functions and all test points
 % returns the mean and variances for all f* across all latent functions
-% Mf: Nstar x Q of all mean(f*)
+% MeanF: Nstar x Q of all mean(f*)
 % VarF = Nstar x Q of all var(f*)
+% Edwin V. Bonilla (http://ebonilla.github.io/)
 
 PhiStar  = feval(model.featFunc, xstar, model.Z, model.featParam);
 

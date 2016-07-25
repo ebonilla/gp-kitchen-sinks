@@ -1,6 +1,7 @@
 function nelbo  = mteugpNelbo( model )
 %MTEUGPNELBO Summary of this function goes here
 %   Detailed explanation goes here
+% Edwin V. Bonilla (http://ebonilla.github.io/)
 
 
 %% KL term

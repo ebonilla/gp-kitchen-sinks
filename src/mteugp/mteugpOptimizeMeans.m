@@ -2,6 +2,7 @@ function [ model ] = mteugpOptimizeMeans( model )
 %MTEUPOPTIMIZEMEANS Summary of this function goes here
 %   Detailed explanation goes here
 % Optmize means and linearization parameters
+% Edwin V. Bonilla (http://ebonilla.github.io/)
 
 if ( isfield(model, 'useNewton') ) 
     if (model.useNewton == 1) 

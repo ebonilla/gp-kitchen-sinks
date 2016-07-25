@@ -1,4 +1,6 @@
 function Cq = mteugpGetCq(Aq, Phi, sigma2wq, diagSigmayinv)
+% Edwin V. Bonilla (http://ebonilla.github.io/)
+
 D          = size(Phi,2);
 Hq         =   (1/sigma2wq) * eye(D); 
 v          = diagProd(bsxfun(@times, Aq, diagSigmayinv'), Aq'); % Nx1

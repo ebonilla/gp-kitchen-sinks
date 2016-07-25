@@ -1,6 +1,7 @@
 function [ x, fval ] = optimizeObjective(optimizer, fobj, x0, optconf )
 %OPTIMIZEOBJECTIVE Summary of this function goes here
 %   Detailed explanation goes here
+% Edwin V. Bonilla (http://ebonilla.github.io/)
 
 switch optimizer,
     case 'minFunc',

@@ -1,4 +1,5 @@
 function set_equal_axes()
+% Edwin V. Bonilla (http://ebonilla.github.io/)
 
 aa   = axis();
 mini = min([aa(1) aa(3)]); 

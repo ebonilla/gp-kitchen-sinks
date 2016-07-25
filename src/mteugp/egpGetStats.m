@@ -1,4 +1,6 @@
 function [Gval, J, H] =  egpGetStats(MuF, fwdFunc, jacobian, diaghess, N, P, Q)
+% Edwin V. Bonilla (http://ebonilla.github.io/)
+
 Gval = zeros(N,P);
 J    = zeros(N,P,Q);
 if (nargout == 2) % hessian not required

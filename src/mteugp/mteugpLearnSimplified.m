@@ -1,6 +1,8 @@
 function  model  = mteugpLearnSimplified( model, xtest, ytest )
 %MTEUGPLEARNSIMPLIFIED mteugpLearn using simplified version of NELBO
 %   Detailed explanation goes here
+% Edwin V. Bonilla (http://ebonilla.github.io/)
+
 TCHANGE = 2; % number of iterations to check for change in NELBO
 
 model.nelbo = [];

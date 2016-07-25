@@ -1,6 +1,7 @@
 function  Kinv  = getInverseChol( L )
 %GETINVERSECHOL Get inverse of matrix with Cholesky Decompositon
 %   L: The lower triangular representation of the matrix
+% Edwin V. Bonilla (http://ebonilla.github.io/)
 
 I    = eye(size(L));
 Kinv = L'\(L\I);

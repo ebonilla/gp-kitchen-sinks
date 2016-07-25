@@ -4,7 +4,8 @@ function plotConfidenceInterval(xstar,mu, se, t, area, colorM, colorS)
 % se: vector of standard errors
 % t: value of +/- se to achieve some % confidence
 % t=1.96 by default
-% Edwin V. Bonilla
+% Edwin V. Bonilla (http://ebonilla.github.io/)
+
 if (~exist('t', 'var') || isempty(t))
     t = 1.96;
 end

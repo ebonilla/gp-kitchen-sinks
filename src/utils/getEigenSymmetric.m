@@ -1,6 +1,9 @@
 function [ E, V ] = getEigenSymmetric( K, minNoise )
 %GETEIGENSYMMETRIC Summary of this function goes here
 %   Gets egeindecomposition of a symmetric matrix K
+% Edwin V. Bonilla (http://ebonilla.github.io/)
+
+
 D = size(K,1);
 
 if (nargin==1)

@@ -1,4 +1,7 @@
 function evaluateLatentPredictions(xtrain, ftrain, xtest, muStar, sigmaStar, ftest, strTitle)
+% Edwin V. Bonilla (http://ebonilla.github.io/)
+
+
 %% Evaluate Latent Predicitons
 figure;
 if size(xtest,1)

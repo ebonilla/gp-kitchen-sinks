@@ -1,6 +1,7 @@
 function model  = mteugpUnwrapHyper( model, theta )
 %MTEUGPUNWRAPHYPER Summary of this function goes here
 %   Detailed explanation goes here
+% Edwin V. Bonilla (http://ebonilla.github.io/)
 
 L          = length(theta);
 P          = model.P; % Number of tasks

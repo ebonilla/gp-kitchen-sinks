@@ -1,6 +1,8 @@
 function  kl  = mteugpGetKL( model )
 %MTEUGPGETKL Summary of this function goes here
 %   kl divergence
+% Edwin V. Bonilla (http://ebonilla.github.io/)
+
 Q = model.Q;
 
 kl = 0;

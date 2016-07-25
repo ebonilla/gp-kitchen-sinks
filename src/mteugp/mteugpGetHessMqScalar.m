@@ -3,6 +3,7 @@ function  H  = mteugpGetHessMqScalar( model, mq, sigma2w, diagSigmainv, N, q )
 %
 %   Get Hessian of negative elbo evaluated at w_q = m_q
 % Sigmainv: (Sigma_y)^-1
+% Edwin V. Bonilla (http://ebonilla.github.io/)
 
 D = model.D;
 H =  - (1/sigma2w) * eye(D);

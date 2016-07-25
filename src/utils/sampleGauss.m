@@ -8,6 +8,9 @@ function X = sampleGauss(mu, Sigma, N)
 % Sigma = [1 0.5; 0.5 2]; %Covariance matrix you saved for each problem
 % mu,x: column vectors
 % Each column of X is a different sample
+% Edwin V. Bonilla (http://ebonilla.github.io/)
+
+
 D = length(mu);
 
 %if ( isDiag(Sigma) )

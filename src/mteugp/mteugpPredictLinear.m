@@ -2,6 +2,7 @@ function  Gstar  = mteugpPredictLinear( model, xstar )
 %MTEUGPPREDICTLINEAR Summary of this function goes here
 %   Detailed explanation goes here
 % predicts using linearization at phi_*
+% Edwin V. Bonilla (http://ebonilla.github.io/)
 
 % Updates the model with test data
 model.X         = xstar;

@@ -2,6 +2,7 @@ function  [model, nelbo, exitFlag] = mteugpOptimizeAllSimplified( model )
 %MTEUGPOPTIMIZEMEANSSIMPLIFIED Optimize all the parameters jointly
 % using simplified Nelbo
 %   Detailed explanation goes here
+% Edwin V. Bonilla (http://ebonilla.github.io/)
 
 
 fprintf('Optimizing all parameters starting \n');

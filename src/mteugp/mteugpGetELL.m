@@ -1,4 +1,6 @@
 function ell = mteugpGetELL(model)
+% Edwin V. Bonilla (http://ebonilla.github.io/)
+
 sigma2y      = model.sigma2y;
 diagSigmaInv = 1./(sigma2y);
 P            = model.P;

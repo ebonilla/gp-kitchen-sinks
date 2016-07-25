@@ -3,6 +3,8 @@ function [g, dg]  = mteugpFwdSoftmax( f )
 %   Detailed explanation goes here
 % [N, C] = size(f)
 % [P Q] = size(dg) % only done fo a single n :-( 
+% Edwin V. Bonilla (http://ebonilla.github.io/)
+
 g = softmax(f);
 
 

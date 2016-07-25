@@ -1,6 +1,7 @@
 function  [model, nelbo, exitFlag] = mteugpOptimizeMeansSimplified( model )
 %MTEUGPOPTIMIZEMEANSSIMPLIFIED Optimize means using simplified Nelbo
 %   Detailed explanation goes here
+% Edwin V. Bonilla (http://ebonilla.github.io/)
 
 % DELETE ME?
 model = mteugpOptimizeMeansMap(model);

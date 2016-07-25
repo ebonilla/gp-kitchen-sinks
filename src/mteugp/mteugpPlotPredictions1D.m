@@ -1,6 +1,7 @@
 function mteugpPlotPredictions1D( data ,model, pred )
 %MTEUGPPLOTPREDICTIONS1D Summary of this function goes here
 %   Detailed explanation goes here
+% Edwin V. Bonilla (http://ebonilla.github.io/)
 
 [xtest, idx] = sort(data.xtest);
 mFpred   = pred.mFpred(idx);

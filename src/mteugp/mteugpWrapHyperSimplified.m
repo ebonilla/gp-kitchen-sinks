@@ -1,4 +1,6 @@
 function theta = mteugpWrapHyperSimplified(model)
+% Edwin V. Bonilla (http://ebonilla.github.io/)
+
  theta_f = mteugpWrapParameter(model.featParam, model.featTransform);
  theta_y = mteugpWrapParameter(model.lambday, model.lambdayTransform);
  theta_w = mteugpWrapParameter(model.lambdaw,model.lambdawTransform );

@@ -5,6 +5,7 @@ function [model, nelbo, exitFlag]  = mteugpOptimizeHyperSimplified(model )
 % theta = [featureParam; likelihoodParam; PriorParam]
 %       = [featureParam; theta_y; theta_w]
 %
+% Edwin V. Bonilla (http://ebonilla.github.io/)
 
 if (model.hyperConf.verbose)
     fprintf('Optimizing Hyper starting \n')

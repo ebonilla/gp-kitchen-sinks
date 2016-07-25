@@ -1,4 +1,6 @@
 function [theta_f, theta_y, theta_w] = mteugpSplitHyper(theta, P, Q)
+% Edwin V. Bonilla (http://ebonilla.github.io/)
+
 L          = length(theta);
 nFeatParam = L - P - Q; % Number of feature parameters
 theta_f    = theta(1:nFeatParam);

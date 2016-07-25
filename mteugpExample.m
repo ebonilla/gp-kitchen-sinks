@@ -1,7 +1,9 @@
 function mteugpExample()
+% Example of using MTEUGP (aka Extended and Unscented Kitchen Sinks)
+% See Bonilla et al (International Conference on Machine Learning, 2016)
 % Edwin V. Bonilla (http://ebonilla.github.io/)
 rng('default');
-linearMethod    = 'Taylor';         % {'Taylor', 'Unscented'}
+linearMethod    = 'Unscented';         % {'Taylor', 'Unscented'}
 D               = 50;              % number of features
 fwdModel        = @exampleFwdModel; % This is the fwd model (problem specific)
 
@@ -30,7 +32,7 @@ title('Gpred');
 
 end
 
-%% 
+%% Generates data from a GP and passses them through the fwdModel
 function [xtr,ytr, xte, yte, fte] = generateData(fwdModel)
 N   = 1000;
 Ntr = floor(0.2*N);

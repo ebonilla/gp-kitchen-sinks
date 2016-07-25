@@ -8,6 +8,9 @@ function [ An, bn ] = ugpGetLinearization(fwdFunc, muF, varF, kappa)
 % We generate N = 2*Q + 1 sigma points, their weights and observations
 % This N has nothing to so with the actual number of observtions in 
 % our original problem
+% Edwin V. Bonilla (http://ebonilla.github.io/)
+
+
 Q    =  length(muF);
 N    =  2*Q + 1;  
 X    =  zeros(Q, N);

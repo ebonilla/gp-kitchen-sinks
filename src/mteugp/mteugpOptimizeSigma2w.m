@@ -1,6 +1,8 @@
 function model = mteugpOptimizeSigma2w( model )
 %MTEUGPOPTIMIZESIGMA2W Optimize sigma2w using simplified nelbo
 %   Detailed explanation goes here
+% Edwin V. Bonilla (http://ebonilla.github.io/)
+
 fprintf('Optimizing sigma2w starting \n');
 
 theta =  mteugpWrapSigma2w(model.sigma2w);

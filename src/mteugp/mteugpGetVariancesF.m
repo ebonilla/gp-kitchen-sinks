@@ -4,6 +4,8 @@ function  V  = mteugpGetVariancesF( Phi, C )
 % Phi: NxD matrix of features
 % C: DxDxQ matrix of Q DxD covariances (on weights)
 % V: NxQ vector of variances
+% Edwin V. Bonilla (http://ebonilla.github.io/)
+
 N = size(Phi,1);
 Q = size(C,3);
 V = zeros(N,Q);

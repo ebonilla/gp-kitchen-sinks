@@ -1,6 +1,8 @@
 function  model  = mteugpOptimizeFeatures( model)
 %MTEUGPOPTIMIZEFEATURES Summary of this function goes here
 %   Detailed explanation goes here
+% Edwin V. Bonilla (http://ebonilla.github.io/)
+
 global bestNelbo;
 bestNelbo = min(model.nelbo(model.nelbo~=0));
 global best_M; % to share with mteugpNelboHyper;

@@ -1,6 +1,7 @@
 function nelbo  = mteugpNelboSimplified( model )
 %MTEUGPNELBOSIMPLIFIED Simplified version of the Nelbo that
 %  eliminates {C_q} from  explicit optimization
+% Edwin V. Bonilla (http://ebonilla.github.io/)
 
 
 % gets required variables from model

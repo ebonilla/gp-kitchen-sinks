@@ -1,5 +1,7 @@
 function  model  = mteugpGetConfigDefault( X, Y, fwdFunc, linearMethod, D )
 %MTEUGPGETCONFIGTOY Get configuration for toy experiment
+% Edwin V. Bonilla (http://ebonilla.github.io/)
+
 d = size(X,2);
 
 %% feature function

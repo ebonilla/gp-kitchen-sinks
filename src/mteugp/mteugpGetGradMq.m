@@ -1,4 +1,6 @@
 function grad_mq = mteugpGetGradMq(model, mq, sigma2w, diagSigmainv, N, q)
+% Edwin V. Bonilla (http://ebonilla.github.io/)
+
 grad_mq = - (1/sigma2w)*mq;
 
 Aq    = model.A(:,:,q); % NxP

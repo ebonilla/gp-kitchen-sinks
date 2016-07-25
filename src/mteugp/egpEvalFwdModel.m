@@ -6,6 +6,7 @@ function [ fwdVal, J, H ] = egpEvalFwdModel( fwdFunc, f, P, boolJacob, boolDiagH
 % boolJacob: Jacobian provided?
 % fwdFunc: R^Q --> R^P forward model function
 % H: PxQ matrix of second derivatives
+% Edwin V. Bonilla (http://ebonilla.github.io/)
 
 if (nargout == 1) % Check if gradients are required
     fwdVal = fwdfunc(f);  % simply computes the function

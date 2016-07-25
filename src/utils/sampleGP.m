@@ -1,5 +1,6 @@
 function y = sampleGP(xstar, covfunc, loghyper, MIN_NOISE)
 %  generates samples from the true GP
+% Edwin V. Bonilla (http://ebonilla.github.io/)
 
 if (nargin == 3)
     MIN_NOISE = 1e-7;

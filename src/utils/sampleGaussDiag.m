@@ -3,6 +3,7 @@ function  X  = sampleGaussDiag( mu, diagSigma, N )
 %   mu: mean
 % diagSigma: vector with variances
 % N: Number of observations
+% Edwin V. Bonilla (http://ebonilla.github.io/)
 
 D = length(mu);
 z = randn(D,N); % D N-dimensional independent Gaussian vectors

@@ -1,6 +1,8 @@
 function theta = mteugpWrapParameter(val, transform)
 % transform: mapping from theta --> cal:
 %  e.g. 'exp': val = exp(theta) --> theta = log(val)
+% Edwin V. Bonilla (http://ebonilla.github.io/)
+
 switch transform,
     case 'linear',
         theta = val;

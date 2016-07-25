@@ -1,6 +1,7 @@
 function  [model, grad] =  mteugpUnwrapHyperSimplified(model, theta)
 % assume precision parameterization
 % e.g. lambda_y = exp(theta)
+% Edwin V. Bonilla (http://ebonilla.github.io/)
 
 [theta_f, theta_y, theta_w] = mteugpSplitHyper(theta, model.P, model.Q);
 [theta_f, grad_f]           = mteugpUnwrapParameter(theta_f, model.featTransform);

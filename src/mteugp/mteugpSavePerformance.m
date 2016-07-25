@@ -1,4 +1,6 @@
 function mteugpSavePerformance(i, model, xtest, ytest)
+% Edwin V. Bonilla (http://ebonilla.github.io/)
+
 if (~isfield(model,'resultsFname'))
     return;
 end

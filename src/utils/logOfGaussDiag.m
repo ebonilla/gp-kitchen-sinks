@@ -3,6 +3,8 @@ function logn = logOfGaussDiag( y, m, diagS )
 % y: observations
 % m: mean
 % diagS: diagonal vector with variances
+% Edwin V. Bonilla (http://ebonilla.github.io/)
+
 N = size(y,1);
 
 logn = -0.5*(N*log(2*pi) + sum(log(diagS)) + sum(((y-m).^2)./diagS) );

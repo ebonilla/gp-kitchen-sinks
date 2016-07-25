@@ -2,6 +2,9 @@ function  smll = mySMLL(ytrain, ytest, muPred, varPred )
 %MYSMLL Standardised mean log loss
 %   ean Negative log likelihood aussuming gaussianity
 %   and standardised by using a gaussian with the training data stats
+% Edwin V. Bonilla (http://ebonilla.github.io/)
+
+
 mu     = mean(ytrain);
 sigma2 = var(ytrain);
 

@@ -4,6 +4,8 @@ function model  = mteugpOptimizeHyper(model )
 % theta = [featureParam; likelihoodParam; PriorParam]
 %       = [featureParam; theta_y; theta_w]
 %
+% Edwin V. Bonilla (http://ebonilla.github.io/)
+
 global bestNelbo;
 
 bestNelbo = min(model.nelbo(model.nelbo~=0));

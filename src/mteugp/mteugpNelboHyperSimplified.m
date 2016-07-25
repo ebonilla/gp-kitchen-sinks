@@ -1,6 +1,8 @@
 function [nelbo, grad] = mteugpNelboHyperSimplified(theta, model)
 % the implemented gradients are wrt precision parameters 
 % lambday, lambdaw
+% Edwin V. Bonilla (http://ebonilla.github.io/)
+
 [model, d_hyper] =  mteugpUnwrapHyperSimplified(model, theta);
 
 % TODO: [EVB] DELETE? TEMPORARY HERE, DOES THIS ACTUALLY WORK?

@@ -9,6 +9,8 @@ function nelbo  = mteugpNelboHyper( theta, model )
 % Although  sigma2w is a D-dimensional here we consider an isotropic 
 % parameterization sigma2w = exp(theta_w)*ones(D,1)
 %
+% Edwin V. Bonilla (http://ebonilla.github.io/)
+
 global bestNelbo;
 
 global best_M; % to share with mteugpOptimizeHyper

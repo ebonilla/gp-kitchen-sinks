@@ -1,6 +1,7 @@
 function  theta  = initRandomRBF(sigmaf )
 %INITRANDOMRBF Initializes parameters of random RBF
 %   Detailed explanation goes here
+% Edwin V. Bonilla (http://ebonilla.github.io/)
  
 if(nargin == 0) 
     sigmaf = 1;

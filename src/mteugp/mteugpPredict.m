@@ -1,6 +1,5 @@
 function  Gstar  = mteugpPredict( model, MeanF, VarF )
-%MTEUGPPREDICT Summary of this function goes here
-%   Predicts the (noiseless) target variable (g*) for the EUGP
+%MTEUGPPREDICT  Predicts the (noiseless) target variable (g*) for the EUGP
 % based on the Gaussian predictive distribution
 % MeanF: Nstar x Q matrix of means
 % varF: Nstar x Q matrix of variances 
@@ -10,6 +9,7 @@ function  Gstar  = mteugpPredict( model, MeanF, VarF )
 %   return a matrix Nstar x P
 % Gstar: matrix of Nstar x P predictions
 % 
+% Edwin V. Bonilla (http://ebonilla.github.io/)
 
 switch model.predMethod,
     case 'mc',

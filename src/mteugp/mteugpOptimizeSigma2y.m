@@ -4,6 +4,7 @@ function  model  = mteugpOptimizeSigma2y( model )
 
 % Using gradients
 % model = mteugpOptimizeSigma2yGrad(model);
+% Edwin V. Bonilla (http://ebonilla.github.io/)
 
 model = meteugpUpdateSigma2y(model);
 

@@ -2,6 +2,8 @@ function [ nelbo, grad ] = mteugNelboFeat( theta, model)
 %MTEUGNELBOFEAT Summary of this function goes here
 %   Detailed explanation goes here
 % Nelbo and gradients for learning parameteres of features 
+% Edwin V. Bonilla (http://ebonilla.github.io/)
+
 global bestNelbo;
 
 global best_M; % to share with mteugpOptimizeFeat

@@ -3,6 +3,7 @@ function  H  = mteugpGetHessMq( model, mq, sigma2w, diagSigmainv, N, q )
 %   Get Hessian of negative elbo evaluated at w_q = m_q
 % diagSigmaInv: Px1 vector of diagonal terms (Sigma_y)^-1
 % and the code is fully vectorized
+% Edwin V. Bonilla (http://ebonilla.github.io/)
 
 D = model.D;
 H =  - (1/sigma2w) * eye(D);

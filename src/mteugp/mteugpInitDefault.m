@@ -2,6 +2,7 @@ function  model  = mteugpInitDefault( model )
 %MTEUGPINIT Summary of this function goes here
 % [ model ] = mteugpInit( model )
 %   Initializes all model parameters
+% Edwin V. Bonilla (http://ebonilla.github.io/)
 
 %% Initializing features
 model.featParam = feval(model.initFeatFunc);

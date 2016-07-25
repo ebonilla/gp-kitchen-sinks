@@ -1,6 +1,7 @@
 function thetaLB  = mteugpGetHyperLB( model  )
 %MTEUGPGETHYPERLB Get Hyperparameter lower bounds
 %   Detailed explanation goes here
+% Edwin V. Bonilla (http://ebonilla.github.io/)
 
 % Default lower bounds (-inf)
 m.featParam = -Inf*ones(size(model.featParam));

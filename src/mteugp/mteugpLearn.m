@@ -1,17 +1,19 @@
 function  model  = mteugpLearn( model, xtest, ytest )
-%MTEUGPLEARN Summary of this function goes here
-%   Detailed explanation goes here
-% xtest, ytest: used only to evaluate the model as we go -> to check
-% progress
+%MTEUGPLEARN Learns an MTEUGP model (aka extended/unscented kitchen sinks)
+% INPUT:
+%   - model: structure as obained from  mteugpGetConfigDefault.m
+%   -  xtest, ytest: used only to evaluate the model as we go -> to check progress
+% OUTPUT:
+%   - model: modified structure with learned posterior parameters (model.M and Model.C) and
+%   hyperparameters (m.featParam, m.sigma2y, m.sigma2w)
+%
+% Edwin V. Bonilla (http://ebonilla.github.io/)
 
 model.nelbo = [];
-model            = model.initFunc(model); 
-optConf = model.globalConf;
-%if (~isempty(model.nelbo)) % There awas a previous run 
-%     model  = mteugpOptimizeHyper(model);
-%end
-oldNelbo         = model.nelbo;
-model.nelbo      = zeros(optConf.iter + 2,1);
+model       = model.initFunc(model); 
+optConf     = model.globalConf;
+oldNelbo    = model.nelbo;
+model.nelbo = zeros(optConf.iter + 2,1);
 i = 1;
 model.nelbo(i) =  mteugpNelbo( model ); 
 showProgress(i, model.nelbo(i));

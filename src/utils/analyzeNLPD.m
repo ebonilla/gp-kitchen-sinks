@@ -1,4 +1,6 @@
 clear all; clc;
+% Edwin V. Bonilla (http://ebonilla.github.io/)
+
 
 nlpd = @(delta,sigma2) 0.5*(log(sigma2) +  (delta)^2*(1./sigma2));
 sigma2 = 1e-4:0.001:100;

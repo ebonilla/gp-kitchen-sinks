@@ -3,6 +3,7 @@ function [theta, fval, exitCode] =  ...
 %MTEUGPOPTIMIZE Summary of this function goes here
 %   Detailed explanation goes here
 % wrapper for other optimizers
+% Edwin V. Bonilla (http://ebonilla.github.io/)
 
 
 switch optConf.optimizer

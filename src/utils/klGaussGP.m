@@ -1,5 +1,7 @@
 function [ kl dKL] = klGaussGP(meanFunc, covFunc, loghyper, x,  muq, Sigmaq )
 %KLGAUSSGP KL(q|p) where q is a Guassian and p is a GP prior
+% Edwin V. Bonilla (http://ebonilla.github.io/)
+
 N = size(x,1);
 strDecomp = 'chol';
 

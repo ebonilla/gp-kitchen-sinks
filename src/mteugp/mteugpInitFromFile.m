@@ -1,6 +1,7 @@
 function [model, exitCode]  = mteugpInitFromFile( model )
 %MTEUGPINITFROMFILE Summary of this function goes here
 %   Detailed explanation goes here
+% Edwin V. Bonilla (http://ebonilla.github.io/)
 
 exitCode = 0;
 try

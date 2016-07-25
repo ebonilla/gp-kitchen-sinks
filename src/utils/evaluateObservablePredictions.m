@@ -1,4 +1,6 @@
 function evaluateObservablePredictions(xtrain, xtest, ytest, yStar, strTitle)
+% Edwin V. Bonilla (http://ebonilla.github.io/)
+
 if (size(xtrain,2) == 1)
     [foo idx] = sort(xtest);
     xtest = xtest(idx);

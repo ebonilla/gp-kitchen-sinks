@@ -1,6 +1,8 @@
 function [ model ] = mteugpOptimizeCovariances( model )
 %MTEUGPOPTIMIZECOVARIANCES Summary of this function goes here
 % update covariances using optimal mean
+% Edwin V. Bonilla (http://ebonilla.github.io/)
+
 for q = 1 : model.Q
         model.C(:,:,q) = updateCovariance(model,q);
 end

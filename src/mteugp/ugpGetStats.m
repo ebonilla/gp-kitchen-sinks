@@ -1,6 +1,8 @@
 function [Ybar, J] =  ugpGetStats(MuF, fwdFunc, VarF, kappa, N, P, Q)
 % Gets stats from UGP necessary for MAP objective
 % we compute the jacobian J form the UGP function
+% Edwin V. Bonilla (http://ebonilla.github.io/)
+
 
 Ybar = zeros(N, P);
 J    = zeros(N,P,Q);

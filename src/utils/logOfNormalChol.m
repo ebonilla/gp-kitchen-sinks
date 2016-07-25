@@ -2,6 +2,7 @@ function  logn  = logOfNormalChol( y, m, L )
 % Computes the log of a normal distribution evaluated at y
 %   Detailed explanation goes here
 % L: the lower cholesky decomposition of Sigma
+% Edwin V. Bonilla (http://ebonilla.github.io/)
 
 D     = length(m);
 ldet  = getLogDetChol(L);

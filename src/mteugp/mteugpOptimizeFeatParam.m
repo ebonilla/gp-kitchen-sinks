@@ -1,6 +1,8 @@
 function  model  = mteugpOptimizeFeatParam( model )
 %MTEUGPOPTIMIZEFEATPARAM Optmizes feature parameters using simplfied nelbo
 %   Detailed explanation goes here
+% Edwin V. Bonilla (http://ebonilla.github.io/)
+
 fprintf('Optimizing feature parameters starting \n');
 
 theta   = model.featParam; % wrapping of feat param managed by feat func

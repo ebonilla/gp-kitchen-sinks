@@ -5,6 +5,8 @@ function nll  = myMNLPMulti( ytrain, ytest, pYpred )
 % Assumes ytest(j) in {0,1}
 % ytrain: ingnored but kept for consistency with othe loss functions
 % [N C] size(ytest) = size(pYpred)
+% Edwin V. Bonilla (http://ebonilla.github.io/)
+
 
 % Matlab reads matrix columnwise so we need to transpose things
 pYpred = pYpred';

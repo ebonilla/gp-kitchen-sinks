@@ -6,7 +6,7 @@ function  e  = mySMSE(ytrain, ytest, ypred )
 %   - ytest: real
 %   - ypred: prediction from my model
 %
-% Edwin V. Bonilla
+% Edwin V. Bonilla (http://ebonilla.github.io/)
 
 res = ytest - ypred; % residuals
 e   = mean(res.^2,1);

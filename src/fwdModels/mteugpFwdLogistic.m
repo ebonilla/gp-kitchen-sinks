@@ -2,6 +2,7 @@ function [ g, dg, d2g ] = mteugpFwdLogistic( f )
 %MTEUGPFWDBINARYCLASS Implementation of logistic sigmoid function for binary classification
 %   Detailed explanation goes here
 % 
+% Edwin V. Bonilla (http://ebonilla.github.io/)
 
 g  = logisticSigmoid(f);
 dg = g.*(1-g);

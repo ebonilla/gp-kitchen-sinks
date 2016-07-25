@@ -5,6 +5,7 @@ function [Phi, GradPhi] = getRandomRBF(x, Z, theta)
 %     return;
 % end
 % sigma_z is the std deviation of the features
+% Edwin V. Bonilla (http://ebonilla.github.io/)
 
 
 sigma_z = exp(theta); % exponential mapping

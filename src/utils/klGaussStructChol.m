@@ -1,6 +1,7 @@
 function  kl  = klGaussStructChol( prior, post )
 %KLGAUSSSTRUCT KL Gauss when the parameters are all structures
 % Assumes Cholesky factorization
+% Edwin V. Bonilla (http://ebonilla.github.io/)
 
 D = length(prior.mu);
 
