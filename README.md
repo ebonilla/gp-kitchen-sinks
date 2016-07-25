@@ -3,7 +3,7 @@ Extended and Unscented Kitchen Sinks
 
 Implements the framework _"Extended and Unscented Kitchen Sinks"_ of Bonilla et al [1].
 
-** Apache License** version 2.0 
+**Apache License** version 2.0 
 
 ## Author ##
 [Edwin V. Bonilla](http://ebonilla.github.io/)
