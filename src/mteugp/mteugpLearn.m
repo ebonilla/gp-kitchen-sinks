@@ -24,7 +24,10 @@ while (( i < optConf.iter) && (tol > optConf.ftol) )
     model.nelbo(i) =  mteugpNelbo( model );
     showProgress(i, model.nelbo(i));
     
-    save(model.resultsFname, 'model');  
+    if ( ~isempty(model.resultsFname) ) 
+        save(model.resultsFname, 'model');  
+    end
+    
     % We save results here after optimizing variational parameters
     if (nargin > 1)
         mteugpSavePerformance(i, model, xtest, ytest);
