@@ -66,7 +66,7 @@ model.hyperConf   = optConf;
 model.initFunc    = @mteugpInitDefault;
 
 %% Results directory
-model.resultsFname = [];
+model.resultsFname = []; % Provide output dir here to save results on the go
 
 end
 
