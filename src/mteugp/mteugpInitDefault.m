@@ -3,26 +3,20 @@ function  model  = mteugpInitDefault( model )
 % [ model ] = mteugpInit( model )
 %   Initializes all model parameters
 
-
-% Initializing features
+%% Initializing features
 model.featParam = feval(model.initFeatFunc);
-model.Phi       = feval(model.featFunc, model.X, model.featParam); 
+model.Phi       = feval(model.featFunc, model.X, model.Z, model.featParam); 
 model.D         = size(model.Phi,2); % actual number of features
 
-% likelihood variances
+%% likelihood variances
 model.sigma2y = 0.01*var(model.Y, 0, 1)';
 
 
-% hyper-parameters (of prior on w)
+%% hyper-parameters (of prior on w) and mean
 model.sigma2w = ones(model.Q,1); 
+model.M  = zeros(model.D,model.Q);
 
-
-% means, lineariz. and covariances
-%model.M            = randn(model.D,model.Q);
-model.M            = 0.01*randn(model.D,model.Q);
-
-
-% The UGP needs the covariances 
+%% The UGP needs the covariances 
 if ( strcmp(model.linearMethod, 'Unscented') )
     C = eye(model.D);
     for q = 1 : model.Q
@@ -40,7 +34,7 @@ fprintf('Initial sigma2w = %.4f\n', model.sigma2w);
 
 % fprintf('Initial Nelbo = %.2f\n', mteugpNelbo( model ) );
 
-
+ 
 
 end
 
