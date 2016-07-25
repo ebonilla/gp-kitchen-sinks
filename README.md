@@ -17,7 +17,7 @@ The package is written in Matlab and work as is. However, to use the mex version
 2. See `mteugpExample.m` for an example 
 
 ## License ## 
-Apache 2.0
+Apache 2.0 
 
 ## References ##
 [1] E. V. Bonilla and D. Steinberg and A. Reid. _Extended and Unscented Kitchen Sinks_. ICML (2016). 
