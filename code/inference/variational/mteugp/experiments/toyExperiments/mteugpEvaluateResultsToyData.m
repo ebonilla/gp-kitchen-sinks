@@ -72,6 +72,7 @@ figure;
 
 [hb, he] = mybarweb(meanVal, stdVal, strDim, benchmark, BAR_WIDTH, parula, baseValue);
 set(gca, 'FontSize', FONT_SIZE);
+set(gca, 'color', 'none');
 h_legend = findobj(gcf,'Tag','legend');
 set(h_legend, 'FontSize', FONT_SIZE, 'location', 'NorthWest', 'Orientation', 'vertical', 'Box', 'On');
 ylabel(strYlabel);
