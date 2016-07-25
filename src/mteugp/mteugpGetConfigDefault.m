@@ -1,19 +1,19 @@
 function  model  = mteugpGetConfigDefault( X, Y, fwdFunc, linearMethod, D )
-%MTEUGPGETCONFIGTOY Get configuration for toy experiment
+%MTEUGPGETCONFIGDEFAULT Get Default configuration 
 % Edwin V. Bonilla (http://ebonilla.github.io/)
 
-d = size(X,2);
+d = size(X,2);  % dimensionality of input
 
 %% feature function
-model.Z            = randn(D,d);
-model.featFunc     =  @getRandomRBF;
-model.initFeatFunc = @initRandomRBF;
+model.Z            = randn(D,d);        
+model.featFunc     =  @getRandomRBF;    % Feature map
+model.initFeatFunc = @initRandomRBF;    % Initialization function 
 
 %% set up model
 model.Q            = 1;         % # latent functions
 model.P            = size(Y,2); % # Outputs
 model.N            = size(X,1); % # datapoints
-model.D            = D;         % # Feature dimensionality
+model.D            = D;         % # Dimensionality of feature map
 model.Y            = Y;
 model.X            = X;
 
@@ -28,7 +28,7 @@ model.kappa        = 1/2;           % parameter of Unscented linearization
 featParam       = model.initFeatFunc(1);
 Phi             = model.featFunc(model.X, model.Z, featParam); 
 D               = size(Phi,2);
-model.priorMean = zeros(D,model.Q);
+model.priorMean = zeros(D,model.Q); % Zero-mean peio by default
 
 
 %% prediction settings
