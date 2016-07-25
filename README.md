@@ -16,6 +16,7 @@ The package is written in Matlab and work as is. However, to use the mex version
 1. To set-up the path you need to execute `setPathEUGP.m`
 2. See `mteugpExample.m` for an example 
 
+
 ## License ## 
 Apache 2.0 
 
