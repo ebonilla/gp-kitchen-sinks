@@ -3,6 +3,8 @@ Extended and Unscented Kitchen Sinks
 
 Implements the framework _"Extended and Unscented Kitchen Sinks"_ of Bonilla et al [1].
 
+**License** Apache 2.0 
+
 ## Author ##
 [Edwin V. Bonilla](http://ebonilla.github.io/)
 
@@ -17,8 +19,6 @@ The package is written in Matlab and work as is. However, to use the mex version
 2. See `mteugpExample.m` for an example 
 
 
-## License ## 
-Apache 2.0 
 
 ## References ##
 [1] E. V. Bonilla and D. Steinberg and A. Reid. _Extended and Unscented Kitchen Sinks_. ICML (2016). 
