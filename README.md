@@ -1,4 +1,5 @@
-bayes-inv-var
+Extended and Unscented Kitchen Sinks
 =============
 
-Bayesian Joint Inversions with variational Inference
+Code for the framework "Extended and Unscented Kitchen Sinks"
+
