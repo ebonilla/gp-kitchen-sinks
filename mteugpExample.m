@@ -3,7 +3,7 @@ function mteugpExample()
 % See Bonilla et al (International Conference on Machine Learning, 2016)
 % Edwin V. Bonilla (http://ebonilla.github.io/)
 rng('default');
-linearMethod    = 'Unscented';         % {'Taylor', 'Unscented'}
+linearMethod    = 'Taylor';         % {'Taylor', 'Unscented'}
 D               = 50;              % number of features
 fwdModel        = @exampleFwdModel; % This is the fwd model (problem specific)
 
