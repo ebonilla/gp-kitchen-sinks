@@ -1,7 +1,7 @@
 Extended and Unscented Kitchen Sinks
 =============
 
-Implements the framework _"Extended and Unscented Kitchen Sinks"_ of Bonilla et al [1].
+Implements the framework _"Extended and Unscented Kitchen Sinks"_ of Bonilla et al [1]. This carries out approximate posterior inference in models with Gaussian process priors and nonlinear likelihoods. See [1] for details.
 
 **Apache License** version 2.0 
 
