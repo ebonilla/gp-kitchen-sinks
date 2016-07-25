@@ -12,7 +12,7 @@ Implements the framework _"Extended and Unscented Kitchen Sinks"_ of Bonilla et 
 The only additional package that needs to be installed is [nlopt-2.4.2](http://ab-initio.mit.edu/wiki/index.php/NLopt).
 
 ## Installation ##
-The package is written in Matlab and work as is. However, to use the mex version of some files please execute install.m
+The package is written in Matlab and works as is. However, to use the mex version of some files please execute install.m
 
 ## Usage ##
 1. To set-up the path you need to execute `setPathEUGP.m`
