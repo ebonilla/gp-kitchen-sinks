@@ -1,0 +1,6 @@
+{
+  "name": "Gp-kitchen-sinks",
+  "tagline": "Extended and Unscented Kitchen Sinks",
+  "body": "Extended and Unscented Kitchen Sinks\r\n=============\r\n\r\nImplements the framework _\"Extended and Unscented Kitchen Sinks\"_ of Bonilla et al [1]. This carries out approximate posterior inference in models with Gaussian process priors and nonlinear likelihoods. See [1] for details.\r\n\r\n**Apache License** version 2.0 \r\n\r\n## Author ##\r\n[Edwin V. Bonilla](http://ebonilla.github.io/)\r\n\r\n## Requirements ##\r\nThe only additional package that needs to be installed is [nlopt-2.4.2](http://ab-initio.mit.edu/wiki/index.php/NLopt).\r\n\r\n## Installation ##\r\nThe package is written in Matlab and works as is. However, to use the mex version of some files please execute install.m\r\n\r\n## Usage ##\r\n1. To set-up the path you need to execute `setPathEUGP.m`\r\n2. See `mteugpExample.m` for an example \r\n\r\n\r\n\r\n## References ##\r\n[1] E. V. Bonilla and D. Steinberg and A. Reid. _Extended and Unscented Kitchen Sinks_. ICML (2016). \r\nSee [Paper](http://ebonilla.github.io/papers/bonilla-et-al-icml-2016.pdf) and \r\n[Supplement](http://ebonilla.github.io/papers/bonilla-et-al-icml-2016-supplemental.pdf)\r\nfor details.\r\n",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
