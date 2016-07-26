@@ -1,8 +1,8 @@
 function [ A, B ] = mteugpUpdateLinearization( model)
-%MTEUGPUPDATELINEARIZATION Summary of this function goes here
-%   Detailed explanation goes here
-% Updates parameters of linearization
-% N = model.N;
+%MTEUGPUPDATELINEARIZATION Returns linearization parameter given the
+% current model
+
+
 % Edwin V. Bonilla (http://ebonilla.github.io/)
 
 

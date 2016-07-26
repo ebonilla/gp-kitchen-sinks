@@ -1,13 +1,11 @@
 function  [model, fval, exitCode]  = mteugpOptimizeMeansMap(model)
-%MTEUGPOPTIMIZEMEANSMAP Uses the MAP objective
-%   Detailed explanation goes here
-%for testing purposes only % Using minFunc
-% opt = struct('Display', 'full', 'Method', 'lbfgs', ...
-%                'MaxIter', 10, 'MaxFunEvals', 100, ...
-%                'progTol', 1e-3, ...
-%                'DerivativeCheck','on', 'numDiff', 0); 
-% theta = model.M(:);
-% [theta, nelboFeat, exitFlag]  = minFunc(@mapObjective, theta, opt, model); 
+%MTEUGPOPTIMIZEMEANSMAP Optimizes the mean using the MAP objective
+% INPUT:
+%   - model: model structure
+% OUTPUT:
+%   - model: modified model structured with optimized means
+%   - fval: Final value of objective function
+%   - exitCode: Termination flag (optimizer dependent)
 % Edwin V. Bonilla (http://ebonilla.github.io/)
 
 if (model.varConf.verbose)

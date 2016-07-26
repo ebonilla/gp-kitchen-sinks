@@ -1,4 +1,5 @@
 function ell = mteugpGetELL(model)
+% MTEUGPGETELL Computes expected log likelihood for a given model
 % Edwin V. Bonilla (http://ebonilla.github.io/)
 
 sigma2y      = model.sigma2y;

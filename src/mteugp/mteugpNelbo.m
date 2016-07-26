@@ -1,6 +1,6 @@
 function nelbo  = mteugpNelbo( model )
-%MTEUGPNELBO Summary of this function goes here
-%   Detailed explanation goes here
+%MTEUGPNELBO Return the negative evidence lower bound (NELBO) for a given
+%model
 % Edwin V. Bonilla (http://ebonilla.github.io/)
 
 

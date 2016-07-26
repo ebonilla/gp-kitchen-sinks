@@ -1,9 +1,10 @@
 function model  = mteugpOptimizeHyper(model )
-%MTEUGPOPTIMIZE Summary of this function goes here
-%   wrapper for differenr optimization algorithms for hyperparameters
-% theta = [featureParam; likelihoodParam; PriorParam]
-%       = [featureParam; theta_y; theta_w]
-%
+%MTEUGPOPTIMIZE Optimizes negative evidence lower bound wrt
+%hyper-parameters
+% INPUT:
+%   - model: model structured
+% OUTPUT:
+%   - model: Modifed model with optimal hyper-parameters (and means)
 % Edwin V. Bonilla (http://ebonilla.github.io/)
 
 global bestNelbo;

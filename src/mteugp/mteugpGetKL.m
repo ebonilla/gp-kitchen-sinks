@@ -1,6 +1,5 @@
 function  kl  = mteugpGetKL( model )
-%MTEUGPGETKL Summary of this function goes here
-%   kl divergence
+%MTEUGPGETKL Computes KL divergence KL[q || p] for a given model
 % Edwin V. Bonilla (http://ebonilla.github.io/)
 
 Q = model.Q;
